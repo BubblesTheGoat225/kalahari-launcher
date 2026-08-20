@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Taxi World by Kalahari</title>
+<h3>Press M to exit game!</h3>
+<style>
+  body { margin:0; overflow:hidden; font-family:'Trebuchet MS'; background:#87cfff;}
+  canvas { display:block; }
+  #devPanel, #resetModal {
+    display:none;
+    position:absolute;
+    top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    background:#222; color:white; text-align:center;
+    padding:20px; border-radius:10px; z-index:1000;
+  }
+  #devPanel h2, #resetModal h3 { margin:10px 0; }
+  #devPanel button, #resetModal button { margin:5px; padding:5px 10px; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<canvas id="gameCanvas"></canvas>
+
+<!-- Dev console panel -->
+<div id="devPanel">
+  <h2>Dev Console</h2>
+  <button id="devAdd">Add $1000 + 1 Job</button>
+  <button id="devAdd2">Add $30,000 + 100 Jobs</button>
+   <button id="devAdd3">Add $1000000</button>
+  <button id="devDelete">Delete Data</button>
+  <button id="devLogout">Log Out</button>
+</div>
+
+<!-- Save data reset modal -->
+<div id="resetModal">
+  <h3>Do you want to delete your savedata?</h3>
+  <button id="resetYes">Yes</button>
+  <button id="resetNo">No</button>
+</div>
+
+<script>
+// =================== SETTINGS ===================
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const TILE = 80;
+const MAP_COLS = 50;
+const MAP_ROWS = 50;
+const ROAD_GAP = 6;
+const UI_MARGIN = 20;
+let gameState = "title";
+
+// =================== MAP ===================
+const map = [];
+for(let y=0;y<MAP_ROWS;y++){
+  map[y]=[];
+  for(let x=0;x<MAP_COLS;x++){
+    map[y][x] = (x%ROAD_GAP<2 || y%ROAD_GAP<2) ? 1:0;
+  }
+}
+
+// =================== PLAYER ===================
+const player = {x:6*TILE,y:6*TILE,angle:0,speed:0,maxSpeed:6,accel:0.2,friction:0.05};
+const camera={x:0,y:0};
+const keys={};
+
+// =================== SAVE SYSTEM ===================
+let money=0,jobsCompleted=0;
+const safehouse = {x:8*TILE,y:8*TILE,owned:false,price:5000};
+function saveGame(){localStorage.setItem("taxiSave",JSON.stringify({money,jobsCompleted,safehouse:safehouse.owned}));}
+function loadGame(){const save=JSON.parse(localStorage.getItem("taxiSave"));if(save){money=save.money;jobsCompleted=save.jobsCompleted;safehouse.owned = save.safehouse || false;}}
+loadGame();
+
+// =================== JOBS ===================
+let passenger = null;
+function spawnPassenger(){
+  let px,py,dx,dy;
+  do{px=Math.floor(Math.random()*MAP_COLS);py=Math.floor(Math.random()*MAP_ROWS);}while(map[py][px]!==1);
+  do{dx=Math.floor(Math.random()*MAP_COLS);dy=Math.floor(Math.random()*MAP_ROWS);}while(map[dy][dx]!==1);
+  passenger={pickupX:px*TILE+TILE/2,pickupY:py*TILE+TILE/2,dropX:dx*TILE+TILE/2,dropY:dy*TILE+TILE/2,picked:false};
+}
+
+// =================== TRAFFIC ===================
+const traffic=[];
+function spawnTraffic(){if(traffic.length>60)return;let tx,ty; do{tx=Math.floor(Math.random()*MAP_COLS);ty=Math.floor(Math.random()*MAP_ROWS);}while(map[ty][tx]!==1); const horizontal=(ty%ROAD_GAP<2); traffic.push({x:tx*TILE+TILE/2,y:ty*TILE+TILE/2,dir:horizontal?0:Math.PI/2,speed:2});}
+function updateTraffic(){for(let car of traffic){car.x+=Math.cos(car.dir)*car.speed;car.y+=Math.sin(car.dir)*car.speed;if(Math.abs(Math.sin(car.dir))<0.1) car.y=Math.round(car.y/TILE)*TILE+TILE/2;else car.x=Math.round(car.x/TILE)*TILE+TILE/2;const tx=Math.floor(car.x/TILE),ty=Math.floor(car.y/TILE);if(tx%ROAD_GAP===0 && ty%ROAD_GAP===0){if(Math.random()<0.02)car.dir+=Math.PI/2;}}}
+
+// =================== COLLISION ===================
+function rectCollision(ax,ay,aw,ah,bx,by,bw,bh){return ax<bx+bw && ax+aw>bx && ay<by+bh && ay+ah>by;}
+
+// =================== UPDATE ===================
+function update(){
+  if(gameState!=="playing") return;
+  if(!passenger) spawnPassenger();
+
+  if(keys["ArrowUp"]||keys["w"]) player.speed+=player.accel;
+  if(keys["ArrowDown"]||keys["s"]) player.speed-=player.accel;
+  if(keys["ArrowLeft"]||keys["a"]) player.angle-=0.05;
+  if(keys["ArrowRight"]||keys["d"]) player.angle+=0.05;
+
+  player.speed=Math.max(-2,Math.min(player.speed,player.maxSpeed));
+  if(player.speed>0) player.speed-=player.friction;
+  if(player.speed<0) player.speed+=player.friction;
+
+  const newX=player.x+Math.cos(player.angle)*player.speed;
+  const newY=player.y+Math.sin(player.angle)*player.speed;
+  const tileX=Math.floor(newX/TILE),tileY=Math.floor(newY/TILE);
+  if(map[tileY] && map[tileY][tileX]===1){player.x=newX;player.y=newY;}
+
+  updateTraffic();
+
+  // Passenger pickup/drop
+  if(!passenger.picked && rectCollision(player.x-20,player.y-10,40,20,passenger.pickupX-15,passenger.pickupY-15,30,30)) passenger.picked=true;
+  if(passenger.picked && rectCollision(player.x-20,player.y-10,40,20,passenger.dropX-15,passenger.dropY-15,30,30)){
+    money+=400;jobsCompleted++;passenger=null;saveGame();
+  }
+
+  // Safehouse purchase
+  if(!safehouse.owned && rectCollision(player.x-20,player.y-10,40,20,safehouse.x-20,safehouse.y-20,40,40)){
+    if(money>=safehouse.price){money-=safehouse.price; safehouse.owned=true; saveGame(); alert("Congratulations! With purchasing the safehouse");}
+  }
+
+  camera.x=player.x-canvas.width/2;
+  camera.y=player.y-canvas.height/2;
+}
+
+// =================== DRAW ===================
+function drawMap(){for(let y=0;y<MAP_ROWS;y++){for(let x=0;x<MAP_COLS;x++){ctx.fillStyle=map[y][x]===1?"#444":"#2ecc71";ctx.fillRect(x*TILE,y*TILE,TILE,TILE);}}}
+function drawMinimap(){
+  const size=200,scale=size/(MAP_COLS*TILE);
+  ctx.fillStyle="#111"; ctx.fillRect(canvas.width-size-UI_MARGIN,UI_MARGIN,size,size);
+  ctx.fillStyle="white"; ctx.fillRect(canvas.width-size-UI_MARGIN+player.x*scale,UI_MARGIN+player.y*scale,4,4);
+  if(passenger){ctx.fillStyle=passenger.picked?"blue":"lime";const x=passenger.picked?passenger.dropX:passenger.pickupX;const y=passenger.picked?passenger.dropY:passenger.pickupY;ctx.fillRect(canvas.width-size-UI_MARGIN+x*scale,UI_MARGIN+y*scale,4,4);}
+  ctx.fillStyle=safehouse.owned?"gold":"purple";ctx.fillRect(canvas.width-size-UI_MARGIN+safehouse.x,UI_MARGIN+safehouse.y,6,6);
+}
+function drawGame(){
+  ctx.save(); ctx.translate(-camera.x,-camera.y);
+  drawMap();
+  if(passenger){ctx.fillStyle=passenger.picked?"blue":"lime";ctx.beginPath();ctx.arc(passenger.picked?passenger.dropX:passenger.pickupX,passenger.picked?passenger.dropY:passenger.pickupY,15,0,Math.PI*2);ctx.fill();}
+  ctx.fillStyle="red"; traffic.forEach(car=>ctx.fillRect(car.x-20,car.y-10,40,20));
+  ctx.save(); ctx.translate(player.x,player.y); ctx.rotate(player.angle); ctx.fillStyle="yellow"; ctx.fillRect(-20,-10,40,20); ctx.restore();
+  ctx.fillStyle=safehouse.owned?"green":"red"; ctx.fillRect(safehouse.x-20,safehouse.y-20,40,40);
+  ctx.restore();
+  ctx.fillStyle="red"; ctx.font="20px 'Trebuchet MS'"; ctx.textAlign="left";
+  ctx.fillText("Money: $"+money,UI_MARGIN,UI_MARGIN+25); ctx.fillText("Jobs: "+jobsCompleted,UI_MARGIN,UI_MARGIN+50);
+  drawMinimap();
+}
+
+// =================== TITLE ===================
+function drawTitle(){
+  ctx.fillStyle="#87cfff"; ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="black"; ctx.font="60px 'Trebuchet MS'"; ctx.textAlign="center";
+  ctx.fillText("Taxi World",canvas.width/2,canvas.height/2-50);
+  ctx.fillStyle="#222"; ctx.fillRect(canvas.width/2-120,canvas.height/2,240,70);
+  ctx.fillStyle="white"; ctx.font="30px 'Trebuchet MS'";
+  ctx.fillText("CLICK TO PLAY",canvas.width/2,canvas.height/2+45);
+}
+
+canvas.addEventListener("click",()=>{if(gameState==="title"){gameState="playing"; spawnPassenger();}});
+
+// =================== INPUT ===================
+window.addEventListener("keydown",e=>{keys[e.key]=true;
+  if(e.key.toLowerCase()==="m"&&gameState==="playing"){alert("Thanks for playing!"); window.location.href="about:blank";}
+  if(e.key==="`"){if(!devLoggedIn){const pass=prompt("Developer Password:");if(pass==="pluto26"){devLoggedIn=true;devPanel.style.display="block"; alert("Dev Console Accessed.");}} else{devPanel.style.display="block";}}
+  if(e.key==="."){resetModal.style.display="block";}});
+window.addEventListener("keyup",e=>keys[e.key]=false);
+
+// =================== DEV CONSOLE ===================
+let devLoggedIn=false;
+const devPanel = document.getElementById("devPanel");
+const resetModal = document.getElementById("resetModal");
+
+document.getElementById("devAdd").addEventListener("click",()=>{money+=1000;jobsCompleted+=1;saveGame(); alert("Added $1000 and 1 jobs!");});
+document.getElementById("devAdd2").addEventListener("click",()=>{money+=30000;jobsCompleted+=100;saveGame(); alert("Added $30,000 and 100 jobs!");});
+document.getElementById("devAdd3").addEventListener("click",()=>{money+=100000000000000;saveGame(); alert("Added $1 Million and 0 jobs!");})
+document.getElementById("devDelete").addEventListener("click",()=>{money=0;jobsCompleted=0;safehouse.owned=false;saveGame(); alert("Data deleted!");});
+document.getElementById("devLogout").addEventListener("click",()=>{devPanel.style.display="none";devLoggedIn=false;alert("Dev Console logged out.");});
+
+document.getElementById("resetYes").addEventListener("click",()=>{money=0;jobsCompleted=0;safehouse.owned=false;saveGame(); resetModal.style.display="none"; alert("Game has been reset!");});
+document.getElementById("resetNo").addEventListener("click",()=>{resetModal.style.display="none";});
+
+// =================== LOOP ===================
+function loop(){update(); ctx.clearRect(0,0,canvas.width,canvas.height); if(gameState==="title") drawTitle(); else drawGame(); requestAnimationFrame(loop);}
+setInterval(spawnTraffic,500);
+loop();
+</script>
+</body>
+</html>

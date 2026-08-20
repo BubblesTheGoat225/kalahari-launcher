@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalahari Studios Launcher</title>
+<style>
+:root{
+  --bg:#080b10;--panel:#10151d;--panel2:#151c26;--text:#f5f7fa;
+  --muted:#929baa;--accent:#f5c542;--accent2:#ffdf73;--border:#27303c;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+button,input{font:inherit}
+.hidden{display:none!important}
+
+/* Login */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+background:radial-gradient(circle at 50% 0%,#26303e 0,#11161e 35%,#080b10 75%)}
+.login-card{width:100%;max-width:430px;background:rgba(16,21,29,.94);border:1px solid var(--border);
+border-radius:22px;padding:42px;box-shadow:0 30px 80px #0009;backdrop-filter:blur(14px)}
+.logo{display:flex;align-items:center;gap:12px;margin-bottom:34px}
+.logo-mark{width:48px;height:48px;border-radius:14px;background:var(--accent);color:#111;
+display:grid;place-items:center;font-size:25px;font-weight:900;transform:rotate(-5deg)}
+.logo h1{font-size:23px;letter-spacing:-.6px}.logo span{color:var(--accent)}
+.login-card h2{font-size:28px;margin-bottom:8px}.subtitle{color:var(--muted);margin-bottom:28px}
+.field{margin-bottom:17px}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:8px;color:#cbd1da}
+.field input{width:100%;padding:14px 15px;border-radius:11px;border:1px solid var(--border);
+background:#0b0f15;color:white;outline:none}.field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px #f5c54218}
+.remember{display:flex;gap:9px;align-items:center;color:var(--muted);font-size:13px;margin:4px 0 20px}
+.login-btn,.play-btn{border:0;border-radius:11px;background:var(--accent);color:#101010;font-weight:850;
+padding:14px 18px;cursor:pointer;transition:.2s}.login-btn{width:100%}.login-btn:hover,.play-btn:hover{background:var(--accent2);transform:translateY(-1px)}
+.error{color:#ff7272;font-size:13px;margin-top:12px;min-height:18px;text-align:center}
+.demo{margin-top:24px;padding:12px;border-radius:10px;background:#ffffff06;color:var(--muted);font-size:12px;text-align:center}
+
+/* Launcher */
+#launcher{min-height:100vh}
+header{height:72px;border-bottom:1px solid var(--border);background:#0a0e14e8;backdrop-filter:blur(14px);
+display:flex;align-items:center;padding:0 5%;justify-content:space-between;position:sticky;top:0;z-index:10}
+.header-logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:20px}.header-logo b{color:var(--accent)}
+.header-logo .mini{width:34px;height:34px;border-radius:9px;background:var(--accent);color:#111;display:grid;place-items:center;font-weight:900}
+.user-area{display:flex;align-items:center;gap:14px;color:var(--muted);font-size:13px}
+.logout{background:transparent;color:#dce1e8;border:1px solid var(--border);border-radius:9px;padding:8px 12px;cursor:pointer}
+.logout:hover{border-color:#596575}
+
+main{max-width:1250px;margin:auto;padding:42px 5% 70px}
+.hero{border:1px solid var(--border);border-radius:22px;padding:40px;min-height:280px;display:flex;align-items:end;
+background:linear-gradient(110deg,#171e28 0%,#11161e 48%,#252014 100%);overflow:hidden;position:relative}
+.hero:after{content:"🚕";position:absolute;right:5%;bottom:-35px;font-size:180px;opacity:.09;transform:rotate(-8deg)}
+.hero-content{position:relative;z-index:1;max-width:650px}.eyebrow{color:var(--accent);font-weight:850;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+.hero h2{font-size:42px;letter-spacing:-1.5px;margin-bottom:12px}.hero p{color:#b6bdc8;line-height:1.6;margin-bottom:22px}
+.hero-btn{display:inline-block;padding:12px 18px;background:var(--accent);color:#111;border-radius:10px;text-decoration:none;font-weight:850}
+
+.section-head{display:flex;align-items:end;justify-content:space-between;margin:42px 0 18px}
+.section-head h3{font-size:23px}.section-head p{color:var(--muted);font-size:13px}
+.search{background:#0d1219;border:1px solid var(--border);color:white;border-radius:10px;padding:10px 13px;width:220px;outline:none}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:17px;overflow:hidden;transition:.2s}
+.card:hover{transform:translateY(-3px);border-color:#465160;box-shadow:0 14px 35px #0004}
+.cover{height:165px;background:linear-gradient(135deg,#242c37,#11161d);display:flex;align-items:center;justify-content:center;position:relative}
+.game-icon{width:90px;height:90px;border-radius:22px;background:var(--accent);color:#111;display:grid;place-items:center;
+font-size:23px;font-weight:950;box-shadow:0 12px 25px #0005;transform:rotate(-4deg)}
+.cover .badge{position:absolute;top:13px;left:13px;background:#080b10dd;color:#fff;padding:6px 9px;border-radius:7px;font-size:10px;font-weight:800}
+.card-body{padding:18px}.card h4{font-size:21px;margin-bottom:8px}.desc{font-size:13px;color:var(--muted);min-height:38px;line-height:1.45}
+.meta{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0 17px}.tag{font-size:11px;color:#cbd2dc;background:#ffffff08;border:1px solid var(--border);padding:6px 8px;border-radius:7px}
+.card-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px}.release{font-size:11px;color:#7f8997}.play-btn{padding:9px 14px;font-size:12px}
+.coming{opacity:.82}.coming .game-icon{background:#29313c;color:#8d97a5;box-shadow:none}.coming .play-btn{background:#252c36;color:#929baa;cursor:not-allowed}
+footer{text-align:center;color:#68717e;font-size:12px;margin-top:55px}
+
+@media(max-width:850px){.grid{grid-template-columns:1fr 1fr}.hero h2{font-size:34px}}
+@media(max-width:600px){header{padding:0 18px}.user-area span{display:none}main{padding:25px 18px 50px}.hero{padding:27px;min-height:300px}.hero h2{font-size:30px}.grid{grid-template-columns:1fr}.section-head{align-items:stretch;gap:14px;flex-direction:column}.search{width:100%}.login-card{padding:30px 24px}}
+</style>
+</head>
+<body>
+
+<section id="loginScreen">
+  <div class="login-card">
+    <div class="logo">
+      <div class="logo-mark">KS</div>
+      <h1>Kalahari <span>Studios</span></h1>
+    </div>
+    <h2>Welcome back.</h2>
+    <p class="subtitle">Sign in to access your game launcher.</p>
+
+    <form id="loginForm">
+      <div class="field">
+        <label for="username">USERNAME</label>
+        <input id="username" autocomplete="username" placeholder="Enter your username" required>
+      </div>
+      <div class="field">
+        <label for="password">PASSWORD</label>
+        <input id="password" type="password" autocomplete="current-password" placeholder="Enter your password" required>
+      </div>
+      <label class="remember"><input type="checkbox" id="remember"> Remember me on this device</label>
+      <button class="login-btn" type="submit">SIGN IN</button>
+      <div class="error" id="error"></div>
+    </form>
+    <div class="demo">Demo account: <b>admin</b> / <b>taxi123</b></div>
+  </div>
+</section>
+
+<section id="launcher" class="hidden">
+<header>
+  <div class="header-logo"><div class="mini">KS</div> Kalahari <b>Studios</b></div>
+  <div class="user-area"><span>Signed in as <b id="userDisplay">admin</b></span><button class="logout" id="logout">Log out</button></div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-content">
+      <div class="eyebrow">Kalahari Studios • Game Launcher</div>
+      <h2>Your games. One place.</h2>
+      <p>Browse the entire Kalahari Games lineup (Post-2025), check upcoming releases and launch your games from one professional game hub.</p>
+      <a href="#games" class="hero-btn">VIEW GAMES</a>
+    </div>
+  </section>
+
+  <div class="section-head" id="games">
+    <div><h3>Your Games</h3><p>Available Games</p></div>
+    <input class="search" id="search" placeholder="Search games...">
+  </div>
+
+  <div class="grid" id="gameGrid"></div>
+
+  <footer>© 2026 Kalahari Studios • Launcher v1.0.0</footer>
+</main>
+</section>
+
+<script>
+const games = [
+  {
+    name:"TAXI", icon:"TAXI", genre:"Driving", date:"March 2025",
+    description:"Jump behind the wheel and build your taxi career.",
+    status:"AVAILABLE", url: "file:///C:/Users/24HallR/Desktop/things/taxi%20games/TAXI%20-%20Complete%20Edition/taxi/index.html"
+  },
+  {
+    name:"TAXI 2", icon:"TAXI 2", genre:"Driving • Tech Demo", date:"Unreleased to Public",
+    description:"A bigger city, more passengers and more ways to make money.",
+    status:"AVAILABLE", url:"file:///C:/Users/24HallR/Desktop/things/taxi%20games/TAXI%20-%20Complete%20Edition/taxi2_theolddays/index.html"
+  },
+  {
+    name:"TAXI 3", icon:"TAXI 3", genre:"Driving • Open World", date:"August 21, 2026",
+    description:"The next chapter of the TAXI series. Bigger roads. Bigger jobs.",
+    status:"TBR", url:"file:///C:/Users/24HallR/Downloads/taxi-world-3d%20(3).html"
+  },
+  {
+    name:"TAXI 3 - Expansion 1", icon:"TAXI 3.1", genre:"Driving • TBD", date:"August 22, 2026",
+    description:"Take fares beyond the city and explore the countryside.",
+    status:"TBR", url:"file:///C:/Users/24HallR/Downloads/taxi-world-3d-rural%20(2).html"
+  },
+  {
+    name:"TAXI 3 - Expansion 2", icon:"?", genre:"TBA", date:"TBA",
+    description:"A new project is currently in development.",
+    status:"TBR", url:"#"
+  },
+  {
+    name:"Upcoming Game", icon:"?", genre:"TBA", date:"TBA",
+    description:"A new project is currently in development.",
+    status:"TBR", url:"#"
+  }
+];
+
+const grid=document.getElementById("gameGrid");
+const search=document.getElementById("search");
+
+function renderGames(filter=""){
+  grid.innerHTML="";
+  games.filter(g=>g.name.toLowerCase().includes(filter.toLowerCase()) ||
+                   g.genre.toLowerCase().includes(filter.toLowerCase()))
+  .forEach(g=>{
+    const coming=g.status!=="AVAILABLE";
+    const card=document.createElement("article");
+    card.className="card"+(coming?" coming":"");
+    card.innerHTML=`
+      <div class="cover">
+        <span class="badge">${g.status}</span>
+        <div class="game-icon">${g.icon}</div>
+      </div>
+      <div class="card-body">
+        <h4>${g.name}</h4>
+        <div class="desc">${g.description}</div>
+        <div class="meta"><span class="tag">${g.genre}</span></div>
+        <div class="card-bottom">
+          <span class="release">${g.date}</span>
+          <button class="play-btn" ${coming?"disabled":""} data-url="${g.url}">
+            ${coming?"TBR":"PLAY"}
+          </button>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+renderGames();
+
+search.addEventListener("input",e=>renderGames(e.target.value));
+
+document.addEventListener("click",e=>{
+  if(e.target.classList.contains("play-btn") && !e.target.disabled){
+    const url=e.target.dataset.url;
+    if(url && url!=="#") window.location.href=url;
+    else alert("Game launch link not set yet. Add the game's URL in the games list inside index.html.");
+  }
+});
+
+/* Demo authentication */
+const loginScreen=document.getElementById("loginScreen");
+const launcher=document.getElementById("launcher");
+const form=document.getElementById("loginForm");
+const error=document.getElementById("error");
+
+function showLauncher(user){
+  loginScreen.classList.add("hidden");
+  launcher.classList.remove("hidden");
+  document.getElementById("userDisplay").textContent=user;
+}
+function signIn(user,pass,remember){
+  if(user==="admin" && pass==="taxi123"){
+    if(remember) localStorage.setItem("taxiLauncherUser",user);
+    sessionStorage.setItem("taxiLoggedIn","true");
+    showLauncher(user);
+  }else{
+    error.textContent="Incorrect username or password.";
+  }
+}
+form.addEventListener("submit",e=>{
+  e.preventDefault();
+  signIn(document.getElementById("username").value.trim(),
+         document.getElementById("password").value,
+         document.getElementById("remember").checked);
+});
+
+document.getElementById("logout").addEventListener("click",()=>{
+  sessionStorage.removeItem("taxiLoggedIn");
+  localStorage.removeItem("taxiLauncherUser");
+  launcher.classList.add("hidden");
+  loginScreen.classList.remove("hidden");
+  form.reset();
+});
+
+const remembered=localStorage.getItem("taxiLauncherUser");
+if(remembered && sessionStorage.getItem("taxiLoggedIn")==="true") showLauncher(remembered);
+</script>
+</body>
+</html>

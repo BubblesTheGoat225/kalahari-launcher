@@ -90,6 +90,10 @@ footer{text-align:center;color:#68717e;font-size:12px;margin-top:55px}
 
     <form id="loginForm">
       <div class="field">
+        <label for="displayName">DISPLAY USERNAME (FOR SIGN UP)</label>
+        <input id="displayName" placeholder="Choose a username">
+      </div>
+      <div class="field">
         <label for="username">EMAIL ADDRESS</label>
         <input id="username" type="email" autocomplete="email" placeholder="Enter your email" required>
       </div>
@@ -162,7 +166,7 @@ const games = [
   {
     name:"TAXI 3", icon:"TAXI 3", genre:"Driving • Open World", date:"August 21, 2026",
     description:"The next chapter of the TAXI series. Bigger roads. Bigger jobs.",
-    status:"TBR", url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3.html"
+    status:"AVAILABLE", url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3.html"
   },
   {
     name:"TAXI 3 - Expansion 1", icon:"TAXI 3.1", genre:"Driving • TBD", date:"August 22, 2026",
@@ -232,7 +236,7 @@ auth.onAuthStateChanged((user) => {
   if (user) {
     loginScreen.classList.add("hidden");
     launcher.classList.remove("hidden");
-    document.getElementById("userDisplay").textContent = user.email.split('@')[0];
+    document.getElementById("userDisplay").textContent = user.displayName || user.email.split('@')[0];
   } else {
     launcher.classList.add("hidden");
     loginScreen.classList.remove("hidden");
@@ -240,10 +244,22 @@ auth.onAuthStateChanged((user) => {
 });
 
 document.getElementById("signUpBtn").addEventListener("click", () => {
+  const username = document.getElementById("displayName").value.trim();
   const email = document.getElementById("username").value.trim();
   const pass = document.getElementById("password").value;
 
+  if (!username) {
+    error.style.color = "#ff7272";
+    error.textContent = "Please enter a username.";
+    return;
+  }
+
   auth.createUserWithEmailAndPassword(email, pass)
+    .then((userCredential) => {
+      return userCredential.user.updateProfile({
+        displayName: username
+      });
+    })
     .then(() => {
       error.style.color = "#42f570";
       error.textContent = "Account created successfully!";

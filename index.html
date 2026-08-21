@@ -107,7 +107,68 @@ footer{text-align:center;color:#68717e;font-size:12px;margin-top:55px}
       </div>
       <div class="error" id="error"></div>
     </form>
-  </div>
+  <style>
+  .powered-by-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(20, 20, 24, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(6px);
+    font-size: 12px;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.65);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  .powered-by-badge .brand {
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 600;
+    margin-left: 2px;
+  }
+
+  .powered-by-badge svg {
+    display: block;
+    flex-shrink: 0;
+  }
+
+  .powered-by-badge .divider {
+    width: 1px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 0 2px;
+  }
+</style>
+
+<div class="powered-by-badge" role="img" aria-label="Powered by Google Firebase">
+  <span class="label">Powered by</span>
+
+  <!-- Firebase flame logo -->
+  <svg width="14" height="18" viewBox="0 0 256 351" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#FFA000" d="M0 282.998l1.94-2.995L88.44 116.28l.176-1.679L54.11 51.049C48.417 40.25 32.5 41.632 28.75 53.221z"/>
+    <path fill="#FFA000" d="M135.005 138.607l27.42-28.06-27.44-52.288c-5.101-9.71-19.34-9.723-24.45 0L93.5 106.484l1.68 1.72z"/>
+    <path fill="#FFCA28" d="M137.87 213.865l66.16-36.6-46.66-88.605-46.386 47.44z"/>
+    <path fill="#FFA000" d="M0 283l137.87-69.133-26.886-51.208-46.39 47.44z"/>
+    <path fill="#F57C00" d="M143.53 350.15l112.4-63.11-31.75-198.44a12.53 12.53 0 0 0-20.9-6.86L0 283l118.61 65.71a26.9 26.9 0 0 0 24.92 1.44"/>
+    <path fill="#FFCA28" d="M203.87 177.14L204 176.7l-31.68-197.4C168.85-8.85 155.99-9 149.61 3.36L0 283z"/>
+  </svg>
+
+  <span class="divider"></span>
+
+  <!-- Google "G" logo -->
+  <svg width="16" height="16" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/>
+    <path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/>
+    <path fill="#FBBC05" d="M11.69 28.18A13.98 13.98 0 0 1 10.94 24c0-1.45.25-2.86.7-4.18v-5.7H4.34A21.99 21.99 0 0 0 2 24c0 3.55.85 6.91 2.34 9.88z"/>
+    <path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/>
+  </svg>
+
+  <span class="brand">Firebase</span>
+</div>
 </section>
 
 <section id="launcher" class="hidden">

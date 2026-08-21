@@ -214,13 +214,14 @@ function showLauncher(user){
   launcher.classList.remove("hidden");
   document.getElementById("userDisplay").textContent=user;
 }
-function signIn(user,pass,remember){
-  if(user==="admin" && pass==="taxi123"){
-    if(remember) localStorage.setItem("taxiLauncherUser",user);
-    sessionStorage.setItem("taxiLoggedIn","true");
+function signIn(user, pass, remember) {
+  // Ensure these match what you are typing on the login page!
+  if (user === "admin" && pass === "taxi") {
+    if (remember) localStorage.setItem("taxiLauncherUser", user);
+    sessionStorage.setItem("taxiLoggedIn", "true");
     showLauncher(user);
-  }else{
-    error.textContent="Incorrect username or password.";
+  } else {
+    error.textContent = "Incorrect username or password.";
   }
 }
 form.addEventListener("submit",e=>{

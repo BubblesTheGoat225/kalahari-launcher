@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kalahari Launcher - News & Announcements</title>
+  <style>
+    /* ==========================================================
+       THEME & VARIABLES (Matching Kalahari Launcher Dark Style)
+       ========================================================== */
+    :root {
+      --bg-dark: #121318;
+      --card-bg: #1a1c23;
+      --card-border: #2a2d37;
+      --text-main: #f0f2f5;
+      --text-muted: #8c93a4;
+      --accent-color: #6366f1; /* Launcher Primary Accent */
+      --accent-badge: #4f46e5;
+      --tag-patch: #10b981;    /* Green for Updates/Patches */
+      --tag-event: #f59e0b;    /* Orange for Events */
+      --tag-alert: #ef4444;    /* Red for Alerts */
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      padding: 24px;
+      overflow-y: auto;
+    }
+
+    /* ==========================================================
+       LAYOUT & HEADER
+       ========================================================== */
+    .news-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .news-header {
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 16px;
+    }
+
+    .news-header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .news-header p {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    /* ==========================================================
+       ANNOUNCEMENT CARD STYLING
+       ========================================================== */
+    .announcements-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .news-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 20px;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+
+    .news-card:hover {
+      border-color: var(--accent-color);
+    }
+
+    /* Pinned / Highlighted Announcement */
+    .news-card.pinned {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.15);
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+
+    /* Badge Color Variations */
+    .badge.update { background-color: var(--tag-patch); }
+    .badge.event { background-color: var(--tag-event); }
+    .badge.alert { background-color: var(--tag-alert); }
+    .badge.general { background-color: var(--accent-badge); }
+
+    .post-date {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+
+    .card-body {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #c9ced8;
+    }
+
+    .card-body p {
+      margin-bottom: 8px;
+    }
+
+    .card-body p:last-child {
+      margin-bottom: 0;
+    }
+
+    .card-body ul {
+      margin-left: 20px;
+      margin-top: 6px;
+      margin-bottom: 6px;
+    }
+
+    .card-body li {
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="news-container">
+    <div class="news-header">
+      <h1>Announcements</h1>
+      <p>Stay up to date with the latest Kalahari Launcher patches, events, and server news.</p>
+    </div>
+
+    <!-- ANNOUNCEMENTS FEED -->
+    <div class="announcements-feed">
+
+      <!-- =========================================================================
+           COPYABLE ANNOUNCEMENT TEMPLATE
+           Copy from <article> to </article> and paste above this line for new posts!
+           ========================================================================= -->
+      <article class="news-card pinned">
+        <div class="card-meta">
+          <span class="badge update">Update v1.2.0</span>
+          <span class="post-date">October 24, 2026</span>
+        </div>
+        <h2 class="card-title">Kalahari Launcher Major Update Released!</h2>
+        <div class="card-body">
+          <p>We've released a new update for the launcher improving stability and adding news capabilities!</p>
+          <ul>
+            <li> Added news & announcements page</li>
+            <li> Optimized game launching speeds</li>
+            <li> Fixed minor UI bugs</li>
+          </ul>
+        </div>
+      </article>
+      <!-- END COPYABLE TEMPLATE -->
+
+      <!-- EXAMPLE ANNOUNCEMENT 2 -->
+      <article class="news-card">
+        <div class="card-meta">
+          <span class="badge alert">Maintenance</span>
+          <span class="post-date">October 18, 2026</span>
+        </div>
+        <h2 class="card-title">Scheduled Server Downtime</h2>
+        <div class="card-body">
+          <p>Servers will be offline briefly on Sunday from 02:00 UTC to 04:00 UTC for routine database maintenance. Thanks for your patience!</p>
+        </div>
+      </article>
+
+      <!-- EXAMPLE ANNOUNCEMENT 3 -->
+      <article class="news-card">
+        <div class="card-meta">
+          <span class="badge event">Community Event</span>
+          <span class="post-date">October 10, 2026</span>
+        </div>
+        <h2 class="card-title">Weekend Double XP Event</h2>
+        <div class="card-body">
+          <p>Join us this weekend for double XP across all servers! Make sure your launcher is updated to the latest build before joining.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+</body>
+</html>

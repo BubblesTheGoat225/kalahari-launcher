@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalahari Launcher - Messages</title>
+
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  
+<style>
+:root {
+  --bg: #080b10;
+  --panel: #10151d;
+  --panel2: #151c26;
+  --text: #f5f7fa;
+  --muted: #929baa;
+  --accent: #f5c542;
+  --border: #27303c;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: Inter, 'Segoe UI', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  height: 60px;
+  border-bottom: 1px solid var(--border);
+  background: #0a0e14e8;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+}
+
+.brand {
+  font-weight: 900;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand span { color: var(--accent); }
+.brand-icon {
+  width: 28px;
+  height: 28px;
+  background: var(--accent);
+  color: #111;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 14px;
+}
+
+.wip-badge {
+  background: rgba(245, 197, 66, 0.15);
+  border: 1px dashed var(--accent);
+  color: var(--accent);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* Main Workspace */
+.chat-app {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  flex: 1;
+  height: calc(100vh - 60px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Construction Overlay Wireframe Banner */
+.construction-banner {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  z-index: 100;
+  background: repeating-linear-gradient(
+    45deg,
+    #f5c542,
+    #f5c542 10px,
+    #111 10px,
+    #111 20px
+  );
+  padding: 2px;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+.construction-inner {
+  background: #10151d;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Sidebar Placeholder */
+.sidebar {
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sidebar-title {
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Skeleton Loaders */
+.skeleton {
+  background: linear-gradient(90deg, #151c26 25%, #222b3a 50%, #151c26 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 8px;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.user-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid transparent;
+}
+
+.avatar-skeleton {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.text-skeleton-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.line-skeleton {
+  height: 10px;
+  width: 100%;
+}
+.line-skeleton.short { width: 60%; }
+
+/* Main Chat Area */
+.chat-window {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  position: relative;
+}
+
+.chat-header {
+  height: 60px;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 12px;
+}
+
+.messages-area {
+  flex: 1;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  opacity: 0.5; /* Visual incomplete feel */
+}
+
+.message-bubble {
+  max-width: 60%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.message-bubble.incoming {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  align-self: flex-start;
+  border-bottom-left-radius: 2px;
+}
+
+.message-bubble.outgoing {
+  background: var(--accent);
+  color: #111;
+  font-weight: 600;
+  align-self: flex-end;
+  border-bottom-right-radius: 2px;
+}
+
+/* Incomplete Input Bar */
+.input-area {
+  padding: 20px;
+  background: var(--panel);
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  position: relative;
+}
+
+.input-mock {
+  flex: 1;
+  background: #0b0f15;
+  border: 1px dashed var(--border);
+  padding: 14px 18px;
+  border-radius: 10px;
+  color: var(--muted);
+  font-size: 13px;
+  cursor: not-allowed;
+}
+
+.send-btn-mock {
+  background: #252c36;
+  color: var(--muted);
+  border: none;
+  padding: 0 20px;
+  height: 45px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: not-allowed;
+}
+
+/* WIP Grid Wireframe Overlay */
+.wireframe-grid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 30px 30px;
+  pointer-events: none;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-icon">KS</div>
+    Kalahari <span>Messages</span>
+  </div>
+  <div class="wip-badge">FEATURE IN DEVELOPMENT</div>
+</header>
+
+<div class="chat-app">
+  <div class="wireframe-grid"></div>
+
+  <!-- Under Construction Ribbon -->
+  <div class="construction-banner">
+    <div class="construction-inner">
+      🚧 System Module Incomplete •
+    </div>
+  </div>
+
+  <!-- Sidebar (Channels / Direct Messages) -->
+  <aside class="sidebar">
+    <div class="sidebar-title">Direct Chats</div>
+    
+    <!-- Wireframe User Items -->
+    <div class="user-item">
+      <div class="avatar-skeleton skeleton"></div>
+      <div class="text-skeleton-group">
+        <div class="line-skeleton skeleton"></div>
+        <div class="line-skeleton short skeleton"></div>
+      </div>
+    </div>
+
+    <div class="user-item">
+      <div class="avatar-skeleton skeleton"></div>
+      <div class="text-skeleton-group">
+        <div class="line-skeleton skeleton"></div>
+        <div class="line-skeleton short skeleton"></div>
+      </div>
+    </div>
+
+    <div class="user-item">
+      <div class="avatar-skeleton skeleton"></div>
+      <div class="text-skeleton-group">
+        <div class="line-skeleton skeleton"></div>
+        <div class="line-skeleton short skeleton"></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Chat Content Window -->
+  <main class="chat-window">
+    <div class="chat-header">
+      <div class="avatar-skeleton skeleton" style="width:30px; height:30px;"></div>
+      <div class="line-skeleton skeleton" style="width:120px; height:12px;"></div>
+    </div>
+
+    <div class="messages-area">
+      <div class="message-bubble incoming">
+        Hey. Welcome to Kalahari Messages. You get an exclusive preview at the system.
+      </div>
+      <div class="message-bubble outgoing">
+        Is the global chat system live yet?
+      </div>
+      <div class="message-bubble incoming">
+        Not yet—the UI framework is still under construction. Planned release is October 2026.
+      </div>
+    </div>
+
+    <!-- Disabled Input Bar -->
+    <div class="input-area">
+      <div class="input-mock">Messaging module disabled</div>
+      <button class="send-btn-mock" disabled>SEND</button>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

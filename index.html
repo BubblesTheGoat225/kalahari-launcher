@@ -133,6 +133,18 @@ font-size:23px;font-weight:950;box-shadow:0 12px 25px #0005;transform:rotate(-4d
 .meta{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0 17px}.tag{font-size:11px;color:#cbd2dc;background:#ffffff08;border:1px solid var(--border);padding:6px 8px;border-radius:7px}
 .card-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px}.release{font-size:11px;color:#7f8997}.play-btn{padding:9px 14px;font-size:12px}
 .coming{opacity:.82}.coming .game-icon{background:#29313c;color:#8d97a5;box-shadow:none}.coming .play-btn{background:#252c36;color:#929baa;cursor:not-allowed}
+
+/* IN PRODUCTION BUTTON */
+.production-btn{
+  background:#8fd8ff!important;
+  color:#08202d!important;
+  cursor:pointer;
+}
+
+.production-btn:hover{
+  background:#b9e8ff!important;
+}
+
 footer{text-align:center;color:#68717e;font-size:12px;margin-top:55px}
 
 @media(max-width:850px){.grid{grid-template-columns:1fr 1fr}.hero h2{font-size:34px}}
@@ -193,7 +205,7 @@ footer{text-align:center;color:#68717e;font-size:12px;margin-top:55px}
         <path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/>
       </svg>
 
-      <span class="brand">Firebase</span>
+      <span class="brand">Google Firebase</span>
     </div>
 
   </div>
@@ -259,7 +271,7 @@ const auth = firebase.auth();
 // ==========================================
 // NEWS BOX CONTROL: Type "ANN" to show, "OFF" to hide
 // ==========================================
-const IMPORTANT_NEWS = "ANN";
+const IMPORTANT_NEWS = "OFF";
 
 // News details
 const NEWS_DATE = "August 22, 2026";
@@ -271,11 +283,6 @@ const games = [
     name:"TAXI", icon:"TAXI", cover:"taxi1-cover.jpg", genre:"Driving", date:"March 2025",
     description:"Jump behind the wheel and build your taxi career.",
     status:"AVAILABLE", url: "https://BubblesTheGoat225.github.io/kalahari-launcher/taxi.html"
-  },
-  {
-    name:"TAXI 2", icon:"TAXI 2", genre:"Driving • Tech Demo", date:"2025",
-    description:"A tech demo, Part of the production of Taxi 3.",
-    status:"AVAILABLE", url:"this-page-does-not-exist"
   },
   {
     name:"TAXI 3", icon:"TAXI 3", cover:"taxi3-cover.jpg", genre:"Driving • Open World", date:"August 21, 2026",
@@ -298,9 +305,9 @@ const games = [
     status:"AVAILABLE", url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3-mobile.html"
   },
   {
-    name:"WhiteWall", icon:"WW", genre:"Driving • Open World • Story • TBA", date:"TBA",
-    description:"Kingston City, 2017. You arrive in Kingston in 2017, broke and in need of accommodation and money. Maybe try Whitewall Taxi Co? More information TBA. This game is currently in development.",
-    status:"COMING SOON", url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi4placeholder.html"
+    name:"Upcoming Open World Game", icon:"TBD", genre:"Driving • Open World • Story • TBA", date:"TBA",
+    description:"Kingston City, 2025. You arrive in Kingston, broke and in need of accommodation and money. More information TBA. This game is currently in development.",
+    status:"IN PRODUCTION", url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi4placeholder.html"
   },
   {
     name:"Upcoming Game", icon:"?", genre:"TBA", date:"TBA",
@@ -322,7 +329,10 @@ function renderGames(filter=""){
   games.filter(g=>g.name.toLowerCase().includes(filter.toLowerCase()) ||
                     g.genre.toLowerCase().includes(filter.toLowerCase()))
   .forEach(g=>{
-    const coming=g.status!=="AVAILABLE";
+    const available=g.status==="AVAILABLE";
+    const production=g.status==="IN PRODUCTION";
+    const coming=g.status==="COMING SOON";
+
     const card=document.createElement("article");
     card.className="card"+(coming?" coming":"");
     card.innerHTML=`
@@ -336,14 +346,15 @@ function renderGames(filter=""){
         <div class="meta"><span class="tag">${g.genre}</span></div>
         <div class="card-bottom">
           <span class="release">${g.date}</span>
-          <button class="play-btn" ${coming?"disabled":""} data-url="${g.url}">
-            ${coming?"COMING SOON":"PLAY"}
+          <button class="play-btn ${production?"production-btn":""}" ${coming?"disabled":""} data-url="${g.url}">
+            ${available?"PLAY":production?"IN PRODUCTION":"COMING SOON"}
           </button>
         </div>
       </div>`;
     grid.appendChild(card);
   });
 }
+
 renderGames();
 
 search.addEventListener("input",e=>renderGames(e.target.value));

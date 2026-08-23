@@ -22,13 +22,57 @@
   --muted:#929baa;--accent:#f5c542;--accent2:#ffdf73;--border:#27303c;
   --header:#0a0e14e8;--input:#0d1219;--field:#0b0f15;--soft:#ffffff08;
 }
+/* Light mode — Whitewall-inspired navy / cyan / gold palette */
 body.light-mode{
-  --bg:#eef6ff;--panel:#ffffff;--panel2:#f5f9ff;--text:#102033;
-  --muted:#5d7188;--accent:#2388e8;--accent2:#56a9ff;--border:#cbdced;
-  --header:rgba(255,255,255,.9);--input:#ffffff;--field:#f7fbff;--soft:#1020330b;
+  --bg:#061a31;
+  --panel:#071d36;
+  --panel2:#0a2744;
+  --text:#f4f9ff;
+  --muted:#72a9c9;
+  --accent:#ffd21a;
+  --accent2:#ffe56a;
+  --border:#17466c;
+  --header:rgba(5,20,38,.94);
+  --input:#061a31;
+  --field:#061a31;
+  --soft:#ffffff0d;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+body.light-mode #launcher{
+  background:
+    radial-gradient(circle at 15% 15%,rgba(19,91,139,.28),transparent 35%),
+    radial-gradient(circle at 85% 75%,rgba(7,67,108,.25),transparent 38%),
+    linear-gradient(120deg,#06182c 0%,#082340 48%,#061a31 100%);
+}
+body.light-mode .hero{
+  background:linear-gradient(110deg,#092b4b 0%,#071d36 52%,#16344a 100%);
+}
+body.light-mode .news-container{
+  background:rgba(7,29,54,.9);
+}
+body.light-mode .card{
+  background:rgba(7,29,54,.96);
+}
+body.light-mode .cover{
+  background:linear-gradient(135deg,#0b3152,#061a31);
+}
+body.light-mode .tag{
+  color:#9bcce5;
+}
+body.light-mode .search,
+body.light-mode .filter-select{
+  background:#061a31;
+  color:#f4f9ff;
+}
+body.light-mode .header-logo .mini,
+body.light-mode .game-icon{
+  color:#07182a;
+}
+body.light-mode .hero p,
+body.light-mode .news-content{
+  color:#8eb8d0;
+}
 button,input{font:inherit}
 .hidden{display:none!important}
 
@@ -424,7 +468,7 @@ const games = [
   {
     category:"other",
     name:"Upcoming Open World Game", icon:"TBD", cover:"kalaharilogo2026.jpg", genre:"Driving • Open World • Story • TBA", date:"TBA",
-    description:"Kingston City, 2025. You arrive in Kingston, broke and in need of accommodation and money. Over 70% of the buildings in Kingston are enterable. Explore a major city, and the Americana Countryside, doing jobs, buying houses and uncovering secret areas. More information TBA. This game is currently in development.",
+    description:"Kingston City, 2025. You arrive in Kingston, broke and in need of accommodation and money. Over 70% of the buildings in Kingston are enterable. Explore a major city, and the Americana Countryside, doing jobs, buying houses and uncovering secrets. More information TBA. This game is currently in development.",
     status:"IN PRODUCTION", url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi4placeholder.html"
   },
   {

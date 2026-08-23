@@ -18,11 +18,21 @@
 
 <style>
 :root{
-  --bg:#080b10;--panel:#10151d;--panel2:#151c26;--text:#f5f7fa;
-  --muted:#929baa;--accent:#f5c542;--accent2:#ffdf73;--border:#27303c;
-  --header:#0a0e14e8;--input:#0d1219;--field:#0b0f15;--soft:#ffffff08;
+  --bg:#080b10;
+  --panel:#10151d;
+  --panel2:#151c26;
+  --text:#f5f7fa;
+  --muted:#929baa;
+  --accent:#f5c542;
+  --accent2:#ffdf73;
+  --border:#27303c;
+  --header:#0a0e14e8;
+  --input:#0d1219;
+  --field:#0b0f15;
+  --soft:#ffffff08;
 }
-/* Light mode — Whitewall-inspired navy / cyan / gold palette */
+
+/* Light mode */
 body.light-mode{
   --bg:#061a31;
   --panel:#071d36;
@@ -37,166 +47,689 @@ body.light-mode{
   --field:#061a31;
   --soft:#ffffff0d;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Inter,Segoe UI,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+
 body.light-mode #launcher{
   background:
     radial-gradient(circle at 15% 15%,rgba(19,91,139,.28),transparent 35%),
     radial-gradient(circle at 85% 75%,rgba(7,67,108,.25),transparent 38%),
     linear-gradient(120deg,#06182c 0%,#082340 48%,#061a31 100%);
 }
+
 body.light-mode .hero{
   background:linear-gradient(110deg,#092b4b 0%,#071d36 52%,#16344a 100%);
 }
+
 body.light-mode .news-container{
   background:rgba(7,29,54,.9);
 }
+
 body.light-mode .card{
   background:rgba(7,29,54,.96);
 }
+
 body.light-mode .cover{
   background:linear-gradient(135deg,#0b3152,#061a31);
 }
+
 body.light-mode .tag{
   color:#9bcce5;
 }
+
 body.light-mode .search,
 body.light-mode .filter-select{
   background:#061a31;
   color:#f4f9ff;
 }
+
 body.light-mode .header-logo .mini,
 body.light-mode .game-icon{
   color:#07182a;
 }
+
 body.light-mode .hero p,
 body.light-mode .news-content{
   color:#8eb8d0;
 }
-button,input{font:inherit}
-.hidden{display:none!important}
 
-/* Login */
-#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
-background:radial-gradient(circle at 50% 0%,#26303e 0,#11161e 35%,#080b10 75%)}
-.login-card{width:100%;max-width:430px;background:rgba(16,21,29,.94);border:1px solid var(--border);
-border-radius:22px;padding:42px;box-shadow:0 30px 80px #0009;backdrop-filter:blur(14px)}
-.logo{display:flex;align-items:center;gap:12px;margin-bottom:34px}
-.logo-mark{width:48px;height:48px;border-radius:14px;background:var(--accent);color:#111;
-display:grid;place-items:center;font-size:25px;font-weight:900;transform:rotate(-5deg)}
-.logo h1{font-size:23px;letter-spacing:-.6px}.logo span{color:var(--accent)}
-.login-card h2{font-size:28px;margin-bottom:8px}.subtitle{color:var(--muted);margin-bottom:28px}
-.field{margin-bottom:17px}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:8px;color:#cbd1da}
-.field input{width:100%;padding:14px 15px;border-radius:11px;border:1px solid var(--border);
-background:var(--field);color:var(--text);outline:none}.field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px #2388e818}
-.btn-group{display:flex;gap:10px;margin-top:20px}
-.login-btn,.play-btn{border:0;border-radius:11px;background:var(--accent);color:#101010;font-weight:850;
-padding:14px 18px;cursor:pointer;transition:.2s;flex:1}.login-btn:hover,.play-btn:hover{background:var(--accent2);transform:translateY(-1px)}
-.signup-btn{background:#27303c;color:#fff}.signup-btn:hover{background:#384556;transform:translateY(-1px)}
-.error{color:#ff7272;font-size:13px;margin-top:12px;min-height:18px;text-align:center}
-
-/* Powered by badge */
-.powered-by-badge{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:24px;padding:8px 0;font-size:12px;color:var(--muted)}
-.powered-by-badge .brand{color:#cbd1da;font-weight:700;margin-left:2px}
-.powered-by-badge svg{display:block;flex-shrink:0}
-.powered-by-badge .divider{width:1px;height:12px;background:var(--border)}
-
-/* Launcher */
-#launcher{min-height:100vh}
-header{height:72px;border-bottom:1px solid var(--border);background:var(--header);backdrop-filter:blur(14px);
-display:flex;align-items:center;padding:0 5%;justify-content:space-between;position:sticky;top:0;z-index:10}
-.header-logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:20px}.header-logo b{color:var(--accent)}
-.header-logo .mini{width:34px;height:34px;border-radius:9px;background:var(--accent);color:#111;display:grid;place-items:center;font-weight:900}
-.user-area{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px}
-.profile-mini{width:34px;height:34px;border-radius:50%;object-fit:cover;border:1px solid var(--border);background:var(--panel2)}
-.header-btn{background:transparent;color:var(--text);border:1px solid var(--border);border-radius:9px;padding:8px 11px;cursor:pointer}
-.header-btn:hover{border-color:var(--accent);color:var(--accent)}
-.logout{background:transparent;color:var(--text);border:1px solid var(--border);border-radius:9px;padding:8px 12px;cursor:pointer}
-.logout:hover{border-color:#596575}
-
-main{max-width:1250px;margin:auto;padding:42px 5% 70px}
-.hero{border:1px solid var(--border);border-radius:22px;padding:40px;min-height:280px;display:flex;align-items:end;
-background:linear-gradient(110deg,#171e28 0%,#11161e 48%,#252014 100%);overflow:hidden;position:relative}
-.hero-content{position:relative;z-index:1;max-width:650px}.eyebrow{color:var(--accent);font-weight:850;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
-.hero h2{font-size:42px;letter-spacing:-1.5px;margin-bottom:12px}.hero p{color:#b6bdc8;line-height:1.6;margin-bottom:22px}
-.hero-btn{display:inline-block;padding:12px 18px;background:var(--accent);color:#111;border-radius:10px;text-decoration:none;font-weight:850;margin-right:8px;margin-bottom:8px}
-
-/* Important News Box Styles */
-.news-container {
-  background: rgba(16, 21, 29, 0.85);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--accent);
-  border-radius: 14px;
-  padding: 18px 22px;
-  margin-top: 22px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-  text-align: left;
+button,
+input{
+  font:inherit;
 }
 
-.news-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
+.hidden{
+  display:none!important;
 }
 
-.news-badge {
-  background-color: var(--accent);
-  color: #111;
-  font-weight: 850;
-  font-size: 11px;
-  padding: 3px 8px;
-  border-radius: 5px;
-  letter-spacing: 0.8px;
+/* ==========================================
+   LOGIN
+========================================== */
+
+#loginScreen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:
+    radial-gradient(circle at 50% 0%,#26303e 0,#11161e 35%,#080b10 75%);
 }
 
-.news-date {
-  color: var(--muted);
-  font-size: 12px;
+.login-card{
+  width:100%;
+  max-width:430px;
+  background:rgba(16,21,29,.94);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:42px;
+  box-shadow:0 30px 80px #0009;
+  backdrop-filter:blur(14px);
 }
 
-.news-title {
-  color: #ffffff;
-  margin: 0 0 6px 0;
-  font-size: 18px;
-  font-weight: 700;
+.logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:34px;
 }
 
-.news-content {
-  color: #b6bdc8;
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.5;
+.logo-mark{
+  width:48px;
+  height:48px;
+  border-radius:14px;
+  background:var(--accent);
+  color:#111;
+  display:grid;
+  place-items:center;
+  font-size:25px;
+  font-weight:900;
+  transform:rotate(-5deg);
 }
 
-.section-head{display:flex;align-items:end;justify-content:space-between;margin:42px 0 18px}
-.section-head h3{font-size:23px}.section-head p{color:var(--muted);font-size:13px}
-.game-tools{display:flex;gap:9px;align-items:center}
-.search,.filter-select{background:var(--input);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px 13px;outline:none}
-.search{width:220px}.filter-select{min-width:145px;cursor:pointer}
-.search:focus,.filter-select:focus{border-color:var(--accent);box-shadow:0 0 0 3px #2388e818}
+.logo h1{
+  font-size:23px;
+  letter-spacing:-.6px;
+}
 
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:17px;overflow:hidden;transition:.2s}
+.logo span{
+  color:var(--accent);
+}
 
-/* Wide game card */
+.login-card h2{
+  font-size:28px;
+  margin-bottom:8px;
+}
+
+.subtitle{
+  color:var(--muted);
+  margin-bottom:28px;
+}
+
+.field{
+  margin-bottom:17px;
+}
+
+.field label{
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:8px;
+  color:#cbd1da;
+}
+
+.field input{
+  width:100%;
+  padding:14px 15px;
+  border-radius:11px;
+  border:1px solid var(--border);
+  background:var(--field);
+  color:var(--text);
+  outline:none;
+}
+
+.field input:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px #2388e818;
+}
+
+.btn-group{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
+.login-btn,
+.play-btn{
+  border:0;
+  border-radius:11px;
+  background:var(--accent);
+  color:#101010;
+  font-weight:850;
+  padding:14px 18px;
+  cursor:pointer;
+  transition:.2s;
+  flex:1;
+}
+
+.login-btn:hover,
+.play-btn:hover{
+  background:var(--accent2);
+  transform:translateY(-1px);
+}
+
+.signup-btn{
+  background:#27303c;
+  color:#fff;
+}
+
+.signup-btn:hover{
+  background:#384556;
+  transform:translateY(-1px);
+}
+
+.error{
+  color:#ff7272;
+  font-size:13px;
+  margin-top:12px;
+  min-height:18px;
+  text-align:center;
+}
+
+/* ==========================================
+   LAUNCHER DOWN / MAINTENANCE SCREEN
+========================================== */
+
+.launcher-down-card{
+  text-align:center;
+}
+
+.launcher-down-icon{
+  width:78px;
+  height:78px;
+  margin:0 auto 24px;
+  border-radius:22px;
+  background:#b93838;
+  color:white;
+  display:grid;
+  place-items:center;
+  font-size:34px;
+  font-weight:900;
+  box-shadow:0 15px 35px #0006;
+}
+
+.launcher-down-card h2{
+  font-size:32px;
+  margin-bottom:12px;
+}
+
+.launcher-down-card .down-subtitle{
+  color:#ff8585;
+  font-size:13px;
+  font-weight:800;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+  margin-bottom:18px;
+}
+
+.launcher-down-info{
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.7;
+  margin-bottom:22px;
+}
+
+.launcher-status-box{
+  border:1px solid #5b3030;
+  background:#241416;
+  border-radius:12px;
+  padding:14px;
+  color:#d8a0a0;
+  font-size:12px;
+  line-height:1.5;
+}
+
+.launcher-status-box strong{
+  color:#ff8d8d;
+}
+
+.launcher-down-footer{
+  margin-top:24px;
+  color:#6f7784;
+  font-size:11px;
+}
+
+/* ==========================================
+   POWERED BY BADGE
+========================================== */
+
+.powered-by-badge{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  margin-top:24px;
+  padding:8px 0;
+  font-size:12px;
+  color:var(--muted);
+}
+
+.powered-by-badge .brand{
+  color:#cbd1da;
+  font-weight:700;
+  margin-left:2px;
+}
+
+.powered-by-badge svg{
+  display:block;
+  flex-shrink:0;
+}
+
+.powered-by-badge .divider{
+  width:1px;
+  height:12px;
+  background:var(--border);
+}
+
+/* ==========================================
+   LAUNCHER
+========================================== */
+
+#launcher{
+  min-height:100vh;
+}
+
+header{
+  height:72px;
+  border-bottom:1px solid var(--border);
+  background:var(--header);
+  backdrop-filter:blur(14px);
+  display:flex;
+  align-items:center;
+  padding:0 5%;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+.header-logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:900;
+  font-size:20px;
+}
+
+.header-logo b{
+  color:var(--accent);
+}
+
+.header-logo .mini{
+  width:34px;
+  height:34px;
+  border-radius:9px;
+  background:var(--accent);
+  color:#111;
+  display:grid;
+  place-items:center;
+  font-weight:900;
+}
+
+.user-area{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.profile-mini{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  object-fit:cover;
+  border:1px solid var(--border);
+  background:var(--panel2);
+}
+
+.header-btn{
+  background:transparent;
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:9px;
+  padding:8px 11px;
+  cursor:pointer;
+}
+
+.header-btn:hover{
+  border-color:var(--accent);
+  color:var(--accent);
+}
+
+.logout{
+  background:transparent;
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:9px;
+  padding:8px 12px;
+  cursor:pointer;
+}
+
+.logout:hover{
+  border-color:#596575;
+}
+
+main{
+  max-width:1250px;
+  margin:auto;
+  padding:42px 5% 70px;
+}
+
+.hero{
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:40px;
+  min-height:280px;
+  display:flex;
+  align-items:end;
+  background:linear-gradient(
+    110deg,
+    #171e28 0%,
+    #11161e 48%,
+    #252014 100%
+  );
+  overflow:hidden;
+  position:relative;
+}
+
+.hero-content{
+  position:relative;
+  z-index:1;
+  max-width:650px;
+}
+
+.eyebrow{
+  color:var(--accent);
+  font-weight:850;
+  font-size:12px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+
+.hero h2{
+  font-size:42px;
+  letter-spacing:-1.5px;
+  margin-bottom:12px;
+}
+
+.hero p{
+  color:#b6bdc8;
+  line-height:1.6;
+  margin-bottom:22px;
+}
+
+.hero-btn{
+  display:inline-block;
+  padding:12px 18px;
+  background:var(--accent);
+  color:#111;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:850;
+  margin-right:8px;
+  margin-bottom:8px;
+}
+
+/* ==========================================
+   IMPORTANT NEWS
+========================================== */
+
+.news-container{
+  background:rgba(16,21,29,.85);
+  border:1px solid var(--border);
+  border-left:4px solid var(--accent);
+  border-radius:14px;
+  padding:18px 22px;
+  margin-top:22px;
+  backdrop-filter:blur(10px);
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+  text-align:left;
+}
+
+.news-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:8px;
+}
+
+.news-badge{
+  background-color:var(--accent);
+  color:#111;
+  font-weight:850;
+  font-size:11px;
+  padding:3px 8px;
+  border-radius:5px;
+  letter-spacing:.8px;
+}
+
+.news-date{
+  color:var(--muted);
+  font-size:12px;
+}
+
+.news-title{
+  color:#fff;
+  margin:0 0 6px 0;
+  font-size:18px;
+  font-weight:700;
+}
+
+.news-content{
+  color:#b6bdc8;
+  margin:0;
+  font-size:13px;
+  line-height:1.5;
+}
+
+/* ==========================================
+   GAME SECTION
+========================================== */
+
+.section-head{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  margin:42px 0 18px;
+}
+
+.section-head h3{
+  font-size:23px;
+}
+
+.section-head p{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.game-tools{
+  display:flex;
+  gap:9px;
+  align-items:center;
+}
+
+.search,
+.filter-select{
+  background:var(--input);
+  border:1px solid var(--border);
+  color:var(--text);
+  border-radius:10px;
+  padding:10px 13px;
+  outline:none;
+}
+
+.search{
+  width:220px;
+}
+
+.filter-select{
+  min-width:145px;
+  cursor:pointer;
+}
+
+.search:focus,
+.filter-select:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px #2388e818;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+}
+
+.card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:17px;
+  overflow:hidden;
+  transition:.2s;
+}
+
 .card.wide-card{
   grid-column:span 2;
 }
 
-.card:hover{transform:translateY(-3px);border-color:#465160;box-shadow:0 14px 35px #0004}
-.cover{height:165px;background:linear-gradient(135deg,#242c37,#11161d);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.cover img{width:100%;height:100%;object-fit:cover;display:block}
-.game-icon{width:90px;height:90px;border-radius:22px;background:var(--accent);color:#111;display:grid;place-items:center;
-font-size:23px;font-weight:950;box-shadow:0 12px 25px #0005;transform:rotate(-4deg)}
-.cover .badge{position:absolute;top:13px;left:13px;background:#080b10dd;color:#fff;padding:6px 9px;border-radius:7px;font-size:10px;font-weight:800}
-.card-body{padding:18px}.card h4{font-size:21px;margin-bottom:8px}.desc{font-size:13px;color:var(--muted);min-height:38px;line-height:1.45}
-.meta{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0 17px}.tag{font-size:11px;color:#cbd2dc;background:#ffffff08;border:1px solid var(--border);padding:6px 8px;border-radius:7px}
-.card-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px}.release{font-size:11px;color:#7f8997}.play-btn{padding:9px 14px;font-size:12px}
-.coming{opacity:.82}.coming .game-icon{background:#29313c;color:#8d97a5;box-shadow:none}.coming .play-btn{background:#252c36;color:#929baa;cursor:not-allowed}
+.card:hover{
+  transform:translateY(-3px);
+  border-color:#465160;
+  box-shadow:0 14px 35px #0004;
+}
 
-/* IN PRODUCTION BUTTON */
+.cover{
+  height:165px;
+  background:linear-gradient(135deg,#242c37,#11161d);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
+}
+
+.cover img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.game-icon{
+  width:90px;
+  height:90px;
+  border-radius:22px;
+  background:var(--accent);
+  color:#111;
+  display:grid;
+  place-items:center;
+  font-size:23px;
+  font-weight:950;
+  box-shadow:0 12px 25px #0005;
+  transform:rotate(-4deg);
+}
+
+.cover .badge{
+  position:absolute;
+  top:13px;
+  left:13px;
+  background:#080b10dd;
+  color:#fff;
+  padding:6px 9px;
+  border-radius:7px;
+  font-size:10px;
+  font-weight:800;
+}
+
+.card-body{
+  padding:18px;
+}
+
+.card h4{
+  font-size:21px;
+  margin-bottom:8px;
+}
+
+.desc{
+  font-size:13px;
+  color:var(--muted);
+  min-height:38px;
+  line-height:1.45;
+}
+
+.meta{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin:14px 0 17px;
+}
+
+.tag{
+  font-size:11px;
+  color:#cbd2dc;
+  background:#ffffff08;
+  border:1px solid var(--border);
+  padding:6px 8px;
+  border-radius:7px;
+}
+
+.card-bottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.release{
+  font-size:11px;
+  color:#7f8997;
+}
+
+.play-btn{
+  padding:9px 14px;
+  font-size:12px;
+}
+
+.coming{
+  opacity:.82;
+}
+
+.coming .game-icon{
+  background:#29313c;
+  color:#8d97a5;
+  box-shadow:none;
+}
+
+.coming .play-btn{
+  background:#252c36;
+  color:#929baa;
+  cursor:not-allowed;
+}
+
+/* Production Button */
+
 .production-btn{
   background:#8fd8ff!important;
   color:#08202d!important;
@@ -207,554 +740,2240 @@ font-size:23px;font-weight:950;box-shadow:0 12px 25px #0005;transform:rotate(-4d
   background:#b9e8ff!important;
 }
 
-/* Settings modal */
-.settings-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(7px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
-.settings-modal{width:min(680px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--border);border-radius:20px;box-shadow:0 30px 90px #0008;padding:26px}
-.settings-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
-.settings-top h2{font-size:25px}.close-settings{border:1px solid var(--border);background:transparent;color:var(--text);border-radius:9px;width:36px;height:36px;cursor:pointer;font-size:20px}
-.settings-tabs{display:flex;gap:8px;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:20px}
-.settings-tab{border:0;background:transparent;color:var(--muted);padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:700}
-.settings-tab.active,.settings-tab:hover{background:var(--soft);color:var(--accent)}
-.settings-section{display:none}.settings-section.active{display:block}
-.setting-row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 0;border-bottom:1px solid var(--border)}
-.setting-row:last-child{border-bottom:0}.setting-info strong{display:block;margin-bottom:4px}.setting-info span{font-size:12px;color:var(--muted)}
-.switch{position:relative;width:48px;height:26px;flex:none}.switch input{opacity:0;width:0;height:0}
-.slider{position:absolute;inset:0;background:#4a5563;border-radius:99px;cursor:pointer;transition:.2s}.slider:before{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;background:white;border-radius:50%;transition:.2s}
-.switch input:checked + .slider{background:var(--accent)}.switch input:checked + .slider:before{transform:translateX(22px)}
-.account-avatar{width:82px;height:82px;border-radius:50%;object-fit:cover;background:var(--panel2);border:2px solid var(--border)}
-.avatar-row{display:flex;align-items:center;gap:18px;margin-bottom:22px}.settings-input{width:100%;padding:12px 13px;border:1px solid var(--border);border-radius:10px;background:var(--field);color:var(--text);outline:none}
-.settings-input:focus{border-color:var(--accent)}.save-btn{border:0;border-radius:10px;background:var(--accent);color:#111;padding:11px 15px;font-weight:850;cursor:pointer;margin-top:14px}
-.danger-btn{background:#b93838;color:white}.settings-message{font-size:12px;color:#52d47b;min-height:18px;margin-top:10px}
-footer{text-align:center;color:var(--muted);font-size:12px;margin-top:55px}
+/* ==========================================
+   SETTINGS MODAL
+========================================== */
 
-@media(max-width:850px){.grid{grid-template-columns:1fr 1fr}.hero h2{font-size:34px}}
+.settings-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(7px);
+  z-index:100;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.settings-modal{
+  width:min(680px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:20px;
+  box-shadow:0 30px 90px #0008;
+  padding:26px;
+}
+
+.settings-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:22px;
+}
+
+.settings-top h2{
+  font-size:25px;
+}
+
+.close-settings{
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--text);
+  border-radius:9px;
+  width:36px;
+  height:36px;
+  cursor:pointer;
+  font-size:20px;
+}
+
+.settings-tabs{
+  display:flex;
+  gap:8px;
+  border-bottom:1px solid var(--border);
+  padding-bottom:12px;
+  margin-bottom:20px;
+}
+
+.settings-tab{
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  padding:9px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:700;
+}
+
+.settings-tab.active,
+.settings-tab:hover{
+  background:var(--soft);
+  color:var(--accent);
+}
+
+.settings-section{
+  display:none;
+}
+
+.settings-section.active{
+  display:block;
+}
+
+.setting-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  padding:16px 0;
+  border-bottom:1px solid var(--border);
+}
+
+.setting-row:last-child{
+  border-bottom:0;
+}
+
+.setting-info strong{
+  display:block;
+  margin-bottom:4px;
+}
+
+.setting-info span{
+  font-size:12px;
+  color:var(--muted);
+}
+
+.switch{
+  position:relative;
+  width:48px;
+  height:26px;
+  flex:none;
+}
+
+.switch input{
+  opacity:0;
+  width:0;
+  height:0;
+}
+
+.slider{
+  position:absolute;
+  inset:0;
+  background:#4a5563;
+  border-radius:99px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.slider:before{
+  content:"";
+  position:absolute;
+  width:20px;
+  height:20px;
+  left:3px;
+  top:3px;
+  background:white;
+  border-radius:50%;
+  transition:.2s;
+}
+
+.switch input:checked + .slider{
+  background:var(--accent);
+}
+
+.switch input:checked + .slider:before{
+  transform:translateX(22px);
+}
+
+.account-avatar{
+  width:82px;
+  height:82px;
+  border-radius:50%;
+  object-fit:cover;
+  background:var(--panel2);
+  border:2px solid var(--border);
+}
+
+.avatar-row{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  margin-bottom:22px;
+}
+
+.settings-input{
+  width:100%;
+  padding:12px 13px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--field);
+  color:var(--text);
+  outline:none;
+}
+
+.settings-input:focus{
+  border-color:var(--accent);
+}
+
+.save-btn{
+  border:0;
+  border-radius:10px;
+  background:var(--accent);
+  color:#111;
+  padding:11px 15px;
+  font-weight:850;
+  cursor:pointer;
+  margin-top:14px;
+}
+
+.danger-btn{
+  background:#b93838;
+  color:white;
+}
+
+.settings-message{
+  font-size:12px;
+  color:#52d47b;
+  min-height:18px;
+  margin-top:10px;
+}
+
+footer{
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:55px;
+}
+
+@media(max-width:850px){
+  .grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .hero h2{
+    font-size:34px;
+  }
+}
+
 @media(max-width:600px){
-  header{padding:0 18px}
-  .user-area span{display:none}
-  main{padding:25px 18px 50px}
-  .hero{padding:27px;min-height:300px}
-  .hero h2{font-size:30px}
-  .grid{grid-template-columns:1fr}
-  .card.wide-card{grid-column:auto}
-  .section-head{align-items:stretch;gap:14px;flex-direction:column}
-  .game-tools{width:100%;flex-direction:column}.search,.filter-select{width:100%}
-  .login-card{padding:30px 24px}
+  header{
+    padding:0 18px;
+  }
+
+  .user-area span{
+    display:none;
+  }
+
+  main{
+    padding:25px 18px 50px;
+  }
+
+  .hero{
+    padding:27px;
+    min-height:300px;
+  }
+
+  .hero h2{
+    font-size:30px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .card.wide-card{
+    grid-column:auto;
+  }
+
+  .section-head{
+    align-items:stretch;
+    gap:14px;
+    flex-direction:column;
+  }
+
+  .game-tools{
+    width:100%;
+    flex-direction:column;
+  }
+
+  .search,
+  .filter-select{
+    width:100%;
+  }
+
+  .login-card{
+    padding:30px 24px;
+  }
 }
 </style>
 </head>
+
 <body>
 
+<!-- =========================================================
+     LOGIN SCREEN
+========================================================= -->
+
 <section id="loginScreen">
-  <div class="login-card">
+
+  <!-- NORMAL LOGIN -->
+  <div class="login-card" id="normalLoginCard">
+
     <div class="logo">
       <div class="logo-mark">KS</div>
       <h1>Kalahari <span>Studios</span></h1>
     </div>
+
     <h2>Welcome.</h2>
-    <p class="subtitle">Sign in or create an account to access games.</p>
+    <p class="subtitle">
+      Sign in or create an account to access games.
+    </p>
 
     <form id="loginForm">
+
       <div class="field">
-        <label for="displayName">DISPLAY USERNAME (FOR SIGN UP)</label>
-        <input id="displayName" placeholder="Choose a username">
+        <label for="displayName">
+          DISPLAY USERNAME (FOR SIGN UP)
+        </label>
+        <input
+          id="displayName"
+          placeholder="Choose a username"
+        >
       </div>
+
       <div class="field">
-        <label for="username">EMAIL ADDRESS</label>
-        <input id="username" type="email" autocomplete="email" placeholder="Enter your email" required>
+        <label for="username">
+          EMAIL ADDRESS
+        </label>
+        <input
+          id="username"
+          type="email"
+          autocomplete="email"
+          placeholder="Enter your email"
+          required
+        >
       </div>
+
       <div class="field">
-        <label for="password">PASSWORD</label>
-        <input id="password" type="password" autocomplete="current-password" placeholder="Enter your password" required>
+        <label for="password">
+          PASSWORD
+        </label>
+        <input
+          id="password"
+          type="password"
+          autocomplete="current-password"
+          placeholder="Enter your password"
+          required
+        >
       </div>
+
       <div class="btn-group">
-        <button class="login-btn" type="button" id="signInBtn">SIGN IN</button>
-        <button class="login-btn signup-btn" type="button" id="signUpBtn">SIGN UP</button>
+        <button
+          class="login-btn"
+          type="button"
+          id="signInBtn"
+        >
+          SIGN IN
+        </button>
+
+        <button
+          class="login-btn signup-btn"
+          type="button"
+          id="signUpBtn"
+        >
+          SIGN UP
+        </button>
       </div>
+
       <div class="error" id="error"></div>
+
     </form>
 
-    <div class="powered-by-badge" role="img" aria-label="Powered by Google Firebase">
+    <div
+      class="powered-by-badge"
+      role="img"
+      aria-label="Powered by Google Firebase"
+    >
+
       <span class="label">Powered by</span>
 
       <!-- Firebase flame logo -->
-      <svg width="14" height="18" viewBox="0 0 256 351" xmlns="http://www.w3.org/2000/svg">
-        <path fill="#FFA000" d="M0 282.998l1.94-2.995L88.44 116.28l.176-1.679L54.11 51.049C48.417 40.25 32.5 41.632 28.75 53.221z"/>
-        <path fill="#FFA000" d="M135.005 138.607l27.42-28.06-27.44-52.288c-5.101-9.71-19.34-9.723-24.45 0L93.5 106.484l1.68 1.72z"/>
-        <path fill="#FFCA28" d="M137.87 213.865l66.16-36.6-46.66-88.605-46.386 47.44z"/>
-        <path fill="#FFA000" d="M0 283l137.87-69.133-26.886-51.208-46.39 47.44z"/>
-        <path fill="#F57C00" d="M143.53 350.15l112.4-63.11-31.75-198.44a12.53 12.53 0 0 0-20.9-6.86L0 283l118.61 65.71a26.9 26.9 0 0 0 24.92 1.44"/>
-        <path fill="#FFCA28" d="M203.87 177.14L204 176.7l-31.68-197.4C168.85-8.85 155.99-9 149.61 3.36L0 283z"/>
+      <svg
+        width="14"
+        height="18"
+        viewBox="0 0 256 351"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          fill="#FFA000"
+          d="M0 282.998l1.94-2.995L88.44 116.28l.176-1.679L54.11 51.049C48.417 40.25 32.5 41.632 28.75 53.221z"
+        />
+
+        <path
+          fill="#FFA000"
+          d="M135.005 138.607l27.42-28.06-27.44-52.288c-5.101-9.71-19.34-9.723-24.45 0L93.5 106.484l1.68 1.72z"
+        />
+
+        <path
+          fill="#FFCA28"
+          d="M137.87 213.865l66.16-36.6-46.66-88.605-46.386 47.44z"
+        />
+
+        <path
+          fill="#FFA000"
+          d="M0 283l137.87-69.133-26.886-51.208-46.39 47.44z"
+        />
+
+        <path
+          fill="#F57C00"
+          d="M143.53 350.15l112.4-63.11-31.75-198.44a12.53 12.53 0 0 0-20.9-6.86L0 283l118.61 65.71a26.9 26.9 0 0 0 24.92 1.44"
+        />
+
+        <path
+          fill="#FFCA28"
+          d="M203.87 177.14L204 176.7l-31.68-197.4C168.85-8.85 155.99-9 149.61 3.36L0 283z"
+        />
       </svg>
 
       <span class="divider"></span>
 
-      <!-- Google "G" logo -->
-      <svg width="16" height="16" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-        <path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/>
-        <path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/>
-        <path fill="#FBBC05" d="M11.69 28.18A13.98 13.98 0 0 1 10.94 24c0-1.45.25-2.86.7-4.18v-5.7H4.34A21.99 21.99 0 0 0 2 24c0 3.55.85 6.91 2.34 9.88z"/>
-        <path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/>
+      <!-- Google G logo -->
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 48 48"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          fill="#4285F4"
+          d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"
+        />
+
+        <path
+          fill="#34A853"
+          d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"
+        />
+
+        <path
+          fill="#FBBC05"
+          d="M11.69 28.18A13.98 13.98 0 0 1 10.94 24c0-1.45.25-2.86.7-4.18v-5.7H4.34A21.99 21.99 0 0 0 2 24c0 3.55.85 6.91 2.34 9.88z"
+        />
+
+        <path
+          fill="#EA4335"
+          d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"
+        />
       </svg>
 
       <span class="brand">Google Firebase</span>
+
     </div>
 
   </div>
+
+
+  <!-- =====================================================
+       LAUNCHER DOWN SCREEN
+  ====================================================== -->
+
+  <div
+    class="login-card launcher-down-card hidden"
+    id="launcherDownCard"
+  >
+
+    <div class="logo">
+      <div class="logo-mark">KS</div>
+      <h1>Kalahari <span>Studios</span></h1>
+    </div>
+
+    <div class="launcher-down-icon">
+      !
+    </div>
+
+    <div class="down-subtitle">
+      Launcher Offline
+    </div>
+
+    <h2>Launcher Down</h2>
+
+    <p class="launcher-down-info" id="launcherDownInfo">
+      The Kalahari Studios Launcher is currently unavailable.
+      Please check back later.
+    </p>
+
+    <div class="launcher-status-box">
+      <strong>Status:</strong>
+      <span id="launcherDownStatus">
+        The launcher is temporarily offline for maintenance.
+      </span>
+    </div>
+
+    <div class="launcher-down-footer">
+      Kalahari Studios Launcher
+    </div>
+
+  </div>
+
 </section>
+
+
+<!-- =========================================================
+     MAIN LAUNCHER
+========================================================= -->
 
 <section id="launcher" class="hidden">
+
 <header>
-  <div class="header-logo"><div class="mini">KS</div> Kalahari <b>Studios</b></div>
+
+  <div class="header-logo">
+    <div class="mini">KS</div>
+    Kalahari <b>Studios</b>
+  </div>
+
   <div class="user-area">
-      <img id="headerAvatar" class="profile-mini" src="" alt="Profile">
-      <span>Signed in as <b id="userDisplay">User</b></span>
-      <button class="header-btn" id="settingsBtn" title="Settings">⚙ Settings</button>
-      <button class="logout" id="logout">Log out</button>
-    </div>
+
+    <img
+      id="headerAvatar"
+      class="profile-mini"
+      src=""
+      alt="Profile"
+    >
+
+    <span>
+      Signed in as
+      <b id="userDisplay">User</b>
+    </span>
+
+    <button
+      class="header-btn"
+      id="settingsBtn"
+      title="Settings"
+    >
+      ⚙ Settings
+    </button>
+
+    <button
+      class="logout"
+      id="logout"
+    >
+      Log out
+    </button>
+
+  </div>
+
 </header>
 
-<!-- Settings -->
-<div id="settingsOverlay" class="settings-overlay hidden">
-  <div class="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+
+<!-- =========================================================
+     SETTINGS
+========================================================= -->
+
+<div
+  id="settingsOverlay"
+  class="settings-overlay hidden"
+>
+
+  <div
+    class="settings-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="settingsTitle"
+  >
+
     <div class="settings-top">
-      <h2 id="settingsTitle">Settings</h2>
-      <button class="close-settings" id="closeSettings" aria-label="Close settings">×</button>
+
+      <h2 id="settingsTitle">
+        Settings
+      </h2>
+
+      <button
+        class="close-settings"
+        id="closeSettings"
+        aria-label="Close settings"
+      >
+        ×
+      </button>
+
     </div>
+
 
     <div class="settings-tabs">
-      <button class="settings-tab active" data-tab="appearanceTab">Appearance</button>
-      <button class="settings-tab" data-tab="accountTab">Account</button>
-      <button class="settings-tab" data-tab="launcherTab">Launcher</button>
+
+      <button
+        class="settings-tab active"
+        data-tab="appearanceTab"
+      >
+        Appearance
+      </button>
+
+      <button
+        class="settings-tab"
+        data-tab="accountTab"
+      >
+        Account
+      </button>
+
+      <button
+        class="settings-tab"
+        data-tab="launcherTab"
+      >
+        Launcher
+      </button>
+
     </div>
 
-    <section class="settings-section active" id="appearanceTab">
+
+    <section
+      class="settings-section active"
+      id="appearanceTab"
+    >
+
       <div class="setting-row">
-        <div class="setting-info"><strong>Dark mode</strong><span>Use the current dark Kalahari Studios theme. Turn it off for the blue-and-white light theme.</span></div>
-        <label class="switch"><input type="checkbox" id="darkModeToggle"><span class="slider"></span></label>
+
+        <div class="setting-info">
+
+          <strong>Dark mode</strong>
+
+          <span>
+            Use the current dark Kalahari Studios theme.
+            Turn it off for the blue-and-white light theme.
+          </span>
+
+        </div>
+
+        <label class="switch">
+
+          <input
+            type="checkbox"
+            id="darkModeToggle"
+          >
+
+          <span class="slider"></span>
+
+        </label>
+
       </div>
+
     </section>
 
-    <section class="settings-section" id="accountTab">
+
+    <section
+      class="settings-section"
+      id="accountTab"
+    >
+
       <div class="avatar-row">
-        <img id="accountAvatar" class="account-avatar" src="" alt="Profile icon">
-        <div><strong>Profile icon</strong><p style="color:var(--muted);font-size:12px;margin-top:5px">Use an image URL for your profile icon.</p></div>
+
+        <img
+          id="accountAvatar"
+          class="account-avatar"
+          src=""
+          alt="Profile icon"
+        >
+
+        <div>
+
+          <strong>Profile icon</strong>
+
+          <p
+            style="
+              color:var(--muted);
+              font-size:12px;
+              margin-top:5px
+            "
+          >
+            Use an image URL for your profile icon.
+          </p>
+
+        </div>
+
       </div>
-      <div class="field"><label>USERNAME</label><input class="settings-input" id="accountUsername" placeholder="Username"></div>
-      <div class="field"><label>EMAIL ADDRESS</label><input class="settings-input" id="accountEmail" type="email" placeholder="Email"></div>
-      <div class="field"><label>NEW PASSWORD</label><input class="settings-input" id="accountPassword" type="password" placeholder="Leave blank to keep current password"></div>
-      <div class="field"><label>PROFILE ICON URL</label><input class="settings-input" id="accountAvatarUrl" placeholder="https://example.com/profile.png"></div>
-      <button class="save-btn" id="saveAccount">Save account changes</button>
-      <div class="settings-message" id="accountMessage"></div>
+
+
+      <div class="field">
+
+        <label>USERNAME</label>
+
+        <input
+          class="settings-input"
+          id="accountUsername"
+          placeholder="Username"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>EMAIL ADDRESS</label>
+
+        <input
+          class="settings-input"
+          id="accountEmail"
+          type="email"
+          placeholder="Email"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>NEW PASSWORD</label>
+
+        <input
+          class="settings-input"
+          id="accountPassword"
+          type="password"
+          placeholder="Leave blank to keep current password"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>PROFILE ICON URL</label>
+
+        <input
+          class="settings-input"
+          id="accountAvatarUrl"
+          placeholder="https://example.com/profile.png"
+        >
+
+      </div>
+
+
+      <button
+        class="save-btn"
+        id="saveAccount"
+      >
+        Save account changes
+      </button>
+
+      <div
+        class="settings-message"
+        id="accountMessage"
+      ></div>
+
     </section>
 
-    <section class="settings-section" id="launcherTab">
+
+    <section
+      class="settings-section"
+      id="launcherTab"
+    >
+
       <div class="setting-row">
-        <div class="setting-info"><strong>Remember theme</strong><span>Your light/dark choice is saved on this device.</span></div>
-        <span style="color:var(--accent);font-size:12px;font-weight:800">ENABLED</span>
+
+        <div class="setting-info">
+
+          <strong>Remember theme</strong>
+
+          <span>
+            Your light/dark choice is saved on this device.
+          </span>
+
+        </div>
+
+        <span
+          style="
+            color:var(--accent);
+            font-size:12px;
+            font-weight:800
+          "
+        >
+          ENABLED
+        </span>
+
       </div>
+
+
       <div class="setting-row">
-        <div class="setting-info"><strong>Reset launcher preferences</strong><span>Reset theme and game filters back to their defaults.</span></div>
-        <button class="save-btn danger-btn" id="resetPrefs">Reset</button>
+
+        <div class="setting-info">
+
+          <strong>
+            Reset launcher preferences
+          </strong>
+
+          <span>
+            Reset theme and game filters back to their defaults.
+          </span>
+
+        </div>
+
+        <button
+          class="save-btn danger-btn"
+          id="resetPrefs"
+        >
+          Reset
+        </button>
+
       </div>
+
     </section>
+
   </div>
+
 </div>
 
-<main>
-  <section class="hero">
-    <div class="hero-content">
-      <div class="eyebrow">Kalahari Studios • Game Launcher</div>
-      <h2>Your games. One place.</h2>
-      <p>Browse the entire Kalahari Games lineup, check upcoming releases and launch your games directly in browser.</p>
-      <a href="https://BubblesTheGoat225.github.io/kalahari-launcher/news.html" class="hero-btn">Recent Announcements</a>
-      <a href="https://BubblesTheGoat225.github.io/kalahari-launcher/taxi4placeholder.html" class="hero-btn">Check out the Upcoming Taxi Game</a>
-        <a href="https://BubblesTheGoat225.github.io/kalahari-launcher/message.html" class="hero-btn">Kalahari Messages !UNDER CONSTRUCTION!</a>
 
-      <!-- Important News Section -->
-      <div id="news-box" class="news-container hidden">
-        <div class="news-header">
-          <span class="news-badge">IMPORTANT ANNOUNCEMENT</span>
-          <span class="news-date" id="news-date">August 22, 2026</span>
-        </div>
-        <h3 class="news-title" id="news-title">Taxi 3 - Mobile Edition Now Available.</h3>
-        <p class="news-content" id="news-info">
-          Taxi 3 has officially released on mobile devices. You can now access your open world career directly on iOS and Android platforms. The Expansion has not been ported at this time.
-        </p>
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main>
+
+<section class="hero">
+
+  <div class="hero-content">
+
+    <div class="eyebrow">
+      Kalahari Studios • Game Launcher
+    </div>
+
+    <h2>
+      Your games. One place.
+    </h2>
+
+    <p>
+      Browse the entire Kalahari Games lineup,
+      check upcoming releases and launch your
+      games directly in browser.
+    </p>
+
+    <a
+      href="https://BubblesTheGoat225.github.io/kalahari-launcher/news.html"
+      class="hero-btn"
+    >
+      Recent Announcements
+    </a>
+
+    <a
+      href="https://BubblesTheGoat225.github.io/kalahari-launcher/taxi4placeholder.html"
+      class="hero-btn"
+    >
+      Check out the Upcoming Taxi Game
+    </a>
+
+    <a
+      href="https://BubblesTheGoat225.github.io/kalahari-launcher/message.html"
+      class="hero-btn"
+    >
+      Kalahari Messages !UNDER CONSTRUCTION!
+    </a>
+
+
+    <!-- Important News -->
+
+    <div
+      id="news-box"
+      class="news-container hidden"
+    >
+
+      <div class="news-header">
+
+        <span class="news-badge">
+          IMPORTANT ANNOUNCEMENT
+        </span>
+
+        <span
+          class="news-date"
+          id="news-date"
+        >
+          August 22, 2026
+        </span>
+
       </div>
 
-    </div>
-  </section>
+      <h3
+        class="news-title"
+        id="news-title"
+      >
+        Taxi 3 - Mobile Edition Now Available.
+      </h3>
 
-  <div class="section-head" id="games">
-    <div><h3>Your Games</h3><p>Available Games</p></div>
-    <div class="game-tools">
-      <input class="search" id="search" placeholder="Search games...">
-      <select class="filter-select" id="gameFilter" aria-label="Filter games">
-        <option value="all">All Games</option>
-        <option value="taxi">Taxi</option>
-        <option value="other">Other</option>
-      </select>
+      <p
+        class="news-content"
+        id="news-info"
+      >
+        Taxi 3 has officially released on mobile devices.
+      </p>
+
     </div>
+
   </div>
 
-  <div class="grid" id="gameGrid"></div>
-
-  <footer>© 2026 Kalahari Studios • Launcher v2.38</footer>
-</main>
 </section>
 
+
+<!-- Games -->
+
+<div
+  class="section-head"
+  id="games"
+>
+
+  <div>
+
+    <h3>
+      Your Games
+    </h3>
+
+    <p>
+      Available Games
+    </p>
+
+  </div>
+
+
+  <div class="game-tools">
+
+    <input
+      class="search"
+      id="search"
+      placeholder="Search games..."
+    >
+
+    <select
+      class="filter-select"
+      id="gameFilter"
+      aria-label="Filter games"
+    >
+
+      <option value="all">
+        All Games
+      </option>
+
+      <option value="taxi">
+        Taxi
+      </option>
+
+      <option value="other">
+        Other
+      </option>
+
+    </select>
+
+  </div>
+
+</div>
+
+
+<div
+  class="grid"
+  id="gameGrid"
+></div>
+
+
+<footer>
+  © 2026 Kalahari Studios • Launcher v2.38
+</footer>
+
+</main>
+
+</section>
+
+
 <script>
-// Firebase Configuration
+
+/* =========================================================
+   KALAHARI STUDIOS LAUNCHER CONTROL
+=========================================================
+
+   THIS IS THE ONLY PART YOU NEED TO CHANGE.
+
+   ON  = Launcher works normally.
+   OFF = Launcher Down / Maintenance Mode.
+
+   No Firestore is used for this feature.
+
+========================================================= */
+
+const LAUNCHER_STATUS = "OFF";
+
+
+/* =========================================================
+   MAINTENANCE MODE INFORMATION
+========================================================= */
+
+const LAUNCHER_DOWN_TITLE = "Launcher Down";
+
+const LAUNCHER_DOWN_INFO =
+  "The Kalahari Studios Launcher is currently unavailable. This is part of a planned outage. Please check back later.";
+
+const LAUNCHER_DOWN_STATUS =
+  "The launcher is temporarily offline for maintenance. Please try again later.";
+
+
+/* =========================================================
+   FIREBASE CONFIGURATION
+========================================================= */
+
 const firebaseConfig = {
-  apiKey: "AIzaSyBUoUrDa7KVn9ab2NawytUIDZS-u6tSpWw",
-  authDomain: "kalahari-launcher.firebaseapp.com",
-  projectId: "kalahari-launcher",
-  storageBucket: "kalahari-launcher.firebasestorage.app",
-  messagingSenderId: "190018843174",
-  appId: "1:190018843174:web:9be974026ea41ea9e92ce7"
+
+  apiKey:
+    "AIzaSyBUoUrDa7KVn9ab2NawytUIDZS-u6tSpWw",
+
+  authDomain:
+    "kalahari-launcher.firebaseapp.com",
+
+  projectId:
+    "kalahari-launcher",
+
+  storageBucket:
+    "kalahari-launcher.firebasestorage.app",
+
+  messagingSenderId:
+    "190018843174",
+
+  appId:
+    "1:190018843174:web:9be974026ea41ea9e92ce7"
+
 };
 
-// Initialize Firebase Auth
+
+/* =========================================================
+   INITIALIZE FIREBASE
+========================================================= */
+
 firebase.initializeApp(firebaseConfig);
+
 const auth = firebase.auth();
 
-// ==========================================
-// NEWS BOX CONTROL: Type "ANN" to show, "OFF" to hide
-// ==========================================
+
+/* =========================================================
+   GET MAIN LOGIN / LAUNCHER ELEMENTS
+========================================================= */
+
+const loginScreen =
+  document.getElementById("loginScreen");
+
+const launcher =
+  document.getElementById("launcher");
+
+const normalLoginCard =
+  document.getElementById("normalLoginCard");
+
+const launcherDownCard =
+  document.getElementById("launcherDownCard");
+
+
+/* =========================================================
+   LAUNCHER DOWN MODE
+========================================================= */
+
+function applyLauncherStatus(){
+
+  const launcherIsDown =
+    LAUNCHER_STATUS.toUpperCase() === "OFF";
+
+
+  if(launcherIsDown){
+
+    /*
+      Hide the normal login screen.
+      This means users cannot sign in through the UI.
+    */
+
+    normalLoginCard.classList.add("hidden");
+
+
+    /*
+      Show the Launcher Down screen.
+    */
+
+    launcherDownCard.classList.remove("hidden");
+
+
+    /*
+      Make sure the actual launcher is hidden.
+    */
+
+    launcher.classList.add("hidden");
+
+
+    /*
+      Update maintenance information.
+    */
+
+    document.getElementById(
+      "launcherDownInfo"
+    ).textContent = LAUNCHER_DOWN_INFO;
+
+
+    document.getElementById(
+      "launcherDownStatus"
+    ).textContent = LAUNCHER_DOWN_STATUS;
+
+
+    document.title =
+      "Launcher Down • Kalahari Studios";
+
+  }else{
+
+    /*
+      Normal launcher mode.
+    */
+
+    normalLoginCard.classList.remove("hidden");
+
+    launcherDownCard.classList.add("hidden");
+
+    document.title =
+      "Kalahari Studios Launcher";
+
+  }
+
+}
+
+
+/*
+  Run immediately.
+*/
+
+applyLauncherStatus();
+
+
+/* =========================================================
+   IMPORTANT NEWS CONTROL
+========================================================= */
+
 const IMPORTANT_NEWS = "ANN";
 
-// News details
-const NEWS_DATE = "August 24, 2026";
-const NEWS_TITLE = "Major Planned Outage!";
-const NEWS_INFO = "A major planned outage will take place Monday 24 August. It is planned to last until 3:30PM. Sorry for the Inconvenience";
+const NEWS_DATE =
+  "August 24, 2026";
+
+const NEWS_TITLE =
+  "Major Planned Outage!";
+
+const NEWS_INFO =
+  "A major planned outage will take place Monday 24 August. It is planned to last until 3:30PM. Sorry for the Inconvenience.";
+
+
+/* =========================================================
+   GAME LIST
+========================================================= */
 
 const games = [
+
   {
     category:"taxi",
-    name:"TAXI", icon:"TAXI", cover:"taxi1-cover.jpg", genre:"Driving", date:"March 2025",
-    description:"Jump behind the wheel and build your taxi career.",
-    status:"AVAILABLE", url: "https://BubblesTheGoat225.github.io/kalahari-launcher/taxi.html"
+    name:"TAXI",
+    icon:"TAXI",
+    cover:"taxi1-cover.jpg",
+    genre:"Driving",
+    date:"March 2025",
+    description:
+      "Jump behind the wheel and build your taxi career.",
+    status:"AVAILABLE",
+    url:
+      "https://BubblesTheGoat225.github.io/kalahari-launcher/taxi.html"
   },
+
   {
     category:"taxi",
-    name:"TAXI 3", icon:"TAXI 3", cover:"taxi3-cover.jpg", genre:"Driving • Open World", date:"August 21, 2026",
-    description:"The next chapter of the TAXI series. Bigger roads. Bigger jobs.",
-    status:"AVAILABLE", url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3.html"
+    name:"TAXI 3",
+    icon:"TAXI 3",
+    cover:"taxi3-cover.jpg",
+    genre:"Driving • Open World",
+    date:"August 21, 2026",
+    description:
+      "The next chapter of the TAXI series. Bigger roads. Bigger jobs.",
+    status:"AVAILABLE",
+    url:
+      "https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3.html"
   },
+
   {
     category:"taxi",
-    name:"TAXI 3 - Expansion 1", icon:"Ex1", cover:"taxi3ex1-cover.jpg", genre:"Driving • Country Exploration • Expansion", date:"August 22, 2026",
-    description:"Take fares beyond the city and explore the countryside.",
-    status:"AVAILABLE", url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3ex.html"
+    name:"TAXI 3 - Expansion 1",
+    icon:"Ex1",
+    cover:"taxi3ex1-cover.jpg",
+    genre:
+      "Driving • Country Exploration • Expansion",
+    date:"August 22, 2026",
+    description:
+      "Take fares beyond the city and explore the countryside.",
+    status:"AVAILABLE",
+    url:
+      "https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3ex.html"
   },
+
   {
     category:"taxi",
-    name:"TAXI 3 - Expansion 2", icon:"Ex2", genre:"Expansion • TBA", date:"Late-2026",
-    description:"A new project is currently in development.",
-    status:"COMING SOON", url:"#"
+    name:"TAXI 3 - Expansion 2",
+    icon:"Ex2",
+    genre:"Expansion • TBA",
+    date:"Late-2026",
+    description:
+      "A new project is currently in development.",
+    status:"COMING SOON",
+    url:"#"
   },
+
   {
     category:"taxi",
-    name:"Taxi 3 - Mobile Edition", icon:"TAXI 3", cover:"taxi3-cover.jpg", genre:"Driving • Open World", date:"August 22, 2026",
-    description:"The next chapter of the TAXI series. Bigger roads. Bigger jobs. Now on IOS and Android. Note: Taxi 3 - Mobile Edition is only available on Mobile platforms.",
-    status:"AVAILABLE", url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3-mobile.html"
-  },  
+    name:"Taxi 3 - Mobile Edition",
+    icon:"TAXI 3",
+    cover:"taxi3-cover.jpg",
+    genre:"Driving • Open World",
+    date:"August 22, 2026",
+    description:
+      "The next chapter of the TAXI series. Bigger roads. Bigger jobs. Now on IOS and Android. Note: Taxi 3 - Mobile Edition is only available on Mobile platforms.",
+    status:"AVAILABLE",
+    url:
+      "https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3-mobile.html"
+  },
+
   {
     category:"other",
-    name:"Upcoming Game", icon:"?", genre:"TBA", date:"TBA",
-    description:"A new project is currently in development.",
-    status:"COMING SOON", url:"#"
+    name:"Upcoming Game",
+    icon:"?",
+    genre:"TBA",
+    date:"TBA",
+    description:
+      "A new project is currently in development.",
+    status:"COMING SOON",
+    url:"#"
   },
+
   {
     category:"other",
-    name:"Upcoming Open World Game", icon:"TBD", cover:"kalaharilogo2026.jpg", genre:"Driving • Open World • Story • TBA", date:"TBA",
-    description:"Kingston City, 2025. You arrive in Kingston, broke and in need of accommodation and money. Over 70% of the buildings in Kingston are enterable. Explore a major city, and the Americana Countryside, doing jobs, buying houses and uncovering secrets. More information TBA. This game is currently in development.",
-    status:"IN PRODUCTION", url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi4placeholder.html"
+    name:"Upcoming Open World Game",
+    icon:"TBD",
+    cover:"kalaharilogo2026.jpg",
+    genre:"Driving • Open World • Story • TBA",
+    date:"TBA",
+    description:
+      "Kingston City, 2025. You arrive in Kingston, broke and in need of accommodation and money. Over 70% of the buildings in Kingston are enterable. Explore a major city, and the Americana Countryside, doing jobs, buying houses and uncovering secrets. More information TBA. This game is currently in development.",
+    status:"IN PRODUCTION",
+    url:
+      "https://BubblesTheGoat225.github.io/kalahari-launcher/taxi4placeholder.html"
   },
+
   {
     category:"other",
-    name:"Upcoming Game", icon:"?", genre:"TBA", date:"TBA",
-    description:"A new project is currently in development.",
-    status:"COMING SOON", url:"#"
+    name:"Upcoming Game",
+    icon:"?",
+    genre:"TBA",
+    date:"TBA",
+    description:
+      "A new project is currently in development.",
+    status:"COMING SOON",
+    url:"#"
   },
+
   {
     category:"other",
-    name:"Upcoming Game", icon:"?", genre:"TBA", date:"TBA",
-    description:"A new project is currently in development.",
-    status:"COMING SOON", url:"#"
+    name:"Upcoming Game",
+    icon:"?",
+    genre:"TBA",
+    date:"TBA",
+    description:
+      "A new project is currently in development.",
+    status:"COMING SOON",
+    url:"#"
   },
-    {
+
+  {
     category:"other",
-    name:"Upcoming Game", icon:"?", genre:"TBA", date:"TBA",
-    description:"A new project is currently in development.",
-    status:"COMING SOON", url:"#"
+    name:"Upcoming Game",
+    icon:"?",
+    genre:"TBA",
+    date:"TBA",
+    description:
+      "A new project is currently in development.",
+    status:"COMING SOON",
+    url:"#"
   },
-    {
+
+  {
     category:"other",
-    name:"Upcoming Game", icon:"?", genre:"TBA", date:"TBA",
-    description:"A new project is currently in development.",
-    status:"COMING SOON", url:"#"
-  },
+    name:"Upcoming Game",
+    icon:"?",
+    genre:"TBA",
+    date:"TBA",
+    description:
+      "A new project is currently in development.",
+    status:"COMING SOON",
+    url:"#"
+  }
+
 ];
 
-const grid=document.getElementById("gameGrid");
-const search=document.getElementById("search");
-const gameFilter=document.getElementById("gameFilter");
 
-function renderGames(searchTerm="", category="all"){
-  grid.innerHTML="";
-  games.filter(g=>{
-    const matchesSearch = g.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          g.genre.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = category==="all" || g.category===category;
-    return matchesSearch && matchesCategory;
-  })
-  .forEach(g=>{
-    const available=g.status==="AVAILABLE";
-    const production=g.status==="IN PRODUCTION";
-    const coming=g.status==="COMING SOON";
+/* =========================================================
+   GAME RENDERING
+========================================================= */
 
-    const card=document.createElement("article");
-    card.className="card"+(coming?" coming":"")+(g.name==="Upcoming Open World Game"?" wide-card":"");
+const grid =
+  document.getElementById("gameGrid");
 
-    card.innerHTML=`
-      <div class="cover">
-        <span class="badge">${g.status}</span>
-        ${g.cover ? `<img src="${g.cover}" alt="${g.name} cover art">` : `<div class="game-icon">${g.icon}</div>`}
-      </div>
-      <div class="card-body">
-        <h4>${g.name}</h4>
-        <div class="desc">${g.description}</div>
-        <div class="meta"><span class="tag">${g.genre}</span></div>
-        <div class="card-bottom">
-          <span class="release">${g.date}</span>
-          <button class="play-btn ${production?"production-btn":""}" ${coming?"disabled":""} data-url="${g.url}">
-            ${available?"PLAY":production?"IN PRODUCTION":"COMING SOON"}
-          </button>
+const search =
+  document.getElementById("search");
+
+const gameFilter =
+  document.getElementById("gameFilter");
+
+
+function renderGames(
+  searchTerm = "",
+  category = "all"
+){
+
+  grid.innerHTML = "";
+
+  games
+    .filter(g => {
+
+      const matchesSearch =
+        g.name
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+
+        g.genre
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+
+      const matchesCategory =
+        category === "all" ||
+        g.category === category;
+
+      return matchesSearch && matchesCategory;
+
+    })
+    .forEach(g => {
+
+      const available =
+        g.status === "AVAILABLE";
+
+      const production =
+        g.status === "IN PRODUCTION";
+
+      const coming =
+        g.status === "COMING SOON";
+
+
+      const card =
+        document.createElement("article");
+
+
+      card.className =
+        "card" +
+        (coming ? " coming" : "") +
+        (
+          g.name === "Upcoming Open World Game"
+            ? " wide-card"
+            : ""
+        );
+
+
+      card.innerHTML = `
+
+        <div class="cover">
+
+          <span class="badge">
+            ${g.status}
+          </span>
+
+          ${
+            g.cover
+              ? `
+                <img
+                  src="${g.cover}"
+                  alt="${g.name} cover art"
+                >
+              `
+              : `
+                <div class="game-icon">
+                  ${g.icon}
+                </div>
+              `
+          }
+
         </div>
-      </div>`;
-    grid.appendChild(card);
-  });
+
+
+        <div class="card-body">
+
+          <h4>
+            ${g.name}
+          </h4>
+
+          <div class="desc">
+            ${g.description}
+          </div>
+
+          <div class="meta">
+
+            <span class="tag">
+              ${g.genre}
+            </span>
+
+          </div>
+
+          <div class="card-bottom">
+
+            <span class="release">
+              ${g.date}
+            </span>
+
+            <button
+              class="play-btn ${production ? "production-btn" : ""}"
+              ${coming ? "disabled" : ""}
+              data-url="${g.url}"
+            >
+              ${
+                available
+                  ? "PLAY"
+                  : production
+                    ? "IN PRODUCTION"
+                    : "COMING SOON"
+              }
+            </button>
+
+          </div>
+
+        </div>
+
+      `;
+
+      grid.appendChild(card);
+
+    });
+
 }
+
 
 function updateGameList(){
-  renderGames(search.value, gameFilter.value);
+
+  renderGames(
+    search.value,
+    gameFilter.value
+  );
+
 }
+
+
 renderGames();
 
-search.addEventListener("input", updateGameList);
-gameFilter.addEventListener("change", updateGameList);
 
-document.addEventListener("click",e=>{
-  if(e.target.classList.contains("play-btn") && !e.target.disabled){
-    const url=e.target.dataset.url;
-    if(url && url!=="#") window.location.href=url;
-    else alert("Game launch link not set yet.");
+search.addEventListener(
+  "input",
+  updateGameList
+);
+
+gameFilter.addEventListener(
+  "change",
+  updateGameList
+);
+
+
+/* =========================================================
+   GAME LAUNCHING
+========================================================= */
+
+document.addEventListener(
+  "click",
+  e => {
+
+    if(
+      e.target.classList.contains("play-btn") &&
+      !e.target.disabled
+    ){
+
+      const url =
+        e.target.dataset.url;
+
+      if(
+        url &&
+        url !== "#"
+      ){
+
+        window.location.href = url;
+
+      }else{
+
+        alert(
+          "Game launch link not set yet."
+        );
+
+      }
+
+    }
+
   }
-});
+);
 
-// Important News Visibility Controller
-document.addEventListener("DOMContentLoaded", () => {
-  const newsBox = document.getElementById("news-box");
-  if (IMPORTANT_NEWS === "ANN") {
-    document.getElementById("news-date").textContent = NEWS_DATE;
-    document.getElementById("news-title").textContent = NEWS_TITLE;
-    document.getElementById("news-info").textContent = NEWS_INFO;
-    newsBox.classList.remove("hidden");
-  } else {
-    newsBox.classList.add("hidden");
+
+/* =========================================================
+   IMPORTANT NEWS
+========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    const newsBox =
+      document.getElementById("news-box");
+
+
+    if(
+      IMPORTANT_NEWS.toUpperCase() === "ANN"
+    ){
+
+      document.getElementById(
+        "news-date"
+      ).textContent = NEWS_DATE;
+
+
+      document.getElementById(
+        "news-title"
+      ).textContent = NEWS_TITLE;
+
+
+      document.getElementById(
+        "news-info"
+      ).textContent = NEWS_INFO;
+
+
+      newsBox.classList.remove(
+        "hidden"
+      );
+
+    }else{
+
+      newsBox.classList.add(
+        "hidden"
+      );
+
+    }
+
   }
-});
+);
 
 
-// ==========================================
-// SETTINGS / THEME / ACCOUNT
-// ==========================================
-const settingsOverlay = document.getElementById("settingsOverlay");
-const darkModeToggle = document.getElementById("darkModeToggle");
-const accountUsername = document.getElementById("accountUsername");
-const accountEmail = document.getElementById("accountEmail");
-const accountPassword = document.getElementById("accountPassword");
-const accountAvatarUrl = document.getElementById("accountAvatarUrl");
-const accountAvatar = document.getElementById("accountAvatar");
-const headerAvatar = document.getElementById("headerAvatar");
-const accountMessage = document.getElementById("accountMessage");
+/* =========================================================
+   SETTINGS / THEME / ACCOUNT
+========================================================= */
+
+const settingsOverlay =
+  document.getElementById(
+    "settingsOverlay"
+  );
+
+const darkModeToggle =
+  document.getElementById(
+    "darkModeToggle"
+  );
+
+const accountUsername =
+  document.getElementById(
+    "accountUsername"
+  );
+
+const accountEmail =
+  document.getElementById(
+    "accountEmail"
+  );
+
+const accountPassword =
+  document.getElementById(
+    "accountPassword"
+  );
+
+const accountAvatarUrl =
+  document.getElementById(
+    "accountAvatarUrl"
+  );
+
+const accountAvatar =
+  document.getElementById(
+    "accountAvatar"
+  );
+
+const headerAvatar =
+  document.getElementById(
+    "headerAvatar"
+  );
+
+const accountMessage =
+  document.getElementById(
+    "accountMessage"
+  );
+
 
 function defaultAvatar(user){
-  return user?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.displayName || user?.email?.split("@")[0] || "User")}&background=2388e8&color=fff`;
+
+  return user?.photoURL ||
+
+    `https://ui-avatars.com/api/?name=${
+      encodeURIComponent(
+        user?.displayName ||
+        user?.email?.split("@")[0] ||
+        "User"
+      )
+    }&background=2388e8&color=fff`;
+
 }
 
-function setTheme(isDark, save=true){
-  document.body.classList.toggle("light-mode", !isDark);
-  darkModeToggle.checked = isDark;
-  if(save) localStorage.setItem("kalahariTheme", isDark ? "dark" : "light");
+
+function setTheme(
+  isDark,
+  save = true
+){
+
+  document.body.classList.toggle(
+    "light-mode",
+    !isDark
+  );
+
+  darkModeToggle.checked =
+    isDark;
+
+  if(save){
+
+    localStorage.setItem(
+      "kalahariTheme",
+      isDark
+        ? "dark"
+        : "light"
+    );
+
+  }
+
 }
 
-const savedTheme = localStorage.getItem("kalahariTheme") || "dark";
-setTheme(savedTheme === "dark", false);
+
+const savedTheme =
+  localStorage.getItem(
+    "kalahariTheme"
+  ) || "dark";
+
+
+setTheme(
+  savedTheme === "dark",
+  false
+);
+
 
 function populateAccount(user){
+
   if(!user) return;
-  accountUsername.value = user.displayName || user.email.split("@")[0];
-  accountEmail.value = user.email || "";
-  accountPassword.value = "";
-  accountAvatarUrl.value = user.photoURL || "";
-  const avatar = defaultAvatar(user);
-  accountAvatar.src = avatar;
-  headerAvatar.src = avatar;
+
+  accountUsername.value =
+    user.displayName ||
+    user.email.split("@")[0];
+
+  accountEmail.value =
+    user.email || "";
+
+  accountPassword.value =
+    "";
+
+  accountAvatarUrl.value =
+    user.photoURL || "";
+
+  const avatar =
+    defaultAvatar(user);
+
+  accountAvatar.src =
+    avatar;
+
+  headerAvatar.src =
+    avatar;
+
 }
+
 
 function openSettings(){
-  const user = auth.currentUser;
-  if(user) populateAccount(user);
-  settingsOverlay.classList.remove("hidden");
+
+  const user =
+    auth.currentUser;
+
+  if(user){
+
+    populateAccount(user);
+
+  }
+
+  settingsOverlay.classList.remove(
+    "hidden"
+  );
+
 }
+
 
 function closeSettings(){
-  settingsOverlay.classList.add("hidden");
-  accountMessage.textContent = "";
+
+  settingsOverlay.classList.add(
+    "hidden"
+  );
+
+  accountMessage.textContent =
+    "";
+
 }
 
-document.getElementById("settingsBtn").addEventListener("click", openSettings);
-document.getElementById("closeSettings").addEventListener("click", closeSettings);
-settingsOverlay.addEventListener("click", e => {
-  if(e.target === settingsOverlay) closeSettings();
-});
 
-darkModeToggle.addEventListener("change", () => setTheme(darkModeToggle.checked));
+document.getElementById(
+  "settingsBtn"
+).addEventListener(
+  "click",
+  openSettings
+);
 
-document.querySelectorAll(".settings-tab").forEach(tab => {
-  tab.addEventListener("click", () => {
-    document.querySelectorAll(".settings-tab").forEach(t => t.classList.remove("active"));
-    document.querySelectorAll(".settings-section").forEach(s => s.classList.remove("active"));
-    tab.classList.add("active");
-    document.getElementById(tab.dataset.tab).classList.add("active");
+
+document.getElementById(
+  "closeSettings"
+).addEventListener(
+  "click",
+  closeSettings
+);
+
+
+settingsOverlay.addEventListener(
+  "click",
+  e => {
+
+    if(
+      e.target ===
+      settingsOverlay
+    ){
+
+      closeSettings();
+
+    }
+
+  }
+);
+
+
+darkModeToggle.addEventListener(
+  "change",
+  () => {
+
+    setTheme(
+      darkModeToggle.checked
+    );
+
+  }
+);
+
+
+document
+  .querySelectorAll(".settings-tab")
+  .forEach(tab => {
+
+    tab.addEventListener(
+      "click",
+      () => {
+
+        document
+          .querySelectorAll(".settings-tab")
+          .forEach(t =>
+            t.classList.remove(
+              "active"
+            )
+          );
+
+        document
+          .querySelectorAll(".settings-section")
+          .forEach(s =>
+            s.classList.remove(
+              "active"
+            )
+          );
+
+        tab.classList.add(
+          "active"
+        );
+
+        document
+          .getElementById(
+            tab.dataset.tab
+          )
+          .classList.add(
+            "active"
+          );
+
+      }
+    );
+
   });
-});
 
-document.getElementById("saveAccount").addEventListener("click", async () => {
-  const user = auth.currentUser;
-  if(!user) return;
 
-  const username = accountUsername.value.trim();
-  const email = accountEmail.value.trim();
-  const password = accountPassword.value;
-  const photoURL = accountAvatarUrl.value.trim();
+/* =========================================================
+   SAVE ACCOUNT
+========================================================= */
 
-  if(!username || !email){
-    accountMessage.style.color = "#ff7272";
-    accountMessage.textContent = "Username and email are required.";
-    return;
+document.getElementById(
+  "saveAccount"
+).addEventListener(
+  "click",
+  async () => {
+
+    const user =
+      auth.currentUser;
+
+    if(!user) return;
+
+
+    const username =
+      accountUsername.value.trim();
+
+    const email =
+      accountEmail.value.trim();
+
+    const password =
+      accountPassword.value;
+
+    const photoURL =
+      accountAvatarUrl.value.trim();
+
+
+    if(
+      !username ||
+      !email
+    ){
+
+      accountMessage.style.color =
+        "#ff7272";
+
+      accountMessage.textContent =
+        "Username and email are required.";
+
+      return;
+
+    }
+
+
+    accountMessage.style.color =
+      "var(--accent)";
+
+    accountMessage.textContent =
+      "Saving...";
+
+
+    try{
+
+      if(
+        username !==
+          (user.displayName || "") ||
+
+        photoURL !==
+          (user.photoURL || "")
+      ){
+
+        await user.updateProfile({
+          displayName:username,
+          photoURL:photoURL || null
+        });
+
+      }
+
+
+      if(
+        email !==
+        user.email
+      ){
+
+        await user.updateEmail(
+          email
+        );
+
+      }
+
+
+      if(password){
+
+        await user.updatePassword(
+          password
+        );
+
+      }
+
+
+      document.getElementById(
+        "userDisplay"
+      ).textContent =
+        username;
+
+
+      const avatar =
+        defaultAvatar(user);
+
+
+      accountAvatar.src =
+        avatar;
+
+      headerAvatar.src =
+        avatar;
+
+
+      accountPassword.value =
+        "";
+
+
+      accountMessage.style.color =
+        "#52d47b";
+
+      accountMessage.textContent =
+        "Account settings saved successfully.";
+
+    }catch(err){
+
+      accountMessage.style.color =
+        "#ff7272";
+
+      accountMessage.textContent =
+        err.code ===
+        "auth/requires-recent-login"
+
+          ? "For security, please log out and sign in again before changing your email or password."
+
+          : err.message;
+
+    }
+
   }
+);
 
-  accountMessage.style.color = "var(--accent)";
-  accountMessage.textContent = "Saving...";
 
-  try {
-    if(username !== (user.displayName || "" ) || photoURL !== (user.photoURL || "")){
-      await user.updateProfile({displayName: username, photoURL: photoURL || null});
-    }
+/* =========================================================
+   RESET PREFERENCES
+========================================================= */
 
-    if(email !== user.email){
-      await user.updateEmail(email);
-    }
+document.getElementById(
+  "resetPrefs"
+).addEventListener(
+  "click",
+  () => {
 
-    if(password){
-      await user.updatePassword(password);
-    }
+    localStorage.removeItem(
+      "kalahariTheme"
+    );
 
-    document.getElementById("userDisplay").textContent = username;
-    const avatar = defaultAvatar(user);
-    accountAvatar.src = avatar;
-    headerAvatar.src = avatar;
-    accountPassword.value = "";
+    localStorage.removeItem(
+      "kalahariGameFilter"
+    );
 
-    accountMessage.style.color = "#52d47b";
-    accountMessage.textContent = "Account settings saved successfully.";
-  } catch(err) {
-    accountMessage.style.color = "#ff7272";
-    accountMessage.textContent = err.code === "auth/requires-recent-login"
-      ? "For security, please log out and sign in again before changing your email or password."
-      : err.message;
+    setTheme(true);
+
+    gameFilter.value =
+      "all";
+
+    search.value =
+      "";
+
+    updateGameList();
+
   }
-});
+);
 
-document.getElementById("resetPrefs").addEventListener("click", () => {
-  localStorage.removeItem("kalahariTheme");
-  localStorage.removeItem("kalahariGameFilter");
-  setTheme(true);
-  gameFilter.value = "all";
-  search.value = "";
-  updateGameList();
-});
 
-const savedGameFilter = localStorage.getItem("kalahariGameFilter");
+const savedGameFilter =
+  localStorage.getItem(
+    "kalahariGameFilter"
+  );
+
+
 if(savedGameFilter){
-  gameFilter.value = savedGameFilter;
+
+  gameFilter.value =
+    savedGameFilter;
+
 }
-gameFilter.addEventListener("change", () => {
-  localStorage.setItem("kalahariGameFilter", gameFilter.value);
-});
 
 
-// Authentication Handling
-const loginScreen=document.getElementById("loginScreen");
-const launcher=document.getElementById("launcher");
-const error=document.getElementById("error");
+gameFilter.addEventListener(
+  "change",
+  () => {
 
-auth.onAuthStateChanged((user) => {
-  if (user) {
-    loginScreen.classList.add("hidden");
-    launcher.classList.remove("hidden");
-    document.getElementById("userDisplay").textContent = user.displayName || user.email.split('@')[0];
-    populateAccount(user);
-  } else {
-    launcher.classList.add("hidden");
-    loginScreen.classList.remove("hidden");
+    localStorage.setItem(
+      "kalahariGameFilter",
+      gameFilter.value
+    );
+
   }
-});
+);
 
-document.getElementById("signUpBtn").addEventListener("click", () => {
-  const username = document.getElementById("displayName").value.trim();
-  const email = document.getElementById("username").value.trim();
-  const pass = document.getElementById("password").value;
 
-  if (!username) {
-    error.style.color = "#ff7272";
-    error.textContent = "Please enter a username.";
-    return;
+/* =========================================================
+   AUTHENTICATION HANDLING
+========================================================= */
+
+auth.onAuthStateChanged(
+  user => {
+
+    /*
+      IMPORTANT:
+      If the launcher is OFF, Firebase authentication
+      does NOT get permission to reveal the launcher.
+    */
+
+    if(
+      LAUNCHER_STATUS.toUpperCase() === "OFF"
+    ){
+
+      launcher.classList.add(
+        "hidden"
+      );
+
+      loginScreen.classList.remove(
+        "hidden"
+      );
+
+      normalLoginCard.classList.add(
+        "hidden"
+      );
+
+      launcherDownCard.classList.remove(
+        "hidden"
+      );
+
+      return;
+
+    }
+
+
+    /*
+      Normal launcher operation.
+    */
+
+    if(user){
+
+      loginScreen.classList.add(
+        "hidden"
+      );
+
+      launcher.classList.remove(
+        "hidden"
+      );
+
+
+      document.getElementById(
+        "userDisplay"
+      ).textContent =
+        user.displayName ||
+        user.email.split("@")[0];
+
+
+      populateAccount(user);
+
+    }else{
+
+      launcher.classList.add(
+        "hidden"
+      );
+
+      loginScreen.classList.remove(
+        "hidden"
+      );
+
+      normalLoginCard.classList.remove(
+        "hidden"
+      );
+
+      launcherDownCard.classList.add(
+        "hidden"
+      );
+
+    }
+
   }
+);
 
-  auth.createUserWithEmailAndPassword(email, pass)
-    .then((userCredential) => {
-      return userCredential.user.updateProfile({
-        displayName: username
-      });
-    })
-    .then(() => {
-      error.style.color = "#42f570";
-      error.textContent = "Account created successfully!";
-    })
-    .catch((err) => {
-      error.style.color = "#ff7272";
-      error.textContent = err.message;
-    });
-});
 
-document.getElementById("signInBtn").addEventListener("click", () => {
-  const email = document.getElementById("username").value.trim();
-  const pass = document.getElementById("password").value;
+/* =========================================================
+   SIGN UP
+========================================================= */
 
-  auth.signInWithEmailAndPassword(email, pass)
-    .catch((err) => {
-      error.style.color = "#ff7272";
-      error.textContent = "Invalid email or password.";
-    });
-});
+document.getElementById(
+  "signUpBtn"
+).addEventListener(
+  "click",
+  () => {
 
-document.getElementById("logout").addEventListener("click", () => {
-  auth.signOut();
-});
+    /*
+      Extra safety check.
+    */
+
+    if(
+      LAUNCHER_STATUS.toUpperCase() ===
+      "OFF"
+    ){
+
+      return;
+
+    }
+
+
+    const username =
+      document.getElementById(
+        "displayName"
+      ).value.trim();
+
+
+    const email =
+      document.getElementById(
+        "username"
+      ).value.trim();
+
+
+    const pass =
+      document.getElementById(
+        "password"
+      ).value;
+
+
+    const error =
+      document.getElementById(
+        "error"
+      );
+
+
+    if(!username){
+
+      error.style.color =
+        "#ff7272";
+
+      error.textContent =
+        "Please enter a username.";
+
+      return;
+
+    }
+
+
+    auth
+      .createUserWithEmailAndPassword(
+        email,
+        pass
+      )
+
+      .then(
+        userCredential => {
+
+          return userCredential.user
+            .updateProfile({
+              displayName:username
+            });
+
+        }
+      )
+
+      .then(
+        () => {
+
+          error.style.color =
+            "#42f570";
+
+          error.textContent =
+            "Account created successfully!";
+
+        }
+      )
+
+      .catch(
+        err => {
+
+          error.style.color =
+            "#ff7272";
+
+          error.textContent =
+            err.message;
+
+        }
+      );
+
+  }
+);
+
+
+/* =========================================================
+   SIGN IN
+========================================================= */
+
+document.getElementById(
+  "signInBtn"
+).addEventListener(
+  "click",
+  () => {
+
+    /*
+      Extra safety check.
+    */
+
+    if(
+      LAUNCHER_STATUS.toUpperCase() ===
+      "OFF"
+    ){
+
+      return;
+
+    }
+
+
+    const email =
+      document.getElementById(
+        "username"
+      ).value.trim();
+
+
+    const pass =
+      document.getElementById(
+        "password"
+      ).value;
+
+
+    const error =
+      document.getElementById(
+        "error"
+      );
+
+
+    auth
+      .signInWithEmailAndPassword(
+        email,
+        pass
+      )
+
+      .catch(
+        () => {
+
+          error.style.color =
+            "#ff7272";
+
+          error.textContent =
+            "Invalid email or password.";
+
+        }
+      );
+
+  }
+);
+
+
+/* =========================================================
+   LOG OUT
+========================================================= */
+
+document.getElementById(
+  "logout"
+).addEventListener(
+  "click",
+  () => {
+
+    auth.signOut();
+
+  }
+);
+
 </script>
+
 </body>
 </html>

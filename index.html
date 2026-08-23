@@ -32,7 +32,6 @@
   --soft:#ffffff08;
 }
 
-/* Light mode */
 body.light-mode{
   --bg:#061a31;
   --panel:#071d36;
@@ -104,8 +103,7 @@ body.light-mode .news-content{
   color:#8eb8d0;
 }
 
-button,
-input{
+button,input{
   font:inherit;
 }
 
@@ -236,7 +234,6 @@ input{
 
 .signup-btn:hover{
   background:#384556;
-  transform:translateY(-1px);
 }
 
 .error{
@@ -248,37 +245,38 @@ input{
 }
 
 /* ==========================================
-   LAUNCHER DOWN / MAINTENANCE SCREEN
+   LAUNCHER DOWN SCREEN
 ========================================== */
 
-.launcher-down-card{
+.launcher-down{
   text-align:center;
+  padding:8px 0 10px;
 }
 
 .launcher-down-icon{
-  width:78px;
-  height:78px;
-  margin:0 auto 24px;
-  border-radius:22px;
+  width:82px;
+  height:82px;
+  border-radius:24px;
   background:#b93838;
   color:white;
   display:grid;
   place-items:center;
-  font-size:34px;
+  margin:0 auto 24px;
+  font-size:38px;
   font-weight:900;
-  box-shadow:0 15px 35px #0006;
+  box-shadow:0 15px 40px #0006;
 }
 
-.launcher-down-card h2{
-  font-size:32px;
-  margin-bottom:12px;
+.launcher-down h2{
+  font-size:34px;
+  margin-bottom:10px;
 }
 
-.launcher-down-card .down-subtitle{
-  color:#ff8585;
-  font-size:13px;
+.launcher-down .down-subtitle{
+  color:#ff7272;
   font-weight:800;
-  letter-spacing:1.2px;
+  font-size:13px;
+  letter-spacing:1px;
   text-transform:uppercase;
   margin-bottom:18px;
 }
@@ -287,27 +285,16 @@ input{
   color:var(--muted);
   font-size:14px;
   line-height:1.7;
-  margin-bottom:22px;
+  margin-bottom:18px;
 }
 
-.launcher-status-box{
-  border:1px solid #5b3030;
-  background:#241416;
-  border-radius:12px;
-  padding:14px;
-  color:#d8a0a0;
+.launcher-down-date{
+  color:var(--text);
+  background:var(--soft);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px;
   font-size:12px;
-  line-height:1.5;
-}
-
-.launcher-status-box strong{
-  color:#ff8d8d;
-}
-
-.launcher-down-footer{
-  margin-top:24px;
-  color:#6f7784;
-  font-size:11px;
 }
 
 /* ==========================================
@@ -533,7 +520,7 @@ main{
 
 .news-title{
   color:#fff;
-  margin:0 0 6px 0;
+  margin:0 0 6px;
   font-size:18px;
   font-weight:700;
 }
@@ -728,7 +715,37 @@ main{
   cursor:not-allowed;
 }
 
-/* Production Button */
+/* ==========================================
+   GAME UPDATE / MAINTENANCE NOTICE
+========================================== */
+
+.game-update{
+  margin-top:15px;
+  padding:12px 13px;
+  border-radius:10px;
+  border:1px solid #806b25;
+  border-left:3px solid var(--accent);
+  background:rgba(245,197,66,.08);
+}
+
+.game-update-title{
+  color:var(--accent);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.7px;
+  text-transform:uppercase;
+  margin-bottom:5px;
+}
+
+.game-update-text{
+  color:#cbd1da;
+  font-size:12px;
+  line-height:1.5;
+}
+
+/* ==========================================
+   IN PRODUCTION BUTTON
+========================================== */
 
 .production-btn{
   background:#8fd8ff!important;
@@ -1011,206 +1028,176 @@ footer{
 
 <body>
 
-<!-- =========================================================
+<!-- ==========================================================
      LOGIN SCREEN
-========================================================= -->
+========================================================== -->
 
 <section id="loginScreen">
 
-  <!-- NORMAL LOGIN -->
-  <div class="login-card" id="normalLoginCard">
+  <div class="login-card">
 
     <div class="logo">
       <div class="logo-mark">KS</div>
       <h1>Kalahari <span>Studios</span></h1>
     </div>
 
-    <h2>Welcome.</h2>
-    <p class="subtitle">
-      Sign in or create an account to access games.
-    </p>
+    <!-- NORMAL LOGIN -->
+    <div id="normalLogin">
 
-    <form id="loginForm">
+      <h2>Welcome.</h2>
+      <p class="subtitle">
+        Sign in or create an account to access games.
+      </p>
 
-      <div class="field">
-        <label for="displayName">
-          DISPLAY USERNAME (FOR SIGN UP)
-        </label>
-        <input
-          id="displayName"
-          placeholder="Choose a username"
-        >
+      <form id="loginForm">
+
+        <div class="field">
+          <label for="displayName">
+            DISPLAY USERNAME (FOR SIGN UP)
+          </label>
+
+          <input
+            id="displayName"
+            placeholder="Choose a username"
+          >
+        </div>
+
+        <div class="field">
+          <label for="username">
+            EMAIL ADDRESS
+          </label>
+
+          <input
+            id="username"
+            type="email"
+            autocomplete="email"
+            placeholder="Enter your email"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="password">
+            PASSWORD
+          </label>
+
+          <input
+            id="password"
+            type="password"
+            autocomplete="current-password"
+            placeholder="Enter your password"
+            required
+          >
+        </div>
+
+        <div class="btn-group">
+          <button
+            class="login-btn"
+            type="button"
+            id="signInBtn">
+            SIGN IN
+          </button>
+
+          <button
+            class="login-btn signup-btn"
+            type="button"
+            id="signUpBtn">
+            SIGN UP
+          </button>
+        </div>
+
+        <div class="error" id="error"></div>
+
+      </form>
+
+    </div>
+
+    <!-- LAUNCHER DOWN -->
+    <div id="launcherDownScreen" class="launcher-down hidden">
+
+      <div class="launcher-down-icon">
+        !
       </div>
 
-      <div class="field">
-        <label for="username">
-          EMAIL ADDRESS
-        </label>
-        <input
-          id="username"
-          type="email"
-          autocomplete="email"
-          placeholder="Enter your email"
-          required
-        >
+      <h2 id="launcherDownTitle">
+        Launcher Down
+      </h2>
+
+      <div class="down-subtitle">
+        Kalahari Studios Launcher
       </div>
 
-      <div class="field">
-        <label for="password">
-          PASSWORD
-        </label>
-        <input
-          id="password"
-          type="password"
-          autocomplete="current-password"
-          placeholder="Enter your password"
-          required
-        >
+      <p
+        class="launcher-down-info"
+        id="launcherDownInfo">
+        The Kalahari Studios Launcher is currently unavailable.
+      </p>
+
+      <div
+        class="launcher-down-date"
+        id="launcherDownDate">
+        Please check back later.
       </div>
 
-      <div class="btn-group">
-        <button
-          class="login-btn"
-          type="button"
-          id="signInBtn"
-        >
-          SIGN IN
-        </button>
+    </div>
 
-        <button
-          class="login-btn signup-btn"
-          type="button"
-          id="signUpBtn"
-        >
-          SIGN UP
-        </button>
-      </div>
-
-      <div class="error" id="error"></div>
-
-    </form>
-
-    <div
-      class="powered-by-badge"
-      role="img"
-      aria-label="Powered by Google Firebase"
-    >
+    <!-- Firebase Badge -->
+    <div class="powered-by-badge"
+         role="img"
+         aria-label="Powered by Google Firebase">
 
       <span class="label">Powered by</span>
 
-      <!-- Firebase flame logo -->
-      <svg
-        width="14"
-        height="18"
-        viewBox="0 0 256 351"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          fill="#FFA000"
-          d="M0 282.998l1.94-2.995L88.44 116.28l.176-1.679L54.11 51.049C48.417 40.25 32.5 41.632 28.75 53.221z"
-        />
+      <!-- Firebase flame -->
+      <svg width="14" height="18"
+           viewBox="0 0 256 351"
+           xmlns="http://www.w3.org/2000/svg">
 
-        <path
-          fill="#FFA000"
-          d="M135.005 138.607l27.42-28.06-27.44-52.288c-5.101-9.71-19.34-9.723-24.45 0L93.5 106.484l1.68 1.72z"
-        />
+        <path fill="#FFA000"
+          d="M0 282.998l1.94-2.995L88.44 116.28l.176-1.679L54.11 51.049C48.417 40.25 32.5 41.632 28.75 53.221z"/>
 
-        <path
-          fill="#FFCA28"
-          d="M137.87 213.865l66.16-36.6-46.66-88.605-46.386 47.44z"
-        />
+        <path fill="#FFA000"
+          d="M135.005 138.607l27.42-28.06-27.44-52.288c-5.101-9.71-19.34-9.723-24.45 0L93.5 106.484l1.68 1.72z"/>
 
-        <path
-          fill="#FFA000"
-          d="M0 283l137.87-69.133-26.886-51.208-46.39 47.44z"
-        />
+        <path fill="#FFCA28"
+          d="M137.87 213.865l66.16-36.6-46.66-88.605-46.386 47.44z"/>
 
-        <path
-          fill="#F57C00"
-          d="M143.53 350.15l112.4-63.11-31.75-198.44a12.53 12.53 0 0 0-20.9-6.86L0 283l118.61 65.71a26.9 26.9 0 0 0 24.92 1.44"
-        />
+        <path fill="#FFA000"
+          d="M0 283l137.87-69.133-26.886-51.208-46.39 47.44z"/>
 
-        <path
-          fill="#FFCA28"
-          d="M203.87 177.14L204 176.7l-31.68-197.4C168.85-8.85 155.99-9 149.61 3.36L0 283z"
-        />
+        <path fill="#F57C00"
+          d="M143.53 350.15l112.4-63.11-31.75-198.44a12.53 12.53 0 0 0-20.9-6.86L0 283l118.61 65.71a26.9 26.9 0 0 0 24.92 1.44"/>
+
+        <path fill="#FFCA28"
+          d="M203.87 177.14L204 176.7l-31.68-197.4C168.85-8.85 155.99-9 149.61 3.36L0 283z"/>
+
       </svg>
 
       <span class="divider"></span>
 
-      <!-- Google G logo -->
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 48 48"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          fill="#4285F4"
-          d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"
-        />
+      <!-- Google G -->
+      <svg width="16" height="16"
+           viewBox="0 0 48 48"
+           xmlns="http://www.w3.org/2000/svg">
 
-        <path
-          fill="#34A853"
-          d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"
-        />
+        <path fill="#4285F4"
+          d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/>
 
-        <path
-          fill="#FBBC05"
-          d="M11.69 28.18A13.98 13.98 0 0 1 10.94 24c0-1.45.25-2.86.7-4.18v-5.7H4.34A21.99 21.99 0 0 0 2 24c0 3.55.85 6.91 2.34 9.88z"
-        />
+        <path fill="#34A853"
+          d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/>
 
-        <path
-          fill="#EA4335"
-          d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"
-        />
+        <path fill="#FBBC05"
+          d="M11.69 28.18A13.98 13.98 0 0 1 10.94 24c0-1.45.25-2.86.7-4.18v-5.7H4.34A21.99 21.99 0 0 0 2 24c0 3.55.85 6.91 2.34 9.88z"/>
+
+        <path fill="#EA4335"
+          d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/>
+
       </svg>
 
-      <span class="brand">Google Firebase</span>
-
-    </div>
-
-  </div>
-
-
-  <!-- =====================================================
-       LAUNCHER DOWN SCREEN
-  ====================================================== -->
-
-  <div
-    class="login-card launcher-down-card hidden"
-    id="launcherDownCard"
-  >
-
-    <div class="logo">
-      <div class="logo-mark">KS</div>
-      <h1>Kalahari <span>Studios</span></h1>
-    </div>
-
-    <div class="launcher-down-icon">
-      !
-    </div>
-
-    <div class="down-subtitle">
-      Launcher Offline
-    </div>
-
-    <h2>Launcher Down</h2>
-
-    <p class="launcher-down-info" id="launcherDownInfo">
-      The Kalahari Studios Launcher is currently unavailable.
-      Please check back later.
-    </p>
-
-    <div class="launcher-status-box">
-      <strong>Status:</strong>
-      <span id="launcherDownStatus">
-        The launcher is temporarily offline for maintenance.
+      <span class="brand">
+        Google Firebase
       </span>
-    </div>
 
-    <div class="launcher-down-footer">
-      Kalahari Studios Launcher
     </div>
 
   </div>
@@ -1218,9 +1205,9 @@ footer{
 </section>
 
 
-<!-- =========================================================
-     MAIN LAUNCHER
-========================================================= -->
+<!-- ==========================================================
+     LAUNCHER
+========================================================== -->
 
 <section id="launcher" class="hidden">
 
@@ -1237,8 +1224,7 @@ footer{
       id="headerAvatar"
       class="profile-mini"
       src=""
-      alt="Profile"
-    >
+      alt="Profile">
 
     <span>
       Signed in as
@@ -1248,15 +1234,13 @@ footer{
     <button
       class="header-btn"
       id="settingsBtn"
-      title="Settings"
-    >
+      title="Settings">
       ⚙ Settings
     </button>
 
     <button
       class="logout"
-      id="logout"
-    >
+      id="logout">
       Log out
     </button>
 
@@ -1265,21 +1249,17 @@ footer{
 </header>
 
 
-<!-- =========================================================
+<!-- ==========================================================
      SETTINGS
-========================================================= -->
+========================================================== -->
 
-<div
-  id="settingsOverlay"
-  class="settings-overlay hidden"
->
+<div id="settingsOverlay"
+     class="settings-overlay hidden">
 
-  <div
-    class="settings-modal"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="settingsTitle"
-  >
+  <div class="settings-modal"
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="settingsTitle">
 
     <div class="settings-top">
 
@@ -1290,50 +1270,48 @@ footer{
       <button
         class="close-settings"
         id="closeSettings"
-        aria-label="Close settings"
-      >
+        aria-label="Close settings">
         ×
       </button>
 
     </div>
 
-
     <div class="settings-tabs">
 
       <button
         class="settings-tab active"
-        data-tab="appearanceTab"
-      >
+        data-tab="appearanceTab">
         Appearance
       </button>
 
       <button
         class="settings-tab"
-        data-tab="accountTab"
-      >
+        data-tab="accountTab">
         Account
       </button>
 
       <button
         class="settings-tab"
-        data-tab="launcherTab"
-      >
+        data-tab="launcherTab">
         Launcher
       </button>
 
     </div>
 
 
+    <!-- Appearance -->
+
     <section
       class="settings-section active"
-      id="appearanceTab"
-    >
+      id="appearanceTab">
 
       <div class="setting-row">
 
         <div class="setting-info">
 
-          <strong>Dark mode</strong>
+          <strong>
+            Dark mode
+          </strong>
 
           <span>
             Use the current dark Kalahari Studios theme.
@@ -1346,8 +1324,7 @@ footer{
 
           <input
             type="checkbox"
-            id="darkModeToggle"
-          >
+            id="darkModeToggle">
 
           <span class="slider"></span>
 
@@ -1358,10 +1335,11 @@ footer{
     </section>
 
 
+    <!-- Account -->
+
     <section
       class="settings-section"
-      id="accountTab"
-    >
+      id="accountTab">
 
       <div class="avatar-row">
 
@@ -1369,20 +1347,15 @@ footer{
           id="accountAvatar"
           class="account-avatar"
           src=""
-          alt="Profile icon"
-        >
+          alt="Profile icon">
 
         <div>
 
-          <strong>Profile icon</strong>
+          <strong>
+            Profile icon
+          </strong>
 
-          <p
-            style="
-              color:var(--muted);
-              font-size:12px;
-              margin-top:5px
-            "
-          >
+          <p style="color:var(--muted);font-size:12px;margin-top:5px">
             Use an image URL for your profile icon.
           </p>
 
@@ -1390,86 +1363,87 @@ footer{
 
       </div>
 
-
       <div class="field">
 
-        <label>USERNAME</label>
+        <label>
+          USERNAME
+        </label>
 
         <input
           class="settings-input"
           id="accountUsername"
-          placeholder="Username"
-        >
+          placeholder="Username">
 
       </div>
 
-
       <div class="field">
 
-        <label>EMAIL ADDRESS</label>
+        <label>
+          EMAIL ADDRESS
+        </label>
 
         <input
           class="settings-input"
           id="accountEmail"
           type="email"
-          placeholder="Email"
-        >
+          placeholder="Email">
 
       </div>
 
-
       <div class="field">
 
-        <label>NEW PASSWORD</label>
+        <label>
+          NEW PASSWORD
+        </label>
 
         <input
           class="settings-input"
           id="accountPassword"
           type="password"
-          placeholder="Leave blank to keep current password"
-        >
+          placeholder="Leave blank to keep current password">
 
       </div>
 
-
       <div class="field">
 
-        <label>PROFILE ICON URL</label>
+        <label>
+          PROFILE ICON URL
+        </label>
 
         <input
           class="settings-input"
           id="accountAvatarUrl"
-          placeholder="https://example.com/profile.png"
-        >
+          placeholder="https://example.com/profile.png">
 
       </div>
 
-
       <button
         class="save-btn"
-        id="saveAccount"
-      >
+        id="saveAccount">
         Save account changes
       </button>
 
       <div
         class="settings-message"
-        id="accountMessage"
-      ></div>
+        id="accountMessage">
+      </div>
 
     </section>
 
 
+    <!-- Launcher -->
+
     <section
       class="settings-section"
-      id="launcherTab"
-    >
+      id="launcherTab">
 
       <div class="setting-row">
 
         <div class="setting-info">
 
-          <strong>Remember theme</strong>
+          <strong>
+            Remember theme
+          </strong>
 
           <span>
             Your light/dark choice is saved on this device.
@@ -1478,17 +1452,11 @@ footer{
         </div>
 
         <span
-          style="
-            color:var(--accent);
-            font-size:12px;
-            font-weight:800
-          "
-        >
+          style="color:var(--accent);font-size:12px;font-weight:800">
           ENABLED
         </span>
 
       </div>
-
 
       <div class="setting-row">
 
@@ -1506,8 +1474,7 @@ footer{
 
         <button
           class="save-btn danger-btn"
-          id="resetPrefs"
-        >
+          id="resetPrefs">
           Reset
         </button>
 
@@ -1520,157 +1487,146 @@ footer{
 </div>
 
 
-<!-- =========================================================
-     MAIN CONTENT
-========================================================= -->
+<!-- ==========================================================
+     MAIN LAUNCHER
+========================================================== -->
 
 <main>
 
-<section class="hero">
+  <section class="hero">
 
-  <div class="hero-content">
+    <div class="hero-content">
 
-    <div class="eyebrow">
-      Kalahari Studios • Game Launcher
-    </div>
+      <div class="eyebrow">
+        Kalahari Studios • Game Launcher
+      </div>
 
-    <h2>
-      Your games. One place.
-    </h2>
+      <h2>
+        Your games. One place.
+      </h2>
 
-    <p>
-      Browse the entire Kalahari Games lineup,
-      check upcoming releases and launch your
-      games directly in browser.
-    </p>
+      <p>
+        Browse the entire Kalahari Games lineup,
+        check upcoming releases and launch your games
+        directly in browser.
+      </p>
 
-    <a
-      href="https://BubblesTheGoat225.github.io/kalahari-launcher/news.html"
-      class="hero-btn"
-    >
-      Recent Announcements
-    </a>
+      <a
+        href="https://BubblesTheGoat225.github.io/kalahari-launcher/news.html"
+        class="hero-btn">
+        Recent Announcements
+      </a>
 
-    <a
-      href="https://BubblesTheGoat225.github.io/kalahari-launcher/taxi4placeholder.html"
-      class="hero-btn"
-    >
-      Check out the Upcoming Taxi Game
-    </a>
+      <a
+        href="https://BubblesTheGoat225.github.io/kalahari-launcher/taxi4placeholder.html"
+        class="hero-btn">
+        Check out the Upcoming Taxi Game
+      </a>
 
-    <a
-      href="https://BubblesTheGoat225.github.io/kalahari-launcher/message.html"
-      class="hero-btn"
-    >
-      Kalahari Messages !UNDER CONSTRUCTION!
-    </a>
+      <a
+        href="https://BubblesTheGoat225.github.io/kalahari-launcher/message.html"
+        class="hero-btn">
+        Kalahari Messages !UNDER CONSTRUCTION!
+      </a>
 
 
-    <!-- Important News -->
+      <!-- IMPORTANT NEWS -->
 
-    <div
-      id="news-box"
-      class="news-container hidden"
-    >
+      <div
+        id="news-box"
+        class="news-container hidden">
 
-      <div class="news-header">
+        <div class="news-header">
 
-        <span class="news-badge">
-          IMPORTANT ANNOUNCEMENT
-        </span>
+          <span class="news-badge">
+            IMPORTANT ANNOUNCEMENT
+          </span>
 
-        <span
-          class="news-date"
-          id="news-date"
-        >
-          August 22, 2026
-        </span>
+          <span
+            class="news-date"
+            id="news-date">
+            August 24, 2026
+          </span>
+
+        </div>
+
+        <h3
+          class="news-title"
+          id="news-title">
+          Major Planned Outage!
+        </h3>
+
+        <p
+          class="news-content"
+          id="news-info">
+          A major planned outage will take place Monday 24 August.
+        </p>
 
       </div>
 
-      <h3
-        class="news-title"
-        id="news-title"
-      >
-        Taxi 3 - Mobile Edition Now Available.
+    </div>
+
+  </section>
+
+
+  <!-- GAMES -->
+
+  <div
+    class="section-head"
+    id="games">
+
+    <div>
+
+      <h3>
+        Your Games
       </h3>
 
-      <p
-        class="news-content"
-        id="news-info"
-      >
-        Taxi 3 has officially released on mobile devices.
+      <p>
+        Available Games
       </p>
 
     </div>
 
-  </div>
+    <div class="game-tools">
 
-</section>
+      <input
+        class="search"
+        id="search"
+        placeholder="Search games...">
 
+      <select
+        class="filter-select"
+        id="gameFilter"
+        aria-label="Filter games">
 
-<!-- Games -->
+        <option value="all">
+          All Games
+        </option>
 
-<div
-  class="section-head"
-  id="games"
->
+        <option value="taxi">
+          Taxi
+        </option>
 
-  <div>
+        <option value="other">
+          Other
+        </option>
 
-    <h3>
-      Your Games
-    </h3>
+      </select>
 
-    <p>
-      Available Games
-    </p>
-
-  </div>
-
-
-  <div class="game-tools">
-
-    <input
-      class="search"
-      id="search"
-      placeholder="Search games..."
-    >
-
-    <select
-      class="filter-select"
-      id="gameFilter"
-      aria-label="Filter games"
-    >
-
-      <option value="all">
-        All Games
-      </option>
-
-      <option value="taxi">
-        Taxi
-      </option>
-
-      <option value="other">
-        Other
-      </option>
-
-    </select>
+    </div>
 
   </div>
 
-</div>
+
+  <div
+    class="grid"
+    id="gameGrid">
+  </div>
 
 
-<div
-  class="grid"
-  id="gameGrid"
-></div>
-
-
-<footer>
-  © 2026 Kalahari Studios • Launcher v2.38
-</footer>
+  <footer>
+    © 2026 Kalahari Studios • Launcher v2.38
+  </footer>
 
 </main>
 
@@ -1679,183 +1635,91 @@ footer{
 
 <script>
 
-/* =========================================================
-   KALAHARI STUDIOS LAUNCHER CONTROL
-=========================================================
-
-   THIS IS THE ONLY PART YOU NEED TO CHANGE.
-
-   ON  = Launcher works normally.
-   OFF = Launcher Down / Maintenance Mode.
-
-   No Firestore is used for this feature.
-
-========================================================= */
-
-const LAUNCHER_STATUS = "OFF";
-
-
-/* =========================================================
-   MAINTENANCE MODE INFORMATION
-========================================================= */
-
-const LAUNCHER_DOWN_TITLE = "Launcher Down";
-
-const LAUNCHER_DOWN_INFO =
-  "The Kalahari Studios Launcher is currently unavailable. This is part of a planned outage. Please check back later.";
-
-const LAUNCHER_DOWN_STATUS =
-  "The launcher is temporarily offline for maintenance. Please try again later.";
-
-
-/* =========================================================
+/* ==========================================================
    FIREBASE CONFIGURATION
-========================================================= */
+========================================================== */
 
 const firebaseConfig = {
-
-  apiKey:
-    "AIzaSyBUoUrDa7KVn9ab2NawytUIDZS-u6tSpWw",
-
-  authDomain:
-    "kalahari-launcher.firebaseapp.com",
-
-  projectId:
-    "kalahari-launcher",
-
-  storageBucket:
-    "kalahari-launcher.firebasestorage.app",
-
-  messagingSenderId:
-    "190018843174",
-
-  appId:
-    "1:190018843174:web:9be974026ea41ea9e92ce7"
-
+  apiKey: "AIzaSyBUoUrDa7KVn9ab2NawytUIDZS-u6tSpWw",
+  authDomain: "kalahari-launcher.firebaseapp.com",
+  projectId: "kalahari-launcher",
+  storageBucket: "kalahari-launcher.firebasestorage.app",
+  messagingSenderId: "190018843174",
+  appId: "1:190018843174:web:9be974026ea41ea9e92ce7"
 };
-
-
-/* =========================================================
-   INITIALIZE FIREBASE
-========================================================= */
 
 firebase.initializeApp(firebaseConfig);
 
 const auth = firebase.auth();
 
 
-/* =========================================================
-   GET MAIN LOGIN / LAUNCHER ELEMENTS
-========================================================= */
+/* ==========================================================
+   🔴 MASTER LAUNCHER STATUS
+==========================================================
 
-const loginScreen =
-  document.getElementById("loginScreen");
+   CHANGE ONLY THIS WORD:
 
-const launcher =
-  document.getElementById("launcher");
+   "ON"  = Launcher works normally
+   "OFF" = Launcher is completely disabled
 
-const normalLoginCard =
-  document.getElementById("normalLoginCard");
+   No Firestore required.
 
-const launcherDownCard =
-  document.getElementById("launcherDownCard");
+========================================================== */
 
-
-/* =========================================================
-   LAUNCHER DOWN MODE
-========================================================= */
-
-function applyLauncherStatus(){
-
-  const launcherIsDown =
-    LAUNCHER_STATUS.toUpperCase() === "OFF";
+const LAUNCHER_STATUS = "ON";
 
 
-  if(launcherIsDown){
+/* ==========================================================
+   LAUNCHER DOWN INFORMATION
+========================================================== */
 
-    /*
-      Hide the normal login screen.
-      This means users cannot sign in through the UI.
-    */
+const LAUNCHER_DOWN_TITLE = "Launcher Down";
 
-    normalLoginCard.classList.add("hidden");
+const LAUNCHER_DOWN_INFO =
+  "The Kalahari Studios Launcher is currently unavailable while we perform maintenance. Please check back later. Games cannot be launched while the launcher is offline.";
 
-
-    /*
-      Show the Launcher Down screen.
-    */
-
-    launcherDownCard.classList.remove("hidden");
+const LAUNCHER_DOWN_DATE =
+  "Status: Offline • Please check the Kalahari Studios announcements for updates.";
 
 
-    /*
-      Make sure the actual launcher is hidden.
-    */
+/* ==========================================================
+   NEWS BOX CONTROL
+==========================================================
 
-    launcher.classList.add("hidden");
+   "ANN" = show announcement
+   "OFF" = hide announcement
 
-
-    /*
-      Update maintenance information.
-    */
-
-    document.getElementById(
-      "launcherDownInfo"
-    ).textContent = LAUNCHER_DOWN_INFO;
-
-
-    document.getElementById(
-      "launcherDownStatus"
-    ).textContent = LAUNCHER_DOWN_STATUS;
-
-
-    document.title =
-      "Launcher Down • Kalahari Studios";
-
-  }else{
-
-    /*
-      Normal launcher mode.
-    */
-
-    normalLoginCard.classList.remove("hidden");
-
-    launcherDownCard.classList.add("hidden");
-
-    document.title =
-      "Kalahari Studios Launcher";
-
-  }
-
-}
-
-
-/*
-  Run immediately.
-*/
-
-applyLauncherStatus();
-
-
-/* =========================================================
-   IMPORTANT NEWS CONTROL
-========================================================= */
+========================================================== */
 
 const IMPORTANT_NEWS = "ANN";
 
-const NEWS_DATE =
-  "August 24, 2026";
+const NEWS_DATE = "August 24, 2026";
 
 const NEWS_TITLE =
   "Major Planned Outage!";
 
 const NEWS_INFO =
-  "A major planned outage will take place Monday 24 August. It is planned to last until 3:30PM. Sorry for the Inconvenience.";
+  "A major planned outage will take place Monday 24 August. It is planned to last until 3:30PM. Sorry for the inconvenience.";
 
 
-/* =========================================================
-   GAME LIST
-========================================================= */
+/* ==========================================================
+   GAME DATABASE
+==========================================================
+
+   EACH GAME HAS ITS OWN UPDATE SWITCH.
+
+   updateStatus:
+
+   "ON"  = show update / maintenance notice
+   "OFF" = hide update / maintenance notice
+
+   updateNotes:
+   The text displayed when updateStatus is ON.
+
+   This means you can control every game's notices
+   separately without Firestore.
+
+========================================================== */
 
 const games = [
 
@@ -1866,12 +1730,20 @@ const games = [
     cover:"taxi1-cover.jpg",
     genre:"Driving",
     date:"March 2025",
+
     description:
       "Jump behind the wheel and build your taxi career.",
+
     status:"AVAILABLE",
-    url:
-      "https://BubblesTheGoat225.github.io/kalahari-launcher/taxi.html"
+
+    url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi.html",
+
+    updateStatus:"OFF",
+
+    updateNotes:
+      "TAXI is currently receiving maintenance."
   },
+
 
   {
     category:"taxi",
@@ -1880,27 +1752,42 @@ const games = [
     cover:"taxi3-cover.jpg",
     genre:"Driving • Open World",
     date:"August 21, 2026",
+
     description:
       "The next chapter of the TAXI series. Bigger roads. Bigger jobs.",
+
     status:"AVAILABLE",
-    url:
-      "https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3.html"
+
+    url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3.html",
+
+    updateStatus:"OFF",
+
+    updateNotes:
+      "TAXI 3 is currently receiving an update. Some features may be unavailable."
   },
+
 
   {
     category:"taxi",
     name:"TAXI 3 - Expansion 1",
     icon:"Ex1",
     cover:"taxi3ex1-cover.jpg",
-    genre:
-      "Driving • Country Exploration • Expansion",
+    genre:"Driving • Country Exploration • Expansion",
     date:"August 22, 2026",
+
     description:
       "Take fares beyond the city and explore the countryside.",
+
     status:"AVAILABLE",
-    url:
-      "https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3ex.html"
+
+    url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3ex.html",
+
+    updateStatus:"OFF",
+
+    updateNotes:
+      "Expansion 1 is currently undergoing maintenance."
   },
+
 
   {
     category:"taxi",
@@ -1908,11 +1795,20 @@ const games = [
     icon:"Ex2",
     genre:"Expansion • TBA",
     date:"Late-2026",
+
     description:
       "A new project is currently in development.",
+
     status:"COMING SOON",
-    url:"#"
+
+    url:"#",
+
+    updateStatus:"OFF",
+
+    updateNotes:
+      "Expansion 2 is currently unavailable."
   },
+
 
   {
     category:"taxi",
@@ -1921,12 +1817,20 @@ const games = [
     cover:"taxi3-cover.jpg",
     genre:"Driving • Open World",
     date:"August 22, 2026",
+
     description:
       "The next chapter of the TAXI series. Bigger roads. Bigger jobs. Now on IOS and Android. Note: Taxi 3 - Mobile Edition is only available on Mobile platforms.",
+
     status:"AVAILABLE",
-    url:
-      "https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3-mobile.html"
+
+    url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3-mobile.html",
+
+    updateStatus:"ON",
+
+    updateNotes:
+      "Taxi 3 - Mobile is undergoing vital maintenence. DLC will be ported to Mobile in the near future.."
   },
+
 
   {
     category:"other",
@@ -1934,11 +1838,20 @@ const games = [
     icon:"?",
     genre:"TBA",
     date:"TBA",
+
     description:
       "A new project is currently in development.",
+
     status:"COMING SOON",
-    url:"#"
+
+    url:"#",
+
+    updateStatus:"OFF",
+
+    updateNotes:
+      "More information will be announced soon."
   },
+
 
   {
     category:"other",
@@ -1947,12 +1860,20 @@ const games = [
     cover:"kalaharilogo2026.jpg",
     genre:"Driving • Open World • Story • TBA",
     date:"TBA",
+
     description:
       "Kingston City, 2025. You arrive in Kingston, broke and in need of accommodation and money. Over 70% of the buildings in Kingston are enterable. Explore a major city, and the Americana Countryside, doing jobs, buying houses and uncovering secrets. More information TBA. This game is currently in development.",
+
     status:"IN PRODUCTION",
-    url:
-      "https://BubblesTheGoat225.github.io/kalahari-launcher/taxi4placeholder.html"
+
+    url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi4placeholder.html",
+
+    updateStatus:"ON",
+
+    updateNotes:
+      "This game is currently in active development. Features, release dates and gameplay systems are subject to change."
   },
+
 
   {
     category:"other",
@@ -1960,11 +1881,20 @@ const games = [
     icon:"?",
     genre:"TBA",
     date:"TBA",
+
     description:
       "A new project is currently in development.",
+
     status:"COMING SOON",
-    url:"#"
+
+    url:"#",
+
+    updateStatus:"OFF",
+
+    updateNotes:
+      "Development information coming soon."
   },
+
 
   {
     category:"other",
@@ -1972,11 +1902,20 @@ const games = [
     icon:"?",
     genre:"TBA",
     date:"TBA",
+
     description:
       "A new project is currently in development.",
+
     status:"COMING SOON",
-    url:"#"
+
+    url:"#",
+
+    updateStatus:"OFF",
+
+    updateNotes:
+      "Development information coming soon."
   },
+
 
   {
     category:"other",
@@ -1984,11 +1923,20 @@ const games = [
     icon:"?",
     genre:"TBA",
     date:"TBA",
+
     description:
       "A new project is currently in development.",
+
     status:"COMING SOON",
-    url:"#"
+
+    url:"#",
+
+    updateStatus:"OFF",
+
+    updateNotes:
+      "Development information coming soon."
   },
+
 
   {
     category:"other",
@@ -1996,18 +1944,87 @@ const games = [
     icon:"?",
     genre:"TBA",
     date:"TBA",
+
     description:
       "A new project is currently in development.",
+
     status:"COMING SOON",
-    url:"#"
+
+    url:"#",
+
+    updateStatus:"OFF",
+
+    updateNotes:
+      "Development information coming soon."
   }
 
 ];
 
 
-/* =========================================================
+/* ==========================================================
+   MASTER LAUNCHER STATUS SYSTEM
+========================================================== */
+
+const loginScreen =
+  document.getElementById("loginScreen");
+
+const launcher =
+  document.getElementById("launcher");
+
+const normalLogin =
+  document.getElementById("normalLogin");
+
+const launcherDownScreen =
+  document.getElementById("launcherDownScreen");
+
+
+function applyLauncherStatus(){
+
+  const launcherIsOnline =
+    LAUNCHER_STATUS === "ON";
+
+
+  if(launcherIsOnline){
+
+    normalLogin.classList.remove("hidden");
+
+    launcherDownScreen.classList.add("hidden");
+
+  }else{
+
+    normalLogin.classList.add("hidden");
+
+    launcherDownScreen.classList.remove("hidden");
+
+    document.getElementById("launcherDownTitle")
+      .textContent = LAUNCHER_DOWN_TITLE;
+
+    document.getElementById("launcherDownInfo")
+      .textContent = LAUNCHER_DOWN_INFO;
+
+    document.getElementById("launcherDownDate")
+      .textContent = LAUNCHER_DOWN_DATE;
+
+    /*
+      Completely prevent the launcher itself
+      from appearing while offline.
+    */
+
+    launcher.classList.add("hidden");
+
+  }
+
+}
+
+
+/* Apply immediately */
+
+applyLauncherStatus();
+
+
+/* ==========================================================
    GAME RENDERING
-========================================================= */
+========================================================== */
 
 const grid =
   document.getElementById("gameGrid");
@@ -2019,32 +2036,32 @@ const gameFilter =
   document.getElementById("gameFilter");
 
 
-function renderGames(
-  searchTerm = "",
-  category = "all"
-){
+function renderGames(searchTerm="", category="all"){
 
-  grid.innerHTML = "";
+  grid.innerHTML="";
+
 
   games
     .filter(g => {
 
       const matchesSearch =
-        g.name
-          .toLowerCase()
+        g.name.toLowerCase()
           .includes(searchTerm.toLowerCase()) ||
 
-        g.genre
-          .toLowerCase()
+        g.genre.toLowerCase()
           .includes(searchTerm.toLowerCase());
+
 
       const matchesCategory =
         category === "all" ||
         g.category === category;
 
+
       return matchesSearch && matchesCategory;
 
     })
+
+
     .forEach(g => {
 
       const available =
@@ -2057,6 +2074,10 @@ function renderGames(
         g.status === "COMING SOON";
 
 
+      const hasUpdate =
+        g.updateStatus === "ON";
+
+
       const card =
         document.createElement("article");
 
@@ -2064,11 +2085,27 @@ function renderGames(
       card.className =
         "card" +
         (coming ? " coming" : "") +
-        (
-          g.name === "Upcoming Open World Game"
-            ? " wide-card"
-            : ""
-        );
+        (g.name === "Upcoming Open World Game"
+          ? " wide-card"
+          : "");
+
+
+      const updateHTML =
+        hasUpdate
+          ? `
+            <div class="game-update">
+
+              <div class="game-update-title">
+                Update / Maintenance Notice
+              </div>
+
+              <div class="game-update-text">
+                ${g.updateNotes}
+              </div>
+
+            </div>
+          `
+          : "";
 
 
       card.innerHTML = `
@@ -2081,12 +2118,13 @@ function renderGames(
 
           ${
             g.cover
+
               ? `
                 <img
                   src="${g.cover}"
-                  alt="${g.name} cover art"
-                >
+                  alt="${g.name} cover art">
               `
+
               : `
                 <div class="game-icon">
                   ${g.icon}
@@ -2115,6 +2153,7 @@ function renderGames(
 
           </div>
 
+
           <div class="card-bottom">
 
             <span class="release">
@@ -2124,8 +2163,8 @@ function renderGames(
             <button
               class="play-btn ${production ? "production-btn" : ""}"
               ${coming ? "disabled" : ""}
-              data-url="${g.url}"
-            >
+              data-url="${g.url}">
+
               ${
                 available
                   ? "PLAY"
@@ -2133,13 +2172,18 @@ function renderGames(
                     ? "IN PRODUCTION"
                     : "COMING SOON"
               }
+
             </button>
 
           </div>
 
+
+          ${updateHTML}
+
         </div>
 
       `;
+
 
       grid.appendChild(card);
 
@@ -2166,15 +2210,16 @@ search.addEventListener(
   updateGameList
 );
 
+
 gameFilter.addEventListener(
   "change",
   updateGameList
 );
 
 
-/* =========================================================
-   GAME LAUNCHING
-========================================================= */
+/* ==========================================================
+   GAME LAUNCH BUTTONS
+========================================================== */
 
 document.addEventListener(
   "click",
@@ -2185,15 +2230,35 @@ document.addEventListener(
       !e.target.disabled
     ){
 
+      /*
+        Extra safety check.
+
+        Even if somebody somehow changes the UI,
+        games cannot launch while launcher is OFF.
+      */
+
+      if(LAUNCHER_STATUS !== "ON"){
+
+        alert(
+          "The Kalahari Studios Launcher is currently offline."
+        );
+
+        return;
+
+      }
+
+
       const url =
         e.target.dataset.url;
+
 
       if(
         url &&
         url !== "#"
       ){
 
-        window.location.href = url;
+        window.location.href =
+          url;
 
       }else{
 
@@ -2209,9 +2274,9 @@ document.addEventListener(
 );
 
 
-/* =========================================================
+/* ==========================================================
    IMPORTANT NEWS
-========================================================= */
+========================================================== */
 
 document.addEventListener(
   "DOMContentLoaded",
@@ -2221,34 +2286,22 @@ document.addEventListener(
       document.getElementById("news-box");
 
 
-    if(
-      IMPORTANT_NEWS.toUpperCase() === "ANN"
-    ){
+    if(IMPORTANT_NEWS === "ANN"){
 
-      document.getElementById(
-        "news-date"
-      ).textContent = NEWS_DATE;
+      document.getElementById("news-date")
+        .textContent = NEWS_DATE;
 
+      document.getElementById("news-title")
+        .textContent = NEWS_TITLE;
 
-      document.getElementById(
-        "news-title"
-      ).textContent = NEWS_TITLE;
+      document.getElementById("news-info")
+        .textContent = NEWS_INFO;
 
-
-      document.getElementById(
-        "news-info"
-      ).textContent = NEWS_INFO;
-
-
-      newsBox.classList.remove(
-        "hidden"
-      );
+      newsBox.classList.remove("hidden");
 
     }else{
 
-      newsBox.classList.add(
-        "hidden"
-      );
+      newsBox.classList.add("hidden");
 
     }
 
@@ -2256,54 +2309,36 @@ document.addEventListener(
 );
 
 
-/* =========================================================
+/* ==========================================================
    SETTINGS / THEME / ACCOUNT
-========================================================= */
+========================================================== */
 
 const settingsOverlay =
-  document.getElementById(
-    "settingsOverlay"
-  );
+  document.getElementById("settingsOverlay");
 
 const darkModeToggle =
-  document.getElementById(
-    "darkModeToggle"
-  );
+  document.getElementById("darkModeToggle");
 
 const accountUsername =
-  document.getElementById(
-    "accountUsername"
-  );
+  document.getElementById("accountUsername");
 
 const accountEmail =
-  document.getElementById(
-    "accountEmail"
-  );
+  document.getElementById("accountEmail");
 
 const accountPassword =
-  document.getElementById(
-    "accountPassword"
-  );
+  document.getElementById("accountPassword");
 
 const accountAvatarUrl =
-  document.getElementById(
-    "accountAvatarUrl"
-  );
+  document.getElementById("accountAvatarUrl");
 
 const accountAvatar =
-  document.getElementById(
-    "accountAvatar"
-  );
+  document.getElementById("accountAvatar");
 
 const headerAvatar =
-  document.getElementById(
-    "headerAvatar"
-  );
+  document.getElementById("headerAvatar");
 
 const accountMessage =
-  document.getElementById(
-    "accountMessage"
-  );
+  document.getElementById("accountMessage");
 
 
 function defaultAvatar(user){
@@ -2323,7 +2358,7 @@ function defaultAvatar(user){
 
 function setTheme(
   isDark,
-  save = true
+  save=true
 ){
 
   document.body.classList.toggle(
@@ -2333,6 +2368,7 @@ function setTheme(
 
   darkModeToggle.checked =
     isDark;
+
 
   if(save){
 
@@ -2364,24 +2400,31 @@ function populateAccount(user){
 
   if(!user) return;
 
+
   accountUsername.value =
     user.displayName ||
     user.email.split("@")[0];
 
+
   accountEmail.value =
     user.email || "";
+
 
   accountPassword.value =
     "";
 
+
   accountAvatarUrl.value =
     user.photoURL || "";
+
 
   const avatar =
     defaultAvatar(user);
 
+
   accountAvatar.src =
     avatar;
+
 
   headerAvatar.src =
     avatar;
@@ -2394,11 +2437,13 @@ function openSettings(){
   const user =
     auth.currentUser;
 
+
   if(user){
 
     populateAccount(user);
 
   }
+
 
   settingsOverlay.classList.remove(
     "hidden"
@@ -2439,10 +2484,7 @@ settingsOverlay.addEventListener(
   "click",
   e => {
 
-    if(
-      e.target ===
-      settingsOverlay
-    ){
+    if(e.target === settingsOverlay){
 
       closeSettings();
 
@@ -2475,30 +2517,23 @@ document
         document
           .querySelectorAll(".settings-tab")
           .forEach(t =>
-            t.classList.remove(
-              "active"
-            )
+            t.classList.remove("active")
           );
+
 
         document
           .querySelectorAll(".settings-section")
           .forEach(s =>
-            s.classList.remove(
-              "active"
-            )
+            s.classList.remove("active")
           );
 
-        tab.classList.add(
-          "active"
-        );
+
+        tab.classList.add("active");
+
 
         document
-          .getElementById(
-            tab.dataset.tab
-          )
-          .classList.add(
-            "active"
-          );
+          .getElementById(tab.dataset.tab)
+          .classList.add("active");
 
       }
     );
@@ -2506,9 +2541,9 @@ document
   });
 
 
-/* =========================================================
+/* ==========================================================
    SAVE ACCOUNT
-========================================================= */
+========================================================== */
 
 document.getElementById(
   "saveAccount"
@@ -2518,6 +2553,7 @@ document.getElementById(
 
     const user =
       auth.currentUser;
+
 
     if(!user) return;
 
@@ -2535,10 +2571,7 @@ document.getElementById(
       accountAvatarUrl.value.trim();
 
 
-    if(
-      !username ||
-      !email
-    ){
+    if(!username || !email){
 
       accountMessage.style.color =
         "#ff7272";
@@ -2569,17 +2602,19 @@ document.getElementById(
       ){
 
         await user.updateProfile({
-          displayName:username,
-          photoURL:photoURL || null
+
+          displayName:
+            username,
+
+          photoURL:
+            photoURL || null
+
         });
 
       }
 
 
-      if(
-        email !==
-        user.email
-      ){
+      if(email !== user.email){
 
         await user.updateEmail(
           email
@@ -2624,7 +2659,9 @@ document.getElementById(
       accountMessage.textContent =
         "Account settings saved successfully.";
 
-    }catch(err){
+    }
+
+    catch(err){
 
       accountMessage.style.color =
         "#ff7272";
@@ -2643,9 +2680,9 @@ document.getElementById(
 );
 
 
-/* =========================================================
+/* ==========================================================
    RESET PREFERENCES
-========================================================= */
+========================================================== */
 
 document.getElementById(
   "resetPrefs"
@@ -2661,13 +2698,16 @@ document.getElementById(
       "kalahariGameFilter"
     );
 
+
     setTheme(true);
+
 
     gameFilter.value =
       "all";
 
     search.value =
       "";
+
 
     updateGameList();
 
@@ -2702,22 +2742,25 @@ gameFilter.addEventListener(
 );
 
 
-/* =========================================================
-   AUTHENTICATION HANDLING
-========================================================= */
+/* ==========================================================
+   AUTHENTICATION
+========================================================== */
+
+const error =
+  document.getElementById("error");
+
 
 auth.onAuthStateChanged(
   user => {
 
     /*
       IMPORTANT:
-      If the launcher is OFF, Firebase authentication
-      does NOT get permission to reveal the launcher.
+
+      If launcher is OFF, nobody gets
+      into the actual launcher.
     */
 
-    if(
-      LAUNCHER_STATUS.toUpperCase() === "OFF"
-    ){
+    if(LAUNCHER_STATUS !== "ON"){
 
       launcher.classList.add(
         "hidden"
@@ -2727,22 +2770,10 @@ auth.onAuthStateChanged(
         "hidden"
       );
 
-      normalLoginCard.classList.add(
-        "hidden"
-      );
-
-      launcherDownCard.classList.remove(
-        "hidden"
-      );
-
       return;
 
     }
 
-
-    /*
-      Normal launcher operation.
-    */
 
     if(user){
 
@@ -2764,7 +2795,9 @@ auth.onAuthStateChanged(
 
       populateAccount(user);
 
-    }else{
+    }
+
+    else{
 
       launcher.classList.add(
         "hidden"
@@ -2774,23 +2807,15 @@ auth.onAuthStateChanged(
         "hidden"
       );
 
-      normalLoginCard.classList.remove(
-        "hidden"
-      );
-
-      launcherDownCard.classList.add(
-        "hidden"
-      );
-
     }
 
   }
 );
 
 
-/* =========================================================
+/* ==========================================================
    SIGN UP
-========================================================= */
+========================================================== */
 
 document.getElementById(
   "signUpBtn"
@@ -2798,14 +2823,7 @@ document.getElementById(
   "click",
   () => {
 
-    /*
-      Extra safety check.
-    */
-
-    if(
-      LAUNCHER_STATUS.toUpperCase() ===
-      "OFF"
-    ){
+    if(LAUNCHER_STATUS !== "ON"){
 
       return;
 
@@ -2813,27 +2831,23 @@ document.getElementById(
 
 
     const username =
-      document.getElementById(
-        "displayName"
-      ).value.trim();
+      document
+        .getElementById("displayName")
+        .value
+        .trim();
 
 
     const email =
-      document.getElementById(
-        "username"
-      ).value.trim();
+      document
+        .getElementById("username")
+        .value
+        .trim();
 
 
     const pass =
-      document.getElementById(
-        "password"
-      ).value;
-
-
-    const error =
-      document.getElementById(
-        "error"
-      );
+      document
+        .getElementById("password")
+        .value;
 
 
     if(!username){
@@ -2860,7 +2874,10 @@ document.getElementById(
 
           return userCredential.user
             .updateProfile({
-              displayName:username
+
+              displayName:
+                username
+
             });
 
         }
@@ -2894,9 +2911,9 @@ document.getElementById(
 );
 
 
-/* =========================================================
+/* ==========================================================
    SIGN IN
-========================================================= */
+========================================================== */
 
 document.getElementById(
   "signInBtn"
@@ -2904,14 +2921,7 @@ document.getElementById(
   "click",
   () => {
 
-    /*
-      Extra safety check.
-    */
-
-    if(
-      LAUNCHER_STATUS.toUpperCase() ===
-      "OFF"
-    ){
+    if(LAUNCHER_STATUS !== "ON"){
 
       return;
 
@@ -2919,21 +2929,16 @@ document.getElementById(
 
 
     const email =
-      document.getElementById(
-        "username"
-      ).value.trim();
+      document
+        .getElementById("username")
+        .value
+        .trim();
 
 
     const pass =
-      document.getElementById(
-        "password"
-      ).value;
-
-
-    const error =
-      document.getElementById(
-        "error"
-      );
+      document
+        .getElementById("password")
+        .value;
 
 
     auth
@@ -2958,9 +2963,9 @@ document.getElementById(
 );
 
 
-/* =========================================================
+/* ==========================================================
    LOG OUT
-========================================================= */
+========================================================== */
 
 document.getElementById(
   "logout"

@@ -2486,16 +2486,16 @@ function renderGames(
     .forEach(game => {
 
      const available =
-  g.status === "AVAILABLE";
+  game.status === "AVAILABLE";
 
 const production =
-  g.status === "IN PRODUCTION";
+  game.status === "IN PRODUCTION";
 
 const coming =
-  g.status === "COMING SOON";
+  game.status === "COMING SOON";
 
 const maintenance =
-  g.status === "MAINTENANCE";
+  game.status === "MAINTENANCE";
 
 const isAdmin =
   auth.currentUser &&

@@ -2485,21 +2485,30 @@ function renderGames(
     })
     .forEach(game => {
 
-      const available =
-        game.status === "AVAILABLE";
+     const available =
+  g.status === "AVAILABLE";
 
-      const production =
-        game.status === "IN PRODUCTION";
+const production =
+  g.status === "IN PRODUCTION";
 
-      const coming =
-        game.status === "COMING SOON";
+const coming =
+  g.status === "COMING SOON";
 
-      const maintenance =
-        game.status === "MAINTENANCE";
+const maintenance =
+  g.status === "MAINTENANCE";
 
-      const card =
-        document.createElement("article");
+const isAdmin =
+  auth.currentUser &&
+  (
+    auth.currentUser.displayName || ""
+  ).toLowerCase() === "admin";
 
+const canLaunch =
+  available ||
+  (production && isAdmin);
+       
+const card =
+  document.createElement("article");
 
       card.className =
         "card" +

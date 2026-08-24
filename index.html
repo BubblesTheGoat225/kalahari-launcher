@@ -2503,9 +2503,13 @@ const isAdmin =
     auth.currentUser.displayName || ""
   ).toLowerCase() === "admin";
 
+const hasValidLink =
+  !!game.url &&
+  game.url !== "#";
+
 const canLaunch =
   available ||
-  (production && isAdmin);
+  (production && isAdmin && hasValidLink);
        
 const card =
   document.createElement("article");
@@ -2617,7 +2621,7 @@ const card =
                 ${maintenance ? "maintenance-btn" : ""}"
 
               ${
-                !available
+                !canLaunch
                   ? "disabled"
                   : ""
               }
@@ -2625,7 +2629,7 @@ const card =
               data-url="${game.url}">
 
               ${
-                available
+                canLaunch
                   ? "PLAY"
                   : maintenance
                     ? "MAINTENANCE"

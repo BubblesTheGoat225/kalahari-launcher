@@ -15,6 +15,7 @@
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
 <style>
 
@@ -2155,6 +2156,8 @@ const firebaseConfig = {
 
 let auth = null;
 
+let db = null;
+
 try{
 
   if(!firebase.apps.length){
@@ -2165,12 +2168,55 @@ try{
 
   auth = firebase.auth();
 
+  db = firebase.firestore();
+
 }catch(err){
 
   console.error(
     "Firebase initialization failed:",
     err
   );
+
+}
+
+
+/* =========================================================
+   USER DIRECTORY SYNC (for Kalahari Messages)
+========================================================= */
+
+function syncUserProfile(user){
+
+  if(!db || !user){
+    return;
+  }
+
+  db.collection("users")
+    .doc(user.uid)
+    .set({
+
+      displayName:
+        user.displayName ||
+        user.email?.split("@")[0] ||
+        "User",
+
+      email:
+        user.email || null,
+
+      photoURL:
+        user.photoURL || null,
+
+      lastSeen:
+        firebase.firestore.FieldValue.serverTimestamp()
+
+    }, { merge: true })
+    .catch(err => {
+
+      console.error(
+        "Profile sync error:",
+        err
+      );
+
+    });
 
 }
 
@@ -2201,13 +2247,13 @@ const LAUNCHER_DOWN_DATE =
 const IMPORTANT_NEWS = "ANN";
 
 const NEWS_DATE =
-  "August 25-26, 2026";
+  "August 24, 2026";
 
 const NEWS_TITLE =
-  "Important Planned Outage!";
+  "Major Planned Outage!";
 
 const NEWS_INFO =
-  "A major planned outage will take place Wednesday 26 August. It is planned to last from 7:00AM to 3:40PM Wednesday. This is to optimise the launcher and update broken systems, such as removing the account profile picture functionalisy temporarily until Kalahari Messages is complete. Sorry for the inconvenience.";
+  "A major planned outage will take place Monday 24 August. It is planned to last until 3:30PM. Sorry for the inconvenience.";
 
 
 /* =========================================================
@@ -2313,7 +2359,7 @@ const games = [
     date:"TBA",
     description:"Kingston City, 2025. You arrive in Kingston, broke and in need of accommodation and money. Over 70% of the buildings in Kingston are enterable. Explore a major city, and the Americana Countryside, doing jobs, buying houses and uncovering secrets. More information TBA. This game is currently in development.",
     status:"IN PRODUCTION",
-    url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi4.html",
+    url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi4placeholder.html",
     updateStatus:"ON",
     updateNotes:"This game is currently in active development. Features, release dates and gameplay systems are subject to change."
   },
@@ -3208,6 +3254,11 @@ document.getElementById(
       );
 
 
+      syncUserProfile(
+        freshUser
+      );
+
+
       updateGameList();
 
 
@@ -3541,6 +3592,11 @@ function showLauncher(user){
 
 
   updateAdminVisibility(
+    user
+  );
+
+
+  syncUserProfile(
     user
   );
 

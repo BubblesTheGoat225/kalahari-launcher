@@ -102,7 +102,7 @@ body.light-mode .news-content{
   color:#8eb8d0;
 }
 
-button,input{
+button,input,select,textarea{
   font:inherit;
 }
 
@@ -406,6 +406,188 @@ header{
   color:var(--accent);
 }
 
+/* ==========================================
+   ADMIN BUTTON
+========================================== */
+
+.admin-header-btn{
+  background:#b93838;
+  color:#fff;
+  border:1px solid #d45a5a;
+  border-radius:9px;
+  padding:8px 11px;
+  cursor:pointer;
+  font-weight:850;
+}
+
+.admin-header-btn:hover{
+  background:#d04a4a;
+  border-color:#ff7777;
+  color:#fff;
+}
+
+.admin-modal{
+  width:min(900px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:var(--panel);
+  border:1px solid #7d3030;
+  border-radius:20px;
+  box-shadow:0 30px 90px #0009;
+  padding:26px;
+}
+
+.admin-title{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.admin-title-icon{
+  width:44px;
+  height:44px;
+  border-radius:12px;
+  background:#b93838;
+  color:white;
+  display:grid;
+  place-items:center;
+  font-weight:950;
+}
+
+.admin-warning{
+  margin:18px 0;
+  padding:13px;
+  border:1px solid #7d3030;
+  border-left:4px solid #e24d4d;
+  border-radius:10px;
+  background:rgba(185,56,56,.1);
+  color:#ff9b9b;
+  font-size:12px;
+  line-height:1.5;
+}
+
+.admin-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+
+.admin-card{
+  background:var(--panel2);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:17px;
+}
+
+.admin-card h3{
+  margin-bottom:6px;
+  font-size:17px;
+}
+
+.admin-card p{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+  margin-bottom:14px;
+}
+
+.admin-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+}
+
+.admin-row:last-child{
+  margin-bottom:0;
+}
+
+.admin-select,
+.admin-input,
+.admin-textarea{
+  width:100%;
+  padding:10px 11px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:var(--field);
+  color:var(--text);
+  outline:none;
+}
+
+.admin-textarea{
+  min-height:90px;
+  resize:vertical;
+}
+
+.admin-select:focus,
+.admin-input:focus,
+.admin-textarea:focus{
+  border-color:#e24d4d;
+}
+
+.admin-action{
+  border:0;
+  border-radius:9px;
+  padding:10px 13px;
+  background:#b93838;
+  color:white;
+  font-weight:850;
+  cursor:pointer;
+}
+
+.admin-action:hover{
+  background:#d04a4a;
+}
+
+.admin-action.yellow{
+  background:var(--accent);
+  color:#111;
+}
+
+.admin-action.yellow:hover{
+  background:var(--accent2);
+}
+
+.admin-status{
+  font-size:12px;
+  color:#52d47b;
+  min-height:18px;
+  margin-top:10px;
+}
+
+.admin-game-list{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+  margin-top:12px;
+}
+
+.admin-game-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:var(--field);
+}
+
+.admin-game-name{
+  font-size:12px;
+  font-weight:800;
+}
+
+.admin-game-row .admin-select{
+  width:auto;
+  min-width:150px;
+}
+
+/* ==========================================
+   MAIN
+========================================== */
+
 main{
   max-width:1250px;
   margin:auto;
@@ -469,7 +651,7 @@ main{
 }
 
 /* ==========================================
-   IMPORTANT NEWS
+   NEWS
 ========================================== */
 
 .news-container{
@@ -568,7 +750,6 @@ main{
 .search:focus,
 .filter-select:focus{
   border-color:var(--accent);
-  box-shadow:0 0 0 3px #2388e818;
 }
 
 .grid{
@@ -709,7 +890,7 @@ main{
 }
 
 /* ==========================================
-   GAME UPDATE / MAINTENANCE NOTICE
+   GAME UPDATE
 ========================================== */
 
 .game-update{
@@ -737,7 +918,7 @@ main{
 }
 
 /* ==========================================
-   IN PRODUCTION
+   PRODUCTION
 ========================================== */
 
 .production-btn{
@@ -752,7 +933,7 @@ main{
 }
 
 /* ==========================================
-   MAINTENANCE STATUS
+   MAINTENANCE
 ========================================== */
 
 .maintenance{
@@ -803,7 +984,7 @@ main{
 }
 
 /* ==========================================
-   SETTINGS MODAL
+   SETTINGS
 ========================================== */
 
 .settings-overlay{
@@ -1018,6 +1199,10 @@ footer{
     font-size:34px;
   }
 
+  .admin-grid{
+    grid-template-columns:1fr;
+  }
+
 }
 
 @media(max-width:600px){
@@ -1028,6 +1213,17 @@ footer{
 
   .user-area span{
     display:none;
+  }
+
+  .user-area{
+    gap:5px;
+  }
+
+  .admin-header-btn,
+  .header-btn,
+  .logout{
+    padding:7px 8px;
+    font-size:11px;
   }
 
   main{
@@ -1098,7 +1294,6 @@ footer{
       <form id="loginForm">
 
         <div class="field">
-
           <label for="displayName">
             DISPLAY USERNAME (FOR SIGN UP)
           </label>
@@ -1106,11 +1301,9 @@ footer{
           <input
             id="displayName"
             placeholder="Choose a username">
-
         </div>
 
         <div class="field">
-
           <label for="username">
             EMAIL ADDRESS
           </label>
@@ -1121,11 +1314,9 @@ footer{
             autocomplete="email"
             placeholder="Enter your email"
             required>
-
         </div>
 
         <div class="field">
-
           <label for="password">
             PASSWORD
           </label>
@@ -1136,7 +1327,6 @@ footer{
             autocomplete="current-password"
             placeholder="Enter your password"
             required>
-
         </div>
 
         <div class="btn-group">
@@ -1165,9 +1355,7 @@ footer{
 
     <div id="launcherDownScreen" class="launcher-down hidden">
 
-      <div class="launcher-down-icon">
-        !
-      </div>
+      <div class="launcher-down-icon">!</div>
 
       <h2 id="launcherDownTitle">
         Launcher Down
@@ -1196,23 +1384,11 @@ footer{
       role="img"
       aria-label="Powered by Google Firebase">
 
-      <span class="label">
-        Powered by
-      </span>
-
-      <span style="font-size:18px;">
-        🔥
-      </span>
-
+      <span>Powered by</span>
+      <span style="font-size:18px;">🔥</span>
       <span class="divider"></span>
-
-      <span style="font-weight:900;">
-        G
-      </span>
-
-      <span class="brand">
-        Google Firebase
-      </span>
+      <span style="font-weight:900;">G</span>
+      <span class="brand">Google Firebase</span>
 
     </div>
 
@@ -1248,6 +1424,13 @@ footer{
       <b id="userDisplay">User</b>
     </span>
 
+    <!-- ADMIN BUTTON -->
+    <button
+      class="admin-header-btn hidden"
+      id="adminAccessBtn">
+      🔐 ADMIN ACCESS ONLY
+    </button>
+
     <button
       class="header-btn"
       id="settingsBtn"
@@ -1265,6 +1448,259 @@ footer{
 
 </header>
 
+
+<!-- ==========================================
+     ADMIN MODAL
+========================================== -->
+
+<div
+  id="adminOverlay"
+  class="settings-overlay hidden">
+
+  <div
+    class="admin-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="adminTitle">
+
+    <div class="settings-top">
+
+      <div class="admin-title">
+
+        <div class="admin-title-icon">
+          🔐
+        </div>
+
+        <div>
+          <h2 id="adminTitle">
+            ADMIN ACCESS ONLY
+          </h2>
+
+          <span
+            style="font-size:12px;color:var(--muted);">
+            Kalahari Studios Launcher Administration
+          </span>
+        </div>
+
+      </div>
+
+      <button
+        class="close-settings"
+        id="closeAdmin">
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="admin-warning">
+
+      ⚠ ADMIN AREA — Changes made here affect the launcher
+      currently running in this browser. Do not give admin
+      credentials to other users.
+
+    </div>
+
+
+    <div class="admin-grid">
+
+
+      <!-- LAUNCHER CONTROL -->
+
+      <div class="admin-card">
+
+        <h3>
+          Launcher Status
+        </h3>
+
+        <p>
+          Control whether the launcher allows users to sign in
+          and access the main launcher.
+        </p>
+
+        <div class="admin-row">
+
+          <strong>
+            Current Status
+          </strong>
+
+          <select
+            id="adminLauncherStatus"
+            class="admin-select">
+
+            <option value="ON">
+              ON — Operational
+            </option>
+
+            <option value="OFF">
+              OFF — Maintenance
+            </option>
+
+          </select>
+
+        </div>
+
+        <button
+          class="admin-action yellow"
+          id="applyLauncherStatus">
+          Apply Launcher Status
+        </button>
+
+        <div
+          id="adminLauncherMessage"
+          class="admin-status">
+        </div>
+
+      </div>
+
+
+      <!-- NEWS CONTROL -->
+
+      <div class="admin-card">
+
+        <h3>
+          Important News
+        </h3>
+
+        <p>
+          Edit the announcement shown on the launcher home page.
+        </p>
+
+        <div class="field">
+
+          <label>
+            NEWS STATUS
+          </label>
+
+          <select
+            id="adminNewsStatus"
+            class="admin-select">
+
+            <option value="ANN">
+              ON
+            </option>
+
+            <option value="OFF">
+              OFF
+            </option>
+
+          </select>
+
+        </div>
+
+        <div class="field">
+
+          <label>
+            DATE
+          </label>
+
+          <input
+            id="adminNewsDate"
+            class="admin-input"
+            type="text">
+
+        </div>
+
+        <div class="field">
+
+          <label>
+            TITLE
+          </label>
+
+          <input
+            id="adminNewsTitle"
+            class="admin-input"
+            type="text">
+
+        </div>
+
+        <div class="field">
+
+          <label>
+            MESSAGE
+          </label>
+
+          <textarea
+            id="adminNewsInfo"
+            class="admin-textarea">
+          </textarea>
+
+        </div>
+
+        <button
+          class="admin-action yellow"
+          id="applyNews">
+          Apply Announcement
+        </button>
+
+        <div
+          id="adminNewsMessage"
+          class="admin-status">
+        </div>
+
+      </div>
+
+
+      <!-- GAME CONTROL -->
+
+      <div
+        class="admin-card"
+        style="grid-column:1/-1;">
+
+        <h3>
+          Game Status Management
+        </h3>
+
+        <p>
+          Change the status displayed for individual games.
+          This controls the current browser session.
+        </p>
+
+        <div
+          class="admin-game-list"
+          id="adminGameList">
+        </div>
+
+        <div
+          id="adminGameMessage"
+          class="admin-status">
+        </div>
+
+      </div>
+
+
+      <!-- ADMIN ACCOUNT -->
+
+      <div
+        class="admin-card"
+        style="grid-column:1/-1;">
+
+        <h3>
+          Current Administrator
+        </h3>
+
+        <p>
+          The administrator currently signed in is:
+        </p>
+
+        <strong
+          id="adminCurrentUser"
+          style="color:var(--accent);">
+          admin
+        </strong>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ==========================================
+     SETTINGS MODAL
+========================================== -->
 
 <div
   id="settingsOverlay"
@@ -1284,8 +1720,7 @@ footer{
 
       <button
         class="close-settings"
-        id="closeSettings"
-        aria-label="Close settings">
+        id="closeSettings">
         ×
       </button>
 
@@ -1593,8 +2028,7 @@ footer{
 
       <select
         class="filter-select"
-        id="gameFilter"
-        aria-label="Filter games">
+        id="gameFilter">
 
         <option value="all">
           All Games
@@ -1622,7 +2056,7 @@ footer{
 
 
   <footer>
-    © 2026 Kalahari Studios • Launcher v2.38
+    © 2026 Kalahari Studios • Launcher v2.39
   </footer>
 
 </main>
@@ -1633,7 +2067,7 @@ footer{
 <script>
 
 /* ==========================================================
-   FIREBASE CONFIGURATION
+   FIREBASE
 ========================================================== */
 
 const firebaseConfig = {
@@ -1652,22 +2086,13 @@ const auth = firebase.auth();
 
 /* ==========================================================
    MASTER LAUNCHER STATUS
-==========================================================
-
-   "ON"  = Launcher works normally
-   "OFF" = Launcher completely disabled
-
-   No Firestore required.
 ========================================================== */
 
-const LAUNCHER_STATUS = "ON";
+let LAUNCHER_STATUS = "ON";
 
 
-/* ==========================================================
-   LAUNCHER DOWN INFORMATION
-========================================================== */
-
-const LAUNCHER_DOWN_TITLE = "Launcher Down";
+const LAUNCHER_DOWN_TITLE =
+  "Launcher Down";
 
 const LAUNCHER_DOWN_INFO =
   "The Kalahari Studios Launcher is currently unavailable while we perform maintenance. Please check back later. Games cannot be launched while the launcher is offline.";
@@ -1680,44 +2105,20 @@ const LAUNCHER_DOWN_DATE =
    IMPORTANT NEWS
 ========================================================== */
 
-const IMPORTANT_NEWS = "ANN";
+let IMPORTANT_NEWS = "ANN";
 
-const NEWS_DATE = "August 24, 2026";
+let NEWS_DATE =
+  "August 24, 2026";
 
-const NEWS_TITLE =
+let NEWS_TITLE =
   "Major Planned Outage!";
 
-const NEWS_INFO =
+let NEWS_INFO =
   "A major planned outage will take place Monday 24 August. It is planned to last until 3:30PM. Sorry for the inconvenience.";
 
 
 /* ==========================================================
    GAME DATABASE
-==========================================================
-
-   GAME STATUS OPTIONS:
-
-   "AVAILABLE"
-   "MAINTENANCE"
-   "COMING SOON"
-   "IN PRODUCTION"
-
-   Each game is completely independent.
-
-   To put ONE GAME into maintenance:
-
-   status:"MAINTENANCE",
-
-   To make it available again:
-
-   status:"AVAILABLE",
-
-   updateStatus:
-
-   "ON"  = display update/maintenance notes
-   "OFF" = hide update/maintenance notes
-
-   No Firestore required.
 ========================================================== */
 
 const games = [
@@ -1729,20 +2130,12 @@ const games = [
     cover:"taxi1-cover.jpg",
     genre:"Driving",
     date:"March 2025",
-
-    description:
-      "Jump behind the wheel and build your taxi career.",
-
+    description:"Jump behind the wheel and build your taxi career.",
     status:"AVAILABLE",
-
     url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi.html",
-
     updateStatus:"OFF",
-
-    updateNotes:
-      "TAXI is currently receiving maintenance."
+    updateNotes:"TAXI is currently receiving maintenance."
   },
-
 
   {
     category:"taxi",
@@ -1751,20 +2144,12 @@ const games = [
     cover:"taxi3-cover.jpg",
     genre:"Driving • Open World",
     date:"August 21, 2026",
-
-    description:
-      "The next chapter of the TAXI series. Bigger roads. Bigger jobs.",
-
+    description:"The next chapter of the TAXI series. Bigger roads. Bigger jobs.",
     status:"AVAILABLE",
-
     url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3.html",
-
     updateStatus:"OFF",
-
-    updateNotes:
-      "TAXI 3 is currently receiving an update. Some features may be unavailable."
+    updateNotes:"TAXI 3 is currently receiving an update. Some features may be unavailable."
   },
-
 
   {
     category:"taxi",
@@ -1773,20 +2158,12 @@ const games = [
     cover:"taxi3ex1-cover.jpg",
     genre:"Driving • Country Exploration • Expansion",
     date:"August 22, 2026",
-
-    description:
-      "Take fares beyond the city and explore the countryside.",
-
+    description:"Take fares beyond the city and explore the countryside.",
     status:"AVAILABLE",
-
     url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3ex.html",
-
     updateStatus:"OFF",
-
-    updateNotes:
-      "Expansion 1 is currently undergoing maintenance."
+    updateNotes:"Expansion 1 is currently undergoing maintenance."
   },
-
 
   {
     category:"taxi",
@@ -1794,20 +2171,12 @@ const games = [
     icon:"Ex2",
     genre:"Expansion • TBA",
     date:"Late-2026",
-
-    description:
-      "A new project is currently in development.",
-
+    description:"A new project is currently in development.",
     status:"COMING SOON",
-
     url:"#",
-
     updateStatus:"OFF",
-
-    updateNotes:
-      "Expansion 2 is currently unavailable."
+    updateNotes:"Expansion 2 is currently unavailable."
   },
-
 
   {
     category:"taxi",
@@ -1816,20 +2185,12 @@ const games = [
     cover:"taxi3-cover.jpg",
     genre:"Driving • Open World",
     date:"August 22, 2026",
-
-    description:
-      "The next chapter of the TAXI series. Bigger roads. Bigger jobs. Now on IOS and Android. Note: Taxi 3 - Mobile Edition is only available on Mobile platforms.",
-
+    description:"The next chapter of the TAXI series. Bigger roads. Bigger jobs. Now on IOS and Android. Note: Taxi 3 - Mobile Edition is only available on Mobile platforms.",
     status:"MAINTENANCE",
-
     url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3-mobile.html",
-
     updateStatus:"ON",
-
-    updateNotes:
-      "Taxi 3 - Mobile is undergoing vital maintenance. DLC will be ported to Mobile in the near future."
+    updateNotes:"Taxi 3 - Mobile is undergoing vital maintenance. DLC will be ported to Mobile in the near future."
   },
-
 
   {
     category:"other",
@@ -1837,20 +2198,12 @@ const games = [
     icon:"?",
     genre:"TBA",
     date:"TBA",
-
-    description:
-      "A new project is currently in development.",
-
+    description:"A new project is currently in development.",
     status:"COMING SOON",
-
     url:"#",
-
     updateStatus:"OFF",
-
-    updateNotes:
-      "More information will be announced soon."
+    updateNotes:"More information will be announced soon."
   },
-
 
   {
     category:"other",
@@ -1859,20 +2212,12 @@ const games = [
     cover:"kalaharilogo2026.jpg",
     genre:"Driving • Open World • Story • TBA",
     date:"TBA",
-
-    description:
-      "Kingston City, 2025. You arrive in Kingston, broke and in need of accommodation and money. Over 70% of the buildings in Kingston are enterable. Explore a major city, and the Americana Countryside, doing jobs, buying houses and uncovering secrets. More information TBA. This game is currently in development.",
-
+    description:"Kingston City, 2025. You arrive in Kingston, broke and in need of accommodation and money. Over 70% of the buildings in Kingston are enterable. Explore a major city, and the Americana Countryside, doing jobs, buying houses and uncovering secrets. More information TBA. This game is currently in development.",
     status:"IN PRODUCTION",
-
-    url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi4placeholder.html",
-
+    url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi4.html",
     updateStatus:"ON",
-
-    updateNotes:
-      "This game is currently in active development. Features, release dates and gameplay systems are subject to change."
+    updateNotes:"This game is currently in active development. Features, release dates and gameplay systems are subject to change."
   },
-
 
   {
     category:"other",
@@ -1880,20 +2225,12 @@ const games = [
     icon:"?",
     genre:"TBA",
     date:"TBA",
-
-    description:
-      "A new project is currently in development.",
-
+    description:"A new project is currently in development.",
     status:"COMING SOON",
-
     url:"#",
-
     updateStatus:"OFF",
-
-    updateNotes:
-      "Development information coming soon."
+    updateNotes:"Development information coming soon."
   },
-
 
   {
     category:"other",
@@ -1901,20 +2238,12 @@ const games = [
     icon:"?",
     genre:"TBA",
     date:"TBA",
-
-    description:
-      "A new project is currently in development.",
-
+    description:"A new project is currently in development.",
     status:"COMING SOON",
-
     url:"#",
-
     updateStatus:"OFF",
-
-    updateNotes:
-      "Development information coming soon."
+    updateNotes:"Development information coming soon."
   },
-
 
   {
     category:"other",
@@ -1922,20 +2251,12 @@ const games = [
     icon:"?",
     genre:"TBA",
     date:"TBA",
-
-    description:
-      "A new project is currently in development.",
-
+    description:"A new project is currently in development.",
     status:"COMING SOON",
-
     url:"#",
-
     updateStatus:"OFF",
-
-    updateNotes:
-      "Development information coming soon."
+    updateNotes:"Development information coming soon."
   },
-
 
   {
     category:"other",
@@ -1943,25 +2264,18 @@ const games = [
     icon:"?",
     genre:"TBA",
     date:"TBA",
-
-    description:
-      "A new project is currently in development.",
-
+    description:"A new project is currently in development.",
     status:"COMING SOON",
-
     url:"#",
-
     updateStatus:"OFF",
-
-    updateNotes:
-      "Development information coming soon."
+    updateNotes:"Development information coming soon."
   }
 
 ];
 
 
 /* ==========================================================
-   MASTER LAUNCHER STATUS SYSTEM
+   DOM
 ========================================================== */
 
 const loginScreen =
@@ -1976,40 +2290,52 @@ const normalLogin =
 const launcherDownScreen =
   document.getElementById("launcherDownScreen");
 
+const adminAccessBtn =
+  document.getElementById("adminAccessBtn");
+
+const adminOverlay =
+  document.getElementById("adminOverlay");
+
+
+/* ==========================================================
+   LAUNCHER STATUS
+========================================================== */
 
 function applyLauncherStatus(){
 
-  const launcherIsOnline =
+  const online =
     LAUNCHER_STATUS === "ON";
 
-
-  if(launcherIsOnline){
+  if(online){
 
     normalLogin.classList.remove("hidden");
-
     launcherDownScreen.classList.add("hidden");
 
   }else{
 
     normalLogin.classList.add("hidden");
-
     launcherDownScreen.classList.remove("hidden");
 
-    document.getElementById("launcherDownTitle")
-      .textContent = LAUNCHER_DOWN_TITLE;
+    document.getElementById(
+      "launcherDownTitle"
+    ).textContent =
+      LAUNCHER_DOWN_TITLE;
 
-    document.getElementById("launcherDownInfo")
-      .textContent = LAUNCHER_DOWN_INFO;
+    document.getElementById(
+      "launcherDownInfo"
+    ).textContent =
+      LAUNCHER_DOWN_INFO;
 
-    document.getElementById("launcherDownDate")
-      .textContent = LAUNCHER_DOWN_DATE;
+    document.getElementById(
+      "launcherDownDate"
+    ).textContent =
+      LAUNCHER_DOWN_DATE;
 
     launcher.classList.add("hidden");
 
   }
 
 }
-
 
 applyLauncherStatus();
 
@@ -2028,31 +2354,30 @@ const gameFilter =
   document.getElementById("gameFilter");
 
 
-function renderGames(searchTerm="", category="all"){
+function renderGames(
+  searchTerm="",
+  category="all"
+){
 
   grid.innerHTML="";
-
 
   games
     .filter(g => {
 
+      const term =
+        searchTerm.toLowerCase();
+
       const matchesSearch =
-        g.name.toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
-
-        g.genre.toLowerCase()
-          .includes(searchTerm.toLowerCase());
-
+        g.name.toLowerCase().includes(term) ||
+        g.genre.toLowerCase().includes(term);
 
       const matchesCategory =
         category === "all" ||
         g.category === category;
 
-
       return matchesSearch && matchesCategory;
 
     })
-
 
     .forEach(g => {
 
@@ -2068,35 +2393,23 @@ function renderGames(searchTerm="", category="all"){
       const maintenance =
         g.status === "MAINTENANCE";
 
-
       const hasUpdate =
         g.updateStatus === "ON";
-
 
       const card =
         document.createElement("article");
 
-
       card.className =
         "card" +
-
-        (coming
-          ? " coming"
-          : "") +
-
-        (maintenance
-          ? " maintenance"
-          : "") +
-
+        (coming ? " coming" : "") +
+        (maintenance ? " maintenance" : "") +
         (g.name === "Upcoming Open World Game"
           ? " wide-card"
           : "");
 
-
       const updateHTML =
         hasUpdate
           ? `
-
             <div class="game-update">
 
               <div class="game-update-title">
@@ -2112,10 +2425,8 @@ function renderGames(searchTerm="", category="all"){
               </div>
 
             </div>
-
           `
           : "";
-
 
       card.innerHTML = `
 
@@ -2123,33 +2434,24 @@ function renderGames(searchTerm="", category="all"){
 
           <span
             class="badge ${maintenance ? "maintenance-badge" : ""}">
-
             ${g.status}
-
           </span>
 
           ${
             g.cover
-
               ? `
-
                 <img
                   src="${g.cover}"
                   alt="${g.name} cover art">
-
               `
-
               : `
-
                 <div class="game-icon">
                   ${g.icon}
                 </div>
-
               `
           }
 
         </div>
-
 
         <div class="card-body">
 
@@ -2169,13 +2471,11 @@ function renderGames(searchTerm="", category="all"){
 
           </div>
 
-
           <div class="card-bottom">
 
             <span class="release">
               ${g.date}
             </span>
-
 
             <button
               class="play-btn
@@ -2195,805 +2495,4 @@ function renderGames(searchTerm="", category="all"){
               ${
                 available
                   ? "PLAY"
-                  : maintenance
-                    ? "MAINTENANCE"
-                    : production
-                      ? "IN PRODUCTION"
-                      : "COMING SOON"
-              }
-
-            </button>
-
-          </div>
-
-
-          ${updateHTML}
-
-        </div>
-
-      `;
-
-
-      grid.appendChild(card);
-
-    });
-
-}
-
-
-function updateGameList(){
-
-  renderGames(
-    search.value,
-    gameFilter.value
-  );
-
-}
-
-
-renderGames();
-
-
-search.addEventListener(
-  "input",
-  updateGameList
-);
-
-
-gameFilter.addEventListener(
-  "change",
-  updateGameList
-);
-
-
-/* ==========================================================
-   GAME LAUNCH BUTTONS
-========================================================== */
-
-document.addEventListener(
-  "click",
-  e => {
-
-    if(
-      e.target.classList.contains("play-btn") &&
-      !e.target.disabled
-    ){
-
-      if(LAUNCHER_STATUS !== "ON"){
-
-        alert(
-          "The Kalahari Studios Launcher is currently offline."
-        );
-
-        return;
-
-      }
-
-
-      const url =
-        e.target.dataset.url;
-
-
-      if(
-        url &&
-        url !== "#"
-      ){
-
-        window.location.href =
-          url;
-
-      }else{
-
-        alert(
-          "Game launch link not set yet."
-        );
-
-      }
-
-    }
-
-  }
-);
-
-
-/* ==========================================================
-   IMPORTANT NEWS
-========================================================== */
-
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
-
-    const newsBox =
-      document.getElementById("news-box");
-
-
-    if(IMPORTANT_NEWS === "ANN"){
-
-      document.getElementById("news-date")
-        .textContent = NEWS_DATE;
-
-      document.getElementById("news-title")
-        .textContent = NEWS_TITLE;
-
-      document.getElementById("news-info")
-        .textContent = NEWS_INFO;
-
-      newsBox.classList.remove("hidden");
-
-    }else{
-
-      newsBox.classList.add("hidden");
-
-    }
-
-  }
-);
-
-
-/* ==========================================================
-   SETTINGS / THEME / ACCOUNT
-========================================================== */
-
-const settingsOverlay =
-  document.getElementById("settingsOverlay");
-
-const darkModeToggle =
-  document.getElementById("darkModeToggle");
-
-const accountUsername =
-  document.getElementById("accountUsername");
-
-const accountEmail =
-  document.getElementById("accountEmail");
-
-const accountPassword =
-  document.getElementById("accountPassword");
-
-const accountAvatarUrl =
-  document.getElementById("accountAvatarUrl");
-
-const accountAvatar =
-  document.getElementById("accountAvatar");
-
-const headerAvatar =
-  document.getElementById("headerAvatar");
-
-const accountMessage =
-  document.getElementById("accountMessage");
-
-
-function defaultAvatar(user){
-
-  return user?.photoURL ||
-
-    `https://ui-avatars.com/api/?name=${
-      encodeURIComponent(
-        user?.displayName ||
-        user?.email?.split("@")[0] ||
-        "User"
-      )
-    }&background=2388e8&color=fff`;
-
-}
-
-
-function setTheme(
-  isDark,
-  save=true
-){
-
-  document.body.classList.toggle(
-    "light-mode",
-    !isDark
-  );
-
-  darkModeToggle.checked =
-    isDark;
-
-
-  if(save){
-
-    localStorage.setItem(
-      "kalahariTheme",
-      isDark
-        ? "dark"
-        : "light"
-    );
-
-  }
-
-}
-
-
-const savedTheme =
-  localStorage.getItem(
-    "kalahariTheme"
-  ) || "dark";
-
-
-setTheme(
-  savedTheme === "dark",
-  false
-);
-
-
-function populateAccount(user){
-
-  if(!user) return;
-
-
-  accountUsername.value =
-    user.displayName ||
-    user.email.split("@")[0];
-
-
-  accountEmail.value =
-    user.email || "";
-
-
-  accountPassword.value =
-    "";
-
-
-  accountAvatarUrl.value =
-    user.photoURL || "";
-
-
-  const avatar =
-    defaultAvatar(user);
-
-
-  accountAvatar.src =
-    avatar;
-
-
-  headerAvatar.src =
-    avatar;
-
-}
-
-
-function openSettings(){
-
-  const user =
-    auth.currentUser;
-
-
-  if(user){
-
-    populateAccount(user);
-
-  }
-
-
-  settingsOverlay.classList.remove(
-    "hidden"
-  );
-
-}
-
-
-function closeSettings(){
-
-  settingsOverlay.classList.add(
-    "hidden"
-  );
-
-  accountMessage.textContent =
-    "";
-
-}
-
-
-document.getElementById(
-  "settingsBtn"
-).addEventListener(
-  "click",
-  openSettings
-);
-
-
-document.getElementById(
-  "closeSettings"
-).addEventListener(
-  "click",
-  closeSettings
-);
-
-
-settingsOverlay.addEventListener(
-  "click",
-  e => {
-
-    if(e.target === settingsOverlay){
-
-      closeSettings();
-
-    }
-
-  }
-);
-
-
-darkModeToggle.addEventListener(
-  "change",
-  () => {
-
-    setTheme(
-      darkModeToggle.checked
-    );
-
-  }
-);
-
-
-document
-  .querySelectorAll(".settings-tab")
-  .forEach(tab => {
-
-    tab.addEventListener(
-      "click",
-      () => {
-
-        document
-          .querySelectorAll(".settings-tab")
-          .forEach(t =>
-            t.classList.remove("active")
-          );
-
-
-        document
-          .querySelectorAll(".settings-section")
-          .forEach(s =>
-            s.classList.remove("active")
-          );
-
-
-        tab.classList.add("active");
-
-
-        document
-          .getElementById(tab.dataset.tab)
-          .classList.add("active");
-
-      }
-    );
-
-  });
-
-
-/* ==========================================================
-   SAVE ACCOUNT
-========================================================== */
-
-document.getElementById(
-  "saveAccount"
-).addEventListener(
-  "click",
-  async () => {
-
-    const user =
-      auth.currentUser;
-
-
-    if(!user) return;
-
-
-    const username =
-      accountUsername.value.trim();
-
-    const email =
-      accountEmail.value.trim();
-
-    const password =
-      accountPassword.value;
-
-    const photoURL =
-      accountAvatarUrl.value.trim();
-
-
-    if(!username || !email){
-
-      accountMessage.style.color =
-        "#ff7272";
-
-      accountMessage.textContent =
-        "Username and email are required.";
-
-      return;
-
-    }
-
-
-    accountMessage.style.color =
-      "var(--accent)";
-
-    accountMessage.textContent =
-      "Saving...";
-
-
-    try{
-
-      if(
-        username !==
-          (user.displayName || "") ||
-
-        photoURL !==
-          (user.photoURL || "")
-      ){
-
-        await user.updateProfile({
-
-          displayName:
-            username,
-
-          photoURL:
-            photoURL || null
-
-        });
-
-      }
-
-
-      if(email !== user.email){
-
-        await user.updateEmail(
-          email
-        );
-
-      }
-
-
-      if(password){
-
-        await user.updatePassword(
-          password
-        );
-
-      }
-
-
-      document.getElementById(
-        "userDisplay"
-      ).textContent =
-        username;
-
-
-      const avatar =
-        defaultAvatar(user);
-
-
-      accountAvatar.src =
-        avatar;
-
-      headerAvatar.src =
-        avatar;
-
-
-      accountPassword.value =
-        "";
-
-
-      accountMessage.style.color =
-        "#52d47b";
-
-      accountMessage.textContent =
-        "Account settings saved successfully.";
-
-    }
-
-    catch(err){
-
-      accountMessage.style.color =
-        "#ff7272";
-
-      accountMessage.textContent =
-        err.code ===
-        "auth/requires-recent-login"
-
-          ? "For security, please log out and sign in again before changing your email or password."
-
-          : err.message;
-
-    }
-
-  }
-);
-
-
-/* ==========================================================
-   RESET PREFERENCES
-========================================================== */
-
-document.getElementById(
-  "resetPrefs"
-).addEventListener(
-  "click",
-  () => {
-
-    localStorage.removeItem(
-      "kalahariTheme"
-    );
-
-    localStorage.removeItem(
-      "kalahariGameFilter"
-    );
-
-
-    setTheme(true);
-
-
-    gameFilter.value =
-      "all";
-
-    search.value =
-      "";
-
-
-    updateGameList();
-
-  }
-);
-
-
-const savedGameFilter =
-  localStorage.getItem(
-    "kalahariGameFilter"
-  );
-
-
-if(savedGameFilter){
-
-  gameFilter.value =
-    savedGameFilter;
-
-}
-
-
-gameFilter.addEventListener(
-  "change",
-  () => {
-
-    localStorage.setItem(
-      "kalahariGameFilter",
-      gameFilter.value
-    );
-
-  }
-);
-
-
-/* ==========================================================
-   AUTHENTICATION
-========================================================== */
-
-const error =
-  document.getElementById("error");
-
-
-auth.onAuthStateChanged(
-  user => {
-
-    if(LAUNCHER_STATUS !== "ON"){
-
-      launcher.classList.add(
-        "hidden"
-      );
-
-      loginScreen.classList.remove(
-        "hidden"
-      );
-
-      return;
-
-    }
-
-
-    if(user){
-
-      loginScreen.classList.add(
-        "hidden"
-      );
-
-      launcher.classList.remove(
-        "hidden"
-      );
-
-
-      document.getElementById(
-        "userDisplay"
-      ).textContent =
-        user.displayName ||
-        user.email.split("@")[0];
-
-
-      populateAccount(user);
-
-    }
-
-    else{
-
-      launcher.classList.add(
-        "hidden"
-      );
-
-      loginScreen.classList.remove(
-        "hidden"
-      );
-
-    }
-
-  }
-);
-
-
-/* ==========================================================
-   SIGN UP
-========================================================== */
-
-document.getElementById(
-  "signUpBtn"
-).addEventListener(
-  "click",
-  () => {
-
-    if(LAUNCHER_STATUS !== "ON"){
-
-      return;
-
-    }
-
-
-    const username =
-      document
-        .getElementById("displayName")
-        .value
-        .trim();
-
-
-    const email =
-      document
-        .getElementById("username")
-        .value
-        .trim();
-
-
-    const pass =
-      document
-        .getElementById("password")
-        .value;
-
-
-    if(!username){
-
-      error.style.color =
-        "#ff7272";
-
-      error.textContent =
-        "Please enter a username.";
-
-      return;
-
-    }
-
-
-    auth
-      .createUserWithEmailAndPassword(
-        email,
-        pass
-      )
-
-      .then(
-        userCredential => {
-
-          return userCredential.user
-            .updateProfile({
-
-              displayName:
-                username
-
-            });
-
-        }
-      )
-
-      .then(
-        () => {
-
-          error.style.color =
-            "#42f570";
-
-          error.textContent =
-            "Account created successfully!";
-
-        }
-      )
-
-      .catch(
-        err => {
-
-          error.style.color =
-            "#ff7272";
-
-          error.textContent =
-            err.message;
-
-        }
-      );
-
-  }
-);
-
-
-/* ==========================================================
-   SIGN IN
-========================================================== */
-
-document.getElementById(
-  "signInBtn"
-).addEventListener(
-  "click",
-  () => {
-
-    if(LAUNCHER_STATUS !== "ON"){
-
-      return;
-
-    }
-
-
-    const email =
-      document
-        .getElementById("username")
-        .value
-        .trim();
-
-
-    const pass =
-      document
-        .getElementById("password")
-        .value;
-
-
-    auth
-      .signInWithEmailAndPassword(
-        email,
-        pass
-      )
-
-      .catch(
-        () => {
-
-          error.style.color =
-            "#ff7272";
-
-          error.textContent =
-            "Invalid email or password.";
-
-        }
-      );
-
-  }
-);
-
-
-/* ==========================================================
-   LOG OUT
-========================================================== */
-
-document.getElementById(
-  "logout"
-).addEventListener(
-  "click",
-  () => {
-
-    auth.signOut();
-
-  }
-);
-
-</script>
-
-</body>
-</html>
+                 

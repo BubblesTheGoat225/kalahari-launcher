@@ -2179,7 +2179,7 @@ try{
    MASTER LAUNCHER STATUS
 ========================================================= */
 
-const LAUNCHER_STATUS = "ON";
+const LAUNCHER_STATUS = "OFF";
 
 
 const LAUNCHER_DOWN_TITLE =
@@ -3208,6 +3208,9 @@ document.getElementById(
       );
 
 
+      updateGameList();
+
+
       accountPassword.value =
         "";
 
@@ -3540,6 +3543,9 @@ function showLauncher(user){
   updateAdminVisibility(
     user
   );
+
+
+  updateGameList();
 
 }
 

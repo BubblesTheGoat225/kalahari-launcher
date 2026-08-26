@@ -9,11 +9,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
-    <link rel="icon" type="image/x-icon" href="taxi4logo.ico">
-<link rel="icon" type="image/png" sizes="32x32" href="taxi4logo.jpg">
-<link rel="apple-touch-icon" sizes="180x180" href="taxi4logo.jpg">
-  
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:#000;overflow:hidden;user-select:none;}
@@ -862,7 +857,7 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
 <!-- Loading -->
 <div class="screen" id="loadingScreen">
   <div style="text-align:center">
-    <div class="loading-title">Taxi 4</div>
+    <div class="loading-title">Whitewall</div>
     <div class="loading-bar-bg"><div class="loading-bar"></div></div>
     <div class="loading-text">Loading game...</div>
   </div>
@@ -872,7 +867,7 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
 <div class="screen" id="startScreen" style="display:none">
   <div class="start-layout">
     <div class="start-brand">
-      <div class="game-title">Taxi 4</div>
+      <div class="game-title">Whitewall</div>
       <div class="city-line"></div>
       <div class="game-subtitle">(C)2026 Kalahari Studios, Kalahari International, Kalahari Industries & Kalahari Games</div>
       <div class="controls-hint"><strong>WASD</strong> Move · <strong>Mouse</strong> Look · <strong>E</strong> Interact / Enter Car<br><strong>Shift</strong> Sprint · <strong>Space</strong> Jump / Handbrake · <strong>M</strong> Map</div>
@@ -883,7 +878,7 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
       <button class="menu-btn" onclick="startNewGame()">NEW GAME</button>
       <button class="menu-btn" onclick="showHowToPlay()">HOW TO PLAY</button>
       <button class="menu-btn" onclick="showPatchNotes()">UPDATE / PATCH NOTES</button>
-      <button class="menu-btn online-toggle-btn" onclick="openOnlineProfileScreen()">🌐 PLAY TAXI ONLINE</button>
+      <button class="menu-btn online-toggle-btn" onclick="openOnlineProfileScreen()">🌐 PLAY ONLINE</button>
       <div class="online-status-line" id="startOnlineStatus">Checking session...</div>
       <div class="menu-meta">VERSION 4.6 · KALAHARI STUDIOS</div>
     </div>
@@ -897,7 +892,7 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
     <div id="onlineProfileBody" class="online-profile-body">
       <div class="online-profile-loading">Loading...</div>
     </div>
-    <button class="menu-btn online-enter-btn" id="onlineEnterBtn" onclick="enterOnlineWorld()">ENTER Taxi Online</button>
+    <button class="menu-btn online-enter-btn" id="onlineEnterBtn" onclick="enterOnlineWorld()">ENTER ONLINE KINGSTON</button>
     <button class="menu-btn danger-menu-btn" onclick="resetOnlineProgress()">RESET ONLINE PROGRESS</button>
     <button class="menu-btn" onclick="closeOnlineProfileScreen()">BACK</button>
   </div>
@@ -3059,6 +3054,220 @@ function closePvpScreen(){
 }
 
 // =====================================================================
+// APARTMENTS — ONLINE-EXCLUSIVE, SHARED OWNERSHIP
+// Units and garage vehicles live in Firestore, keyed by building id, so
+// every online player sees the same ownership state. Realtime updates
+// via onSnapshot — if someone buys Unit 3 while you're standing in the
+// lobby, your door goes from "available" to "owned" without a refresh.
+// =====================================================================
+
+let apartmentOwnershipCache = {};   // buildingId -> { unitId: {ownerUid, ownerName} }
+let apartmentListeners = {};        // buildingId -> unsubscribe fn
+let garageListenerUnsub = null;
+
+function apartmentUnitRef(buildingId, unitId){
+  return mpFs.collection('taxi4Apartments').doc(buildingId).collection('units').doc(unitId);
+}
+
+function refreshApartmentUnitOwnership(buildingId){
+  if(!onlineMode || !mpFs){
+    // Offline: nothing to fetch — units stay in their default "unavailable" look.
+    (window._interiorApartmentUnits||[]).forEach(u => {
+      u.doorMesh.material.color.setHex(0x3f3f46);
+    });
+    return;
+  }
+
+  if(apartmentListeners[buildingId]) apartmentListeners[buildingId]();
+
+  apartmentListeners[buildingId] = mpFs.collection('taxi4Apartments').doc(buildingId)
+    .collection('units').onSnapshot(snap => {
+      const owned = {};
+      snap.forEach(doc => { owned[doc.id] = doc.data(); });
+      apartmentOwnershipCache[buildingId] = owned;
+      applyApartmentDoorVisuals(buildingId);
+    }, err => console.error('Apartment ownership listen error:', err));
+}
+
+function applyApartmentDoorVisuals(buildingId){
+  const units = window._interiorApartmentUnits;
+  if(!units) return;
+  const owned = apartmentOwnershipCache[buildingId] || {};
+
+  units.forEach(u => {
+    const rec = owned[u.unitId];
+    let colorHex, labelText;
+    if(!rec){
+      colorHex = 0x64748b; labelText = 'UNIT ' + u.unitNum;
+    }else if(mpUser && rec.ownerUid === mpUser.uid){
+      colorHex = 0x4ade80; labelText = 'UNIT ' + u.unitNum + ' (Yours)';
+    }else{
+      colorHex = 0x60a5fa; labelText = 'UNIT ' + u.unitNum + ' — ' + (rec.ownerName || 'Owned');
+    }
+    u.doorMesh.material.color.setHex(colorHex);
+    u.doorMesh.material.emissive.setHex(colorHex);
+
+    const newLabel = makeNameSprite(labelText, null);
+    newLabel.position.copy(u.labelSprite.position);
+    newLabel.scale.copy(u.labelSprite.scale);
+    scene.remove(u.labelSprite);
+    const idx = activeInteriorMeshes.indexOf(u.labelSprite);
+    if(idx >= 0) activeInteriorMeshes[idx] = newLabel;
+    scene.add(newLabel);
+    u.labelSprite = newLabel;
+  });
+}
+
+function interactApartmentUnit(unit){
+  if(!onlineMode){
+    showNotification('Apartments are an online-mode feature — enter online mode to use them.');
+    return;
+  }
+  const owned = apartmentOwnershipCache[unit.buildingId] || {};
+  const rec = owned[unit.unitId];
+
+  if(!rec){
+    if(!confirm(`Buy this apartment for $${unit.unitPrice.toLocaleString()}?`)) return;
+    if(gameState.money < unit.unitPrice){
+      showNotification("You can't afford this apartment yet.");
+      return;
+    }
+    apartmentUnitRef(unit.buildingId, unit.unitId).set({
+      ownerUid: mpUser.uid,
+      ownerName: mpUser.displayName || mpUser.email?.split('@')[0] || 'Player',
+      purchasedAt: Date.now()
+    }).then(() => {
+      gameState.money -= unit.unitPrice;
+      gameState.ownedApartments.add(unit.unitId);
+      showNotification('🏠 Purchased ' + 'Unit ' + unit.unitNum + '!');
+    }).catch(err => {
+      console.error('Apartment purchase failed:', err);
+      showNotification('Could not complete purchase — try again.');
+    });
+    return;
+  }
+
+  if(mpUser && rec.ownerUid === mpUser.uid){
+    enterApartmentUnitInterior(unit);
+  }else{
+    showNotification('🔒 Occupied — owned by ' + (rec.ownerName || 'another player') + '.');
+  }
+}
+
+function enterApartmentUnitInterior(unit){
+  enterNestedInterior({
+    id: 'apt_unit_' + unit.unitId,
+    name: 'Apartment ' + unit.unitNum,
+    type: 'apartment_unit',
+    source: { type: 'apartment_unit', id: unit.unitId }
+  });
+}
+
+function enterApartmentGarageRoom(buildingId){
+  enterNestedInterior({
+    id: 'apt_garage_' + buildingId,
+    name: 'Shared Garage',
+    type: 'apartment_garage',
+    source: { type: 'apartment_garage', id: buildingId }
+  }, () => populateGarageRoom(buildingId));
+}
+
+function populateGarageRoom(buildingId){
+  if(garageListenerUnsub) garageListenerUnsub();
+  window._garageDisplayMeshes = [];
+
+  if(!onlineMode || !mpFs){
+    showNotification('Garage storage needs online mode.');
+    return;
+  }
+
+  garageListenerUnsub = mpFs.collection('taxi4Garages').doc(buildingId)
+    .collection('vehicles').onSnapshot(snap => {
+      (window._garageDisplayMeshes||[]).forEach(o => scene.remove(o));
+      window._garageDisplayMeshes = [];
+
+      const cz = 5000, hw = CATEGORY_INTERIOR_SIZES.apartment_garage.hw;
+      let i = 0;
+      snap.forEach(doc => {
+        const v = doc.data();
+        const template = CAR_TEMPLATES[v.template] || CAR_TEMPLATES[0];
+        const color = typeof v.color === 'number' ? v.color : 0x999999;
+        const spotX = -hw + 6 + (i % 5) * 5.5;
+        const spotZ = cz - 6 + Math.floor(i/5) * 7;
+        const carObj = createVehicleMesh(template, color, spotX, spotZ, 0, 'garage_display_'+doc.id);
+        carObj.group.userData.isStatic = true;
+        window._garageDisplayMeshes.push(carObj.group);
+        const label = makeNameSprite(v.ownerName || 'Player', null);
+        label.position.set(spotX, 2.6, spotZ);
+        scene.add(label);
+        window._garageDisplayMeshes.push(label);
+        i++;
+      });
+    }, err => console.error('Garage listen error:', err));
+}
+
+// Exterior store/retrieve — deliberately NOT inside the garage room itself,
+// since vehicles can't be driven through an interior doorway in this
+// engine. Standing near the building's loading bay handles it instead.
+function garageVehicleRef(buildingId){
+  return mpFs.collection('taxi4Garages').doc(buildingId).collection('vehicles').doc(mpUser.uid);
+}
+
+function ownsAnyUnitIn(buildingId){
+  for(const id of gameState.ownedApartments){
+    if(id.startsWith(buildingId + '_')) return true;
+  }
+  return false;
+}
+
+async function storeVehicleAtGarage(building){
+  if(!onlineMode){ showNotification('Storage needs online mode.'); return; }
+  if(!ownsAnyUnitIn(building.id)){ showNotification('You need to own an apartment here first.'); return; }
+  if(!gameState.inVehicle || !gameState.currentVehicle){ showNotification('Get in a vehicle to store it.'); return; }
+
+  const v = gameState.currentVehicle;
+  const templateIdx = CAR_TEMPLATES.indexOf(v.template);
+  try{
+    await garageVehicleRef(building.id).set({
+      ownerName: mpUser.displayName || mpUser.email?.split('@')[0] || 'Player',
+      template: templateIdx < 0 ? 0 : templateIdx,
+      color: v.color,
+      storedAt: Date.now()
+    });
+    exitVehicle();
+    scene.remove(v.group);
+    const vi = vehicles.indexOf(v);
+    if(vi >= 0) vehicles.splice(vi,1);
+    showNotification('🚗 Vehicle stored in the shared garage.');
+  }catch(err){
+    console.error('Store vehicle failed:', err);
+    showNotification('Could not store vehicle right now.');
+  }
+}
+
+async function retrieveVehicleFromGarage(building){
+  if(!onlineMode){ showNotification('Storage needs online mode.'); return; }
+  if(!ownsAnyUnitIn(building.id)){ showNotification('You need to own an apartment here first.'); return; }
+  if(gameState.inVehicle){ showNotification('Get out of your current vehicle first.'); return; }
+
+  try{
+    const ref = garageVehicleRef(building.id);
+    const snap = await ref.get();
+    if(!snap.exists){ showNotification("You don't have a vehicle stored here."); return; }
+    const v = snap.data();
+    const template = CAR_TEMPLATES[v.template] || CAR_TEMPLATES[0];
+    const spawnX = building.x + building.w*0.6, spawnZ = building.z;
+    const carObj = createVehicleMesh(template, v.color, spawnX, spawnZ, 0, 'retrieved_'+Date.now());
+    vehicles.push(carObj);
+    await ref.delete();
+    showNotification('🚗 Vehicle retrieved — parked outside.');
+  }catch(err){
+    console.error('Retrieve vehicle failed:', err);
+    showNotification('Could not retrieve vehicle right now.');
+  }
+}
+
+// =====================================================================
 // HELPERS
 // =====================================================================
 function pseudoRand(n){
@@ -3752,6 +3961,21 @@ function checkInteractables(){
     }
   }
 
+  if(!nearbyInteractable && onlineMode){
+    for(const b of SPECIAL_BUILDINGS){
+      if(b.type !== 'apartment_complex') continue;
+      const ownsHere = [...gameState.ownedApartments].some(id => id.startsWith(b.id + '_'));
+      if(!ownsHere) continue;
+      const bayX = b.x, bayZ = b.z + b.d/2 + 10;
+      const d = distanceTo(px, pz, bayX, bayZ);
+      if(d < 5){
+        hint = `<span class="key">E</span> Garage — Store/Retrieve Vehicle`;
+        nearbyInteractable = { type:'garage_bay', building:b, bayX, bayZ };
+        break;
+      }
+    }
+  }
+
   if(!nearbyInteractable){
     // Check special buildings
     for(const b of SPECIAL_BUILDINGS){
@@ -3814,6 +4038,11 @@ function handleInteract(){
     if(window._interiorAction && distanceTo(player.pos.x,player.pos.z,window._interiorAction.x,window._interiorAction.z)<3){ startInteriorAction(); return; }
     if(window._interiorVending && distanceTo(player.pos.x,player.pos.z,window._interiorVending.x,window._interiorVending.z)<3){ useVendingMachine(); return; }
     if(window._interiorBoard && distanceTo(player.pos.x,player.pos.z,window._interiorBoard.x,window._interiorBoard.z)<3){ readNoticeboard(); return; }
+    if(window._interiorApartmentUnits){
+      const unit = window._interiorApartmentUnits.find(u => distanceTo(player.pos.x,player.pos.z,u.x,u.z) < 3);
+      if(unit){ interactApartmentUnit(unit); return; }
+    }
+    if(window._interiorGarage && distanceTo(player.pos.x,player.pos.z,window._interiorGarage.x,window._interiorGarage.z)<3){ enterApartmentGarageRoom(window._interiorGarage.buildingId); return; }
     exitBuilding(); return;
   }
   if(gameState.currentEvent && distanceTo(player.pos.x,player.pos.z,gameState.currentEvent.x||player.pos.x,gameState.currentEvent.z||player.pos.z)<10){if(handleRandomEvent())return;}
@@ -3830,6 +4059,8 @@ function handleInteract(){
     enterBuilding(ni.safehouse.id);
   } else if(ni.type === 'dealership'){
     openDealershipScreen();
+  } else if(ni.type === 'garage_bay'){
+    interactGarageBay(ni.building);
   } else if(ni.type === 'building' || ni.type === 'generic_building'){
     enterGenericBuilding(ni.building);
   }
@@ -3910,8 +4141,10 @@ function enterInterior(info){
   // a random fixed point on the map on exit.
   gameState.exteriorReturnPos = { x: player.pos.x, z: player.pos.z };
   gameState.inBuilding=true; gameState.currentBuilding=info.id;
+  gameState.interiorReturnStack = [];
   window._interiorElevator=null; window._interiorJob=null; window._interiorAction=null;
   window._interiorUpgrade=null; window._interiorVending=null; window._interiorBoard=null;
+  window._interiorApartmentUnits=null; window._interiorGarage=null;
   buildActiveInterior(info);
   // Spawn just inside the "front" wall, facing into the room, instead of
   // dropped in the dead centre facing a random direction.
@@ -3920,6 +4153,30 @@ function enterInterior(info){
   camYaw = Math.PI;
   scene.fog.near=25; scene.fog.far=90;
   showNotification(`${info.name} — WASD to walk, E to interact, Esc to exit`);
+}
+
+// Entering a SECOND layer of interior from within one already-entered
+// interior (a personal apartment unit or the shared garage, both reached
+// from inside the apartment complex's lobby). Pressing "exit" here should
+// return to the lobby, not straight outside to the street — that's what
+// gameState.interiorReturnStack is for.
+function enterNestedInterior(info, afterBuildCallback){
+  gameState.interiorReturnStack.push({
+    info: currentInteriorInfo,
+    playerPos: { x:player.pos.x, y:player.pos.y, z:player.pos.z },
+    camYaw
+  });
+  currentInteriorInfo = info;
+  gameState.currentBuilding = info.id;
+  window._interiorElevator=null; window._interiorJob=null; window._interiorAction=null;
+  window._interiorUpgrade=null; window._interiorVending=null; window._interiorBoard=null;
+  window._interiorApartmentUnits=null; window._interiorGarage=null;
+  buildActiveInterior(info);
+  const rz = 5000 + interiorBounds.hd - 3;
+  player.pos.set(0,1.8,rz); playerGroup.position.set(0,0.3,rz);
+  camYaw = Math.PI;
+  showNotification(`${info.name} — WASD to walk, E to interact, Esc to exit`);
+  if(afterBuildCallback) afterBuildCallback();
 }
 
 // Interior footprint scales with the home's value/style — a $2,500 basement
@@ -4423,6 +4680,26 @@ function devSpawnVehicle(){
 
 function exitBuilding(){
   if(!gameState.inBuilding) return;
+
+  // Nested interior (a personal apartment unit or the shared garage,
+  // entered from within the apartment complex's lobby) — go back to the
+  // lobby instead of straight outside.
+  if(gameState.interiorReturnStack.length > 0){
+    const prev = gameState.interiorReturnStack.pop();
+    clearActiveInterior();
+    window._interiorElevator=null; window._interiorJob=null; window._interiorAction=null;
+    window._interiorUpgrade=null; window._interiorVending=null; window._interiorBoard=null;
+    window._interiorApartmentUnits=null; window._interiorGarage=null;
+    gameState.currentBuilding = prev.info.id;
+    currentInteriorInfo = prev.info;
+    buildActiveInterior(prev.info);
+    player.pos.set(prev.playerPos.x, prev.playerPos.y, prev.playerPos.z);
+    playerGroup.position.copy(player.pos); playerGroup.position.y -= 1.5;
+    camYaw = prev.camYaw;
+    showNotification(prev.info.name);
+    return;
+  }
+
   gameState.inBuilding=false; interiorScene=false;
   // Always prefer the exact spot the player stood on right before they
   // walked in — set once in enterInterior(). This works for safehouses AND
@@ -4438,8 +4715,219 @@ function exitBuilding(){
   else player.pos.set(-280,1.8,0);
   gameState.exteriorReturnPos = null;
   playerGroup.position.copy(player.pos); playerGroup.position.y-=1.5; playerGroup.visible=true;
-  clearActiveInterior(); window._interiorElevator=null; window._interiorJob=null; window._interiorAction=null;
+  clearActiveInterior();
+  window._interiorElevator=null; window._interiorJob=null; window._interiorAction=null;
+  window._interiorApartmentUnits=null; window._interiorGarage=null;
   document.getElementById('interactHint').classList.remove('show'); scene.fog.near=150; scene.fog.far=600;
+}
+
+// =====================================================================
+// APARTMENTS & SHARED GARAGE (online mode exclusive)
+// =====================================================================
+
+function enterNestedInterior(info){
+  gameState.interiorReturnStack.push({
+    info: currentInteriorInfo,
+    playerPos: { x:player.pos.x, y:player.pos.y, z:player.pos.z },
+    camYaw
+  });
+  clearActiveInterior();
+  window._interiorElevator=null; window._interiorJob=null; window._interiorAction=null;
+  window._interiorUpgrade=null; window._interiorVending=null; window._interiorBoard=null;
+  window._interiorApartmentUnits=null; window._interiorGarage=null;
+  gameState.currentBuilding = info.id;
+  currentInteriorInfo = info;
+  buildActiveInterior(info);
+  const rz = 5000 + (interiorBounds?.hd||10) - 3;
+  player.pos.set(0,1.8,rz);
+  playerGroup.position.set(0,0.3,rz);
+  camYaw = Math.PI;
+  showNotification(`${info.name} — WASD to walk, E to interact, Esc to exit`);
+}
+
+let _apartmentOwnershipCache = {}; // buildingId -> { unitId: {ownerUid, ownerName} }
+
+async function refreshApartmentUnitOwnership(buildingId){
+  if(!mpFs || !window._interiorApartmentUnits) return;
+  try{
+    const snap = await mpFs.collection('taxi4Apartments').doc(buildingId).collection('units').get();
+    const owned = {};
+    snap.forEach(doc => { owned[doc.id] = doc.data(); });
+    _apartmentOwnershipCache[buildingId] = owned;
+
+    window._interiorApartmentUnits.forEach(unit => {
+      const rec = owned[String(unit.unitNum)];
+      const isMine = rec && mpUser && rec.ownerUid === mpUser.uid;
+      const color = rec ? (isMine ? 0x4ade80 : 0x60a5fa) : 0x64748b;
+      unit.doorMesh.material.color.setHex(color);
+      unit.doorMesh.material.emissive.setHex(color);
+
+      const labelText = rec
+        ? (isMine ? 'UNIT ' + unit.unitNum + ' (YOURS)' : 'UNIT ' + unit.unitNum + ' — ' + (rec.ownerName || 'Occupied'))
+        : 'UNIT ' + unit.unitNum + ' — $' + unit.unitPrice.toLocaleString();
+      const newLabel = makeNameSprite(labelText, null);
+      newLabel.position.copy(unit.labelSprite.position);
+      newLabel.scale.copy(unit.labelSprite.scale);
+      scene.remove(unit.labelSprite);
+      addInterior(newLabel);
+      unit.labelSprite = newLabel;
+
+      if(isMine) gameState.ownedApartments.add(unit.unitId);
+    });
+  }catch(err){
+    console.error('Failed to load apartment ownership:', err);
+  }
+}
+
+function interactApartmentUnit(unit){
+  const owned = _apartmentOwnershipCache[unit.buildingId] || {};
+  const rec = owned[String(unit.unitNum)];
+
+  if(!rec){
+    if(!onlineMode || !mpUser){
+      showNotification('Sign in and go online to buy an apartment.');
+      return;
+    }
+    if(confirm(`Buy Unit ${unit.unitNum} for $${unit.unitPrice.toLocaleString()}?`)){
+      buyApartmentUnit(unit);
+    }
+    return;
+  }
+
+  const isMine = mpUser && rec.ownerUid === mpUser.uid;
+  if(isMine){
+    enterNestedInterior({
+      id: unit.unitId,
+      name: 'Unit ' + unit.unitNum,
+      type: 'apartment_unit',
+      source: { type:'apartment_unit' }
+    });
+  }else{
+    showNotification('🔒 Occupied — owned by ' + (rec.ownerName || 'another player') + '.');
+  }
+}
+
+async function buyApartmentUnit(unit){
+  if(gameState.money < unit.unitPrice){
+    showNotification("You can't afford this unit.");
+    return;
+  }
+  const ref = mpFs.collection('taxi4Apartments').doc(unit.buildingId).collection('units').doc(String(unit.unitNum));
+  try{
+    const result = await mpFs.runTransaction(async tx => {
+      const doc = await tx.get(ref);
+      if(doc.exists) return false; // someone else bought it first
+      tx.set(ref, {
+        ownerUid: mpUser.uid,
+        ownerName: mpUser.displayName || mpUser.email?.split('@')[0] || 'Player',
+        purchasedAt: Date.now()
+      });
+      return true;
+    });
+    if(!result){
+      showNotification('Too slow — someone just bought that unit.');
+      refreshApartmentUnitOwnership(unit.buildingId);
+      return;
+    }
+    gameState.money -= unit.unitPrice;
+    gameState.ownedApartments.add(unit.unitId);
+    updateHUD();
+    showNotification('🏠 Bought Unit ' + unit.unitNum + '!');
+    refreshApartmentUnitOwnership(unit.buildingId);
+    saveOnlineGame(false);
+  }catch(err){
+    console.error('Apartment purchase failed:', err);
+    showNotification('Purchase failed — try again.');
+  }
+}
+
+function enterApartmentGarageRoom(buildingId){
+  enterNestedInterior({
+    id: 'apt_garage_' + buildingId,
+    name: 'Shared Garage',
+    type: 'apartment_garage',
+    source: { type:'apartment_garage' }
+  });
+  populateGarageRoom(buildingId);
+}
+
+async function populateGarageRoom(buildingId){
+  if(!mpFs) return;
+  try{
+    const snap = await mpFs.collection('taxi4Garages').doc(buildingId).collection('vehicles').get();
+    let i = 0;
+    const CZ = 5000;
+    snap.forEach(doc => {
+      const d = doc.data();
+      const col = i % 2 === 0 ? -1 : 1;
+      const row = Math.floor(i/2);
+      const gx = col * ((interiorBounds?.hw||20) * 0.5);
+      const gz = CZ - (interiorBounds?.hd||16) + 6 + row * 7;
+      const vObj = createVehicleMesh(CAR_TEMPLATES[d.template]||CAR_TEMPLATES[0], d.color, gx, gz, 0, 'garagecar_'+doc.id);
+      activeInteriorMeshes.push(vObj.group); // so clearActiveInterior() cleans it up on exit
+      const label = makeNameSprite(d.ownerName || 'Player', null);
+      label.position.set(gx, 2.4, gz);
+      addInterior(label);
+      i++;
+    });
+    if(i===0){
+      const label = makeNameSprite('No vehicles stored yet', null);
+      label.position.set(0, 2.4, CZ);
+      addInterior(label);
+    }
+  }catch(err){
+    console.error('Failed to load garage:', err);
+  }
+}
+
+async function interactGarageBay(building){
+  const buildingId = building.id;
+  const bayX = building.x, bayZ = building.z + building.d/2 + 10;
+
+  // Prefer storing: is there an empty vehicle sitting right at the bay?
+  const nearby = vehicles.find(v => !v.occupied && distanceTo(v.group.position.x, v.group.position.z, bayX, bayZ) < 8);
+
+  if(nearby){
+    if(!confirm('Store this vehicle in the shared garage?')) return;
+    try{
+      await mpFs.collection('taxi4Garages').doc(buildingId).collection('vehicles').doc(mpUser.uid).set({
+        ownerName: mpUser.displayName || mpUser.email?.split('@')[0] || 'Player',
+        template: CAR_TEMPLATES.indexOf(nearby.template) >= 0 ? CAR_TEMPLATES.indexOf(nearby.template) : 0,
+        color: nearby.color,
+        storedAt: Date.now()
+      });
+      scene.remove(nearby.group);
+      vehicles.splice(vehicles.indexOf(nearby), 1);
+      const vmIdx = vehicleMeshes.indexOf(nearby);
+      if(vmIdx >= 0) vehicleMeshes.splice(vmIdx, 1);
+      showNotification('🚗 Vehicle stored in the shared garage.');
+      saveOnlineGame(false);
+    }catch(err){
+      console.error('Store vehicle failed:', err);
+      showNotification('Could not store the vehicle.');
+    }
+    return;
+  }
+
+  // Otherwise, try to retrieve a stored vehicle.
+  try{
+    const ref = mpFs.collection('taxi4Garages').doc(buildingId).collection('vehicles').doc(mpUser.uid);
+    const doc = await ref.get();
+    if(!doc.exists){
+      showNotification('Park an empty vehicle here to store it, or you have nothing stored to retrieve.');
+      return;
+    }
+    const d = doc.data();
+    const template = CAR_TEMPLATES[d.template] || CAR_TEMPLATES[0];
+    const v = createVehicleMesh(template, d.color, bayX, bayZ, 0, 'retrieved_'+Date.now());
+    vehicles.push(v);
+    vehicleMeshes.push(v);
+    await ref.delete();
+    showNotification('🚗 Vehicle retrieved from the shared garage.');
+  }catch(err){
+    console.error('Retrieve vehicle failed:', err);
+    showNotification('Could not retrieve the vehicle.');
+  }
 }
 
 // =====================================================================

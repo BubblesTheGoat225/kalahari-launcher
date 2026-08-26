@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Taxi 4</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:#000;overflow:hidden;user-select:none;}
@@ -98,6 +101,43 @@ body{background:#000;overflow:hidden;user-select:none;}
   width:180px;height:180px;border-radius:50%;
   border:2px solid rgba(255,255,255,0.2);
   box-shadow:0 0 20px rgba(0,0,0,0.8),inset 0 0 10px rgba(0,0,0,0.5);
+  transition:border-color 0.3s, box-shadow 0.3s;
+}
+#minimapCanvas.online-active{
+  border:2px solid #4ade80;
+  box-shadow:0 0 24px rgba(74,222,128,0.55),inset 0 0 10px rgba(0,0,0,0.5);
+}
+#minimapOnlineBadge{
+  display:none;
+  align-items:center;
+  gap:5px;
+  position:absolute;
+  top:-10px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(6,16,10,0.85);
+  border:1px solid #4ade80;
+  color:#4ade80;
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px;
+  letter-spacing:2px;
+  padding:3px 9px;
+  border-radius:20px;
+  white-space:nowrap;
+}
+#minimapOnlineBadge .dot{
+  width:5px;height:5px;border-radius:50%;background:#4ade80;
+  box-shadow:0 0 6px #4ade80;
+  animation:mmPulse 1.6s infinite;
+}
+@keyframes mmPulse{
+  0%,100%{opacity:0.4}
+  50%{opacity:1}
+}
+#onlinePlayerCount{
+  position:absolute;bottom:-42px;left:50%;transform:translateX(-50%);
+  font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:1px;
+  color:rgba(74,222,128,0.85);white-space:nowrap;
 }
 #minimapDistrictLabel{
   position:absolute;bottom:-24px;left:50%;transform:translateX(-50%);
@@ -206,6 +246,200 @@ body{background:#000;overflow:hidden;user-select:none;}
   text-transform:uppercase;margin-bottom:10px;transition:all 0.2s;
 }
 .menu-btn:hover{background:rgba(255,180,0,0.15);border-color:#ffb400;color:#ffb400;}
+
+/* Online mode toggle */
+.online-toggle-btn{
+  border-color:rgba(90,220,255,0.35)!important;
+  color:#8fe3ff!important;
+}
+.online-toggle-btn:hover{
+  background:rgba(90,220,255,0.15)!important;
+  border-color:#5adcff!important;
+  color:#5adcff!important;
+}
+.online-toggle-btn.online-on{
+  background:rgba(74,222,128,0.15)!important;
+  border-color:#4ade80!important;
+  color:#4ade80!important;
+}
+.online-toggle-btn.online-on:hover{
+  background:rgba(74,222,128,0.25)!important;
+}
+.online-status-line{
+  font:11px 'Share Tech Mono',monospace;
+  color:rgba(255,255,255,0.45);
+  text-align:center;
+  margin:-2px 0 10px;
+  letter-spacing:0.5px;
+}
+
+/* PVP menu button (pause menu) */
+.pvp-menu-btn{
+  border-color:rgba(232,121,249,0.35)!important;
+  color:#e879f9!important;
+}
+.pvp-menu-btn:hover{
+  background:rgba(232,121,249,0.15)!important;
+  border-color:#e879f9!important;
+}
+
+/* PVP screen */
+.pvp-role-row{
+  display:flex;
+  gap:8px;
+  margin:14px 0 10px;
+}
+.pvp-role-btn{
+  flex:1;
+  padding:12px 8px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,0.15);
+  background:rgba(255,255,255,0.04);
+  color:rgba(255,255,255,0.65);
+  font:700 13px 'Rajdhani',sans-serif;
+  letter-spacing:1px;
+  cursor:pointer;
+  transition:all 0.15s;
+}
+.pvp-role-btn:hover{
+  border-color:rgba(255,255,255,0.35);
+}
+.pvp-role-btn.pvp-role-active.pvp-role-off{
+  background:rgba(255,255,255,0.12);
+  border-color:rgba(255,255,255,0.5);
+  color:#fff;
+}
+.pvp-role-btn.pvp-role-active.pvp-role-cop{
+  background:rgba(96,165,250,0.2);
+  border-color:#60a5fa;
+  color:#93c5fd;
+}
+.pvp-role-btn.pvp-role-active.pvp-role-robber{
+  background:rgba(232,121,249,0.2);
+  border-color:#e879f9;
+  color:#f0abfc;
+}
+.pvp-hint{
+  font:12px 'Rajdhani',sans-serif;
+  color:rgba(255,255,255,0.5);
+  line-height:1.6;
+  padding:10px 12px;
+  background:rgba(255,255,255,0.03);
+  border-radius:8px;
+  margin-bottom:14px;
+}
+.pvp-roster-header{
+  font:700 11px 'Share Tech Mono',monospace;
+  letter-spacing:2px;
+  color:rgba(255,255,255,0.4);
+  margin-bottom:8px;
+}
+.pvp-roster{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  margin-bottom:14px;
+}
+.pvp-roster-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:9px 12px;
+  border-radius:8px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+}
+.pvp-roster-name{
+  flex:1;
+  font:600 13px 'Rajdhani',sans-serif;
+  color:#fff;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.pvp-tag{
+  font:700 11px 'Share Tech Mono',monospace;
+  padding:3px 8px;
+  border-radius:12px;
+  white-space:nowrap;
+}
+.pvp-tag-cop{ background:rgba(96,165,250,0.18); color:#93c5fd; }
+.pvp-tag-robber{ background:rgba(232,121,249,0.18); color:#f0abfc; }
+.pvp-tag-off{ background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.4); }
+.pvp-roster-stats{
+  font:11px 'Share Tech Mono',monospace;
+  color:rgba(255,255,255,0.45);
+  white-space:nowrap;
+}
+.pvp-empty{
+  color:rgba(255,255,255,0.4);
+  font:13px 'Rajdhani',sans-serif;
+  padding:14px 4px;
+  text-align:center;
+}
+
+/* PVP in-game HUD */
+.pvp-hud{
+  position:fixed;
+  top:70px;
+  left:50%;
+  transform:translateX(-50%);
+  font:700 13px 'Rajdhani',sans-serif;
+  letter-spacing:1px;
+  padding:6px 16px;
+  border-radius:20px;
+  z-index:8;
+  display:none;
+  pointer-events:none;
+}
+.pvp-hud.pvp-cop{
+  background:rgba(96,165,250,0.18);
+  border:1px solid #60a5fa;
+  color:#93c5fd;
+}
+.pvp-hud.pvp-robber{
+  background:rgba(232,121,249,0.18);
+  border:1px solid #e879f9;
+  color:#f0abfc;
+}
+.pvp-hud.pvp-robber-immune{
+  background:rgba(255,255,255,0.12);
+  border:1px solid rgba(255,255,255,0.5);
+  color:#fff;
+}
+.pvp-warn{
+  position:fixed;
+  top:104px;
+  left:50%;
+  transform:translateX(-50%);
+  font:900 15px 'Bebas Neue',sans-serif;
+  letter-spacing:2px;
+  padding:7px 18px;
+  border-radius:8px;
+  z-index:8;
+  display:none;
+  pointer-events:none;
+}
+.pvp-warn-ready{
+  background:rgba(96,165,250,0.25);
+  border:2px solid #60a5fa;
+  color:#fff;
+  animation:pvpPulseReady 0.8s infinite;
+}
+.pvp-warn-danger{
+  background:rgba(239,68,68,0.3);
+  border:2px solid #ef4444;
+  color:#fff;
+  animation:pvpPulseDanger 0.6s infinite;
+}
+@keyframes pvpPulseReady{
+  0%,100%{ opacity:1; }
+  50%{ opacity:0.6; }
+}
+@keyframes pvpPulseDanger{
+  0%,100%{ background:rgba(239,68,68,0.3); }
+  50%{ background:rgba(239,68,68,0.55); }
+}
 
 /* Purchase Screen */
 #purchaseScreen{
@@ -357,7 +591,29 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
 #mapScreen{
   background:rgba(0,0,0,0.92);backdrop-filter:blur(8px);display:none;
 }
-#mapCanvas{border:1px solid rgba(255,180,0,0.3);}
+#mapCanvas{border:1px solid rgba(255,180,0,0.3);cursor:default;}
+#mapCanvasWrap{
+  position:relative;
+  display:inline-block;
+}
+#mapTooltip{
+  position:absolute;
+  display:none;
+  pointer-events:none;
+  background:rgba(6,16,31,0.92);
+  border:1px solid rgba(255,180,0,0.5);
+  color:#fff;
+  font-family:'Rajdhani',sans-serif;
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:0.5px;
+  padding:5px 10px;
+  border-radius:5px;
+  white-space:nowrap;
+  transform:translate(-50%,-130%);
+  z-index:5;
+  box-shadow:0 4px 14px rgba(0,0,0,0.5);
+}
 .map-title{
   font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:4px;
   color:#ffb400;text-align:center;margin-bottom:16px;
@@ -465,6 +721,10 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
 
 <!-- HUD -->
 <div id="hud">
+  <!-- PVP HUD -->
+  <div id="pvpRoleHud" class="pvp-hud"></div>
+  <div id="pvpWarningHud" class="pvp-warn"></div>
+
   <!-- District Notification -->
   <div id="districtNotif">
     <div id="districtName">KINGSTON EXCHANGE</div>
@@ -503,8 +763,10 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
 
   <!-- Minimap -->
   <div id="minimapContainer">
+    <div id="minimapOnlineBadge"><span class="dot"></span>LIVE</div>
     <canvas id="minimapCanvas" width="180" height="180"></canvas>
     <div id="minimapDistrictLabel"></div>
+    <div id="onlinePlayerCount"></div>
   </div>
 
   <!-- Interact hint -->
@@ -541,7 +803,7 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
 <!-- Loading -->
 <div class="screen" id="loadingScreen">
   <div style="text-align:center">
-    <div class="loading-title">Whitewall</div>
+    <div class="loading-title">Taxi 4</div>
     <div class="loading-bar-bg"><div class="loading-bar"></div></div>
     <div class="loading-text">Loading game...</div>
   </div>
@@ -551,7 +813,7 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
 <div class="screen" id="startScreen" style="display:none">
   <div class="start-layout">
     <div class="start-brand">
-      <div class="game-title">Whitewall</div>
+      <div class="game-title">Taxi 4</div>
       <div class="city-line"></div>
       <div class="game-subtitle">(C)2026 Kalahari Studios, Kalahari International, Kalahari Industries & Kalahari Games</div>
       <div class="controls-hint"><strong>WASD</strong> Move · <strong>Mouse</strong> Look · <strong>E</strong> Interact / Enter Car<br><strong>Shift</strong> Sprint · <strong>Space</strong> Jump / Handbrake · <strong>M</strong> Map</div>
@@ -562,6 +824,8 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
       <button class="menu-btn" onclick="startNewGame()">NEW GAME</button>
       <button class="menu-btn" onclick="showHowToPlay()">HOW TO PLAY</button>
       <button class="menu-btn" onclick="showPatchNotes()">UPDATE / PATCH NOTES</button>
+      <button class="menu-btn online-toggle-btn" onclick="toggleOnlineMode()">🌐 ONLINE MODE: OFF</button>
+      <div class="online-status-line" id="startOnlineStatus">Checking session...</div>
       <div class="menu-meta">VERSION 4.6 · KALAHARI STUDIOS</div>
     </div>
   </div>
@@ -595,6 +859,31 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
   </div>
 </div>
 
+<!-- Cops & Robbers -->
+<div class="screen" id="pvpScreen" style="display:none">
+  <div class="pause-panel" style="width:min(560px,92vw)">
+    <div class="pause-title">🚔 COPS &amp; ROBBERS</div>
+
+    <div class="pvp-role-row">
+      <button class="pvp-role-btn pvp-role-off" data-role="off" onclick="setPvpRole(null)">OFF</button>
+      <button class="pvp-role-btn pvp-role-cop" data-role="cop" onclick="setPvpRole('cop')">🚔 COP</button>
+      <button class="pvp-role-btn pvp-role-robber" data-role="robber" onclick="setPvpRole('robber')">🏃 ROBBER</button>
+    </div>
+
+    <div class="pvp-hint">
+      Cops: get close to a robber and press <b>B</b> to bust them.<br>
+      Robbers: stay out of reach — busted robbers get 5s immunity after respawning.
+    </div>
+
+    <div class="pvp-roster-header">ONLINE NOW</div>
+    <div id="pvpRoster" class="pvp-roster" style="max-height:38vh;overflow:auto">
+      <div class="pvp-empty">Go online to see who's playing.</div>
+    </div>
+
+    <button class="menu-btn" onclick="closePvpScreen()">CLOSE</button>
+  </div>
+</div>
+
 <!-- Random Event -->
 <div id="eventBanner"><div id="eventTitle">CITY EVENT</div><div id="eventText"></div></div>
 
@@ -606,6 +895,9 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
     <div class="pause-title">PAUSED</div>
     <button class="menu-btn" onclick="resumeGame()">▶ RESUME</button>
     <button class="menu-btn" onclick="showMap()">🗺 MAP</button><button class="menu-btn" onclick="showSaveSlots()">💾 SAVE SLOTS</button><button class="menu-btn" onclick="showAchievements()">🏆 ACHIEVEMENTS</button>
+    <button class="menu-btn online-toggle-btn" onclick="toggleOnlineMode()">🌐 ONLINE MODE: OFF</button>
+    <div class="online-status-line" id="pauseOnlineStatus">Checking session...</div>
+    <button class="menu-btn pvp-menu-btn" onclick="showPvpScreen()">🚔 COPS &amp; ROBBERS</button>
     <button class="menu-btn" onclick="location.reload()">↩ QUIT TO MENU</button>
   </div>
 </div>
@@ -643,7 +935,10 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
 <div class="screen" id="mapScreen">
   <div style="text-align:center">
     <div class="map-title">City of Kingston Map</div>
-    <canvas id="mapCanvas" width="700" height="500"></canvas>
+    <div id="mapCanvasWrap">
+      <canvas id="mapCanvas" width="700" height="500"></canvas>
+      <div id="mapTooltip"></div>
+    </div>
     <div class="map-legend">
       <div class="legend-item"><div class="legend-dot" style="background:#fff"></div>Player</div>
       <div class="legend-item"><div class="legend-dot" style="background:#4ade80"></div>Safehouse</div>
@@ -651,6 +946,9 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
       <div class="legend-item"><div class="legend-dot" style="background:#f87171"></div>Hospital</div>
       <div class="legend-item"><div class="legend-dot" style="background:#60a5fa"></div>Police</div>
       <div class="legend-item"><div class="legend-dot" style="background:#a78bfa"></div>Point of Interest</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#4ade80"></div>Online Player</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#60a5fa"></div>Cop</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#e879f9"></div>Robber</div>
       <div class="legend-item"><div class="legend-dot" style="background:#567d4d"></div>Future Countryside</div>
     </div>
     <br><button class="btn-cancel" style="width:200px" onclick="closeMap()">CLOSE MAP</button>
@@ -716,6 +1014,77 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
 // =====================================================================
 // TAXI 4 — Main Game Script
 // =====================================================================
+
+// =====================================================================
+// MULTIPLAYER — FIREBASE SETUP
+// Shares the same Firebase project as the Kalahari Studios Launcher, so
+// a player already signed in there is automatically signed in here too
+// (same origin, same auth session). Realtime Database (not Firestore)
+// is used for live position sync — it's built for exactly this kind of
+// frequent, low-latency read/write, unlike Firestore's per-write cost.
+// =====================================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyBUoUrDa7KVn9ab2NawytUIDZS-u6tSpWw",
+  authDomain: "kalahari-launcher.firebaseapp.com",
+  databaseURL: "https://kalahari-launcher-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "kalahari-launcher",
+  storageBucket: "kalahari-launcher.firebasestorage.app",
+  messagingSenderId: "190018843174",
+  appId: "1:190018843174:web:9be974026ea41ea9e92ce7"
+};
+
+let mpAuth = null;
+let mpDb = null;
+let mpUser = null;
+
+try{
+  if(!firebase.apps.length){
+    firebase.initializeApp(firebaseConfig);
+  }
+  mpAuth = firebase.auth();
+  mpDb = firebase.database();
+}catch(err){
+  console.error('Multiplayer Firebase init failed:', err);
+}
+
+const MP_ROOM = 'global';
+let onlineMode = false;
+let mpConnecting = false;
+let mpPlayersRef = null;
+let mpOwnRef = null;
+let mpBroadcastTimer = null;
+let mpLastSent = { x:null, z:null, rotY:null, inVehicle:null };
+let remotePlayers = {}; // uid -> { data, mesh, nameSprite, targetPos, targetRotY, kind }
+
+// =====================================================================
+// PVP — COPS AND ROBBERS
+// Fully client-authoritative, same as the rest of the multiplayer
+// layer: there's no server logic, so a "bust" is really just one
+// client broadcasting an event and every other client (including the
+// robber's own) reacting to it honestly. Fine for a casual mode; not
+// meant to be cheat-proof.
+// =====================================================================
+const PVP_BUST_RADIUS = 4.5;
+const PVP_BUST_COOLDOWN = 1200;   // ms between bust attempts
+const PVP_BUSTED_GRACE = 5000;    // ms a busted robber is immune after respawn
+const PVP_NEARBY_WARN_DIST = 16;  // world units a cop is considered "nearby" for the robber warning
+
+let myPvpRole = null; // null | 'cop' | 'robber'
+let myBustedUntil = 0;
+let lastBustAttempt = 0;
+let pvpEventsRef = null;
+let pvpStatsRef = null;
+let pvpListenerStartTime = 0;
+let pvpStats = {}; // uid -> { name, busts, timesBusted }
+let pvpStatsUnsub = null;
+
+if(mpAuth){
+  mpAuth.onAuthStateChanged(user => {
+    mpUser = user;
+    refreshOnlineUI();
+  });
+}
+
 
 // ---- WORLD DATA ----
 // The city of Kingston — three boroughs linked by wide modern bridges.
@@ -903,6 +1272,8 @@ let interiorObjects = [];
 let taxiMarkerMesh = null, destMarkerMesh = null;
 let interiorScene = false;
 let minimapCtx, mapCtx;
+let mapHoverTargets = []; // populated each drawFullMap() call: {x,y,r,name}
+let mapTooltipEl = null;
 
 // Player physics
 let player = {
@@ -1000,6 +1371,7 @@ function initScene(){
 
   minimapCtx = document.getElementById('minimapCanvas').getContext('2d');
   mapCtx = document.getElementById('mapCanvas').getContext('2d');
+  setupMapTooltip();
 
   window.addEventListener('resize', onResize);
   document.addEventListener('keydown', onKeyDown);
@@ -2054,6 +2426,543 @@ function createPlayer(){
 }
 
 // =====================================================================
+// MULTIPLAYER — CORE
+// =====================================================================
+
+function hashColorForUid(uid){
+  let h = 0;
+  for(let i=0;i<uid.length;i++){
+    h = (h*31 + uid.charCodeAt(i)) >>> 0;
+  }
+  const hue = h % 360;
+  const c = new THREE.Color();
+  c.setHSL(hue/360, 0.62, 0.5);
+  return c.getHex();
+}
+
+function makeNameSprite(name, role){
+  const c = document.createElement('canvas');
+  c.width = 256; c.height = 64;
+  const ctx = c.getContext('2d');
+  const roleColor = role === 'cop' ? '96,165,250' : role === 'robber' ? '232,121,249' : '255,210,31';
+  ctx.fillStyle = 'rgba(6,16,31,0.72)';
+  ctx.fillRect(8, 16, 240, 34);
+  ctx.strokeStyle = 'rgba(' + roleColor + ',0.8)';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(8, 16, 240, 34);
+  ctx.font = 'bold 22px Rajdhani, Arial';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#ffffff';
+  const prefix = role === 'cop' ? '🚔 ' : role === 'robber' ? '🏃 ' : '';
+  ctx.fillText((prefix + name).slice(0,20), 128, 40);
+  const tex = new THREE.CanvasTexture(c);
+  const mat = new THREE.SpriteMaterial({ map:tex, depthTest:false, transparent:true });
+  const sprite = new THREE.Sprite(mat);
+  sprite.scale.set(3, 0.75, 1);
+  sprite.renderOrder = 999;
+  return sprite;
+}
+
+function refreshOnlineUI(){
+  const signedIn = !!mpUser;
+  const label = onlineMode ? '🌐 ONLINE MODE: ON' : '🌐 ONLINE MODE: OFF';
+  document.querySelectorAll('.online-toggle-btn').forEach(btn => {
+    btn.textContent = label;
+    btn.classList.toggle('online-on', onlineMode);
+  });
+  document.querySelectorAll('.online-status-line').forEach(el => {
+    if(onlineMode){
+      el.textContent = 'Connected as ' + (mpUser.displayName || mpUser.email?.split('@')[0] || 'Player');
+    }else if(signedIn){
+      el.textContent = 'Signed in as ' + (mpUser.displayName || mpUser.email?.split('@')[0] || 'Player') + ' — ready to go online';
+    }else{
+      el.textContent = 'Not signed in — sign in via the Kalahari Launcher first';
+    }
+  });
+  const mmBadge = document.getElementById('minimapOnlineBadge');
+  if(mmBadge) mmBadge.style.display = onlineMode ? 'flex' : 'none';
+  const mmCanvas = document.getElementById('minimapCanvas');
+  if(mmCanvas) mmCanvas.classList.toggle('online-active', onlineMode);
+  updateOnlineCount();
+}
+
+function updateOnlineCount(){
+  const el = document.getElementById('onlinePlayerCount');
+  if(!el) return;
+  if(!onlineMode){ el.textContent = ''; return; }
+  const n = Object.keys(remotePlayers).length;
+  el.textContent = n === 0 ? 'You\'re the only one online' : (n + (n===1?' other player':' other players') + ' online');
+}
+
+function toggleOnlineMode(){
+  if(mpConnecting) return;
+  if(onlineMode){
+    disableOnlineMode();
+    return;
+  }
+  if(!mpAuth || !mpDb){
+    showNotification('Multiplayer is unavailable right now.');
+    return;
+  }
+  if(!mpUser){
+    showNotification('Sign in via the Kalahari Launcher first, then come back to go online.');
+    return;
+  }
+  enableOnlineMode();
+}
+
+function enableOnlineMode(){
+  mpConnecting = true;
+  const uid = mpUser.uid;
+  mpPlayersRef = mpDb.ref('taxi4/rooms/' + MP_ROOM + '/players');
+  mpOwnRef = mpPlayersRef.child(uid);
+  pvpEventsRef = mpDb.ref('taxi4/rooms/' + MP_ROOM + '/pvpEvents');
+  pvpStatsRef = mpDb.ref('taxi4/rooms/' + MP_ROOM + '/pvpStats');
+
+  const name = mpUser.displayName || mpUser.email?.split('@')[0] || 'Player';
+
+  mpOwnRef.onDisconnect().remove();
+
+  myPvpRole = null;
+  myBustedUntil = 0;
+
+  mpOwnRef.set({
+    name,
+    x: player.pos.x,
+    y: player.pos.y,
+    z: player.pos.z,
+    rotY: camYaw,
+    inVehicle: false,
+    vTemplate: null,
+    vColor: null,
+    pvpRole: null,
+    bustedUntil: 0,
+    updatedAt: Date.now()
+  }).then(() => {
+    mpConnecting = false;
+    onlineMode = true;
+    pvpListenerStartTime = Date.now();
+    mpPlayersRef.on('value', handlePlayersSnapshot);
+    pvpEventsRef.on('child_added', handlePvpEvent);
+    pvpStatsUnsub = pvpStatsRef.on('value', snap => {
+      pvpStats = snap.val() || {};
+      refreshPvpPanel();
+    });
+    mpBroadcastTimer = setInterval(broadcastPlayerState, 150);
+    refreshOnlineUI();
+    showNotification('🌐 You\'re online — other Kalahari players can see you.');
+  }).catch(err => {
+    mpConnecting = false;
+    console.error('Failed to go online:', err);
+    showNotification('Could not connect to online mode. Try again shortly.');
+  });
+}
+
+function disableOnlineMode(){
+  onlineMode = false;
+
+  if(mpBroadcastTimer){
+    clearInterval(mpBroadcastTimer);
+    mpBroadcastTimer = null;
+  }
+
+  if(mpPlayersRef){
+    mpPlayersRef.off('value', handlePlayersSnapshot);
+  }
+
+  if(pvpEventsRef){
+    pvpEventsRef.off('child_added', handlePvpEvent);
+  }
+
+  if(pvpStatsRef){
+    pvpStatsRef.off('value');
+  }
+
+  if(mpOwnRef){
+    mpOwnRef.onDisconnect().cancel();
+    mpOwnRef.remove();
+  }
+
+  Object.keys(remotePlayers).forEach(removeRemotePlayerMesh);
+  remotePlayers = {};
+  myPvpRole = null;
+  myBustedUntil = 0;
+  pvpStats = {};
+
+  refreshOnlineUI();
+  refreshPvpPanel();
+  showNotification('Went offline.');
+}
+
+function broadcastPlayerState(){
+  if(!onlineMode || !mpOwnRef || !gameState.started) return;
+
+  const inVehicle = gameState.inVehicle && !!gameState.currentVehicle;
+  const pos = inVehicle ? gameState.currentVehicle.group.position : player.pos;
+  const rotY = inVehicle ? gameState.currentVehicle.rotation : camYaw;
+
+  // Skip sends that wouldn't meaningfully change anything remote players see.
+  const moved = mpLastSent.x === null ||
+    Math.abs(pos.x - mpLastSent.x) > 0.05 ||
+    Math.abs(pos.z - mpLastSent.z) > 0.05 ||
+    Math.abs(rotY - mpLastSent.rotY) > 0.02 ||
+    inVehicle !== mpLastSent.inVehicle;
+
+  if(!moved) return;
+
+  const update = {
+    x: pos.x, y: pos.y, z: pos.z,
+    rotY,
+    inVehicle,
+    updatedAt: Date.now()
+  };
+
+  if(inVehicle){
+    update.vTemplate = CAR_TEMPLATES.indexOf(gameState.currentVehicle.template);
+    if(update.vTemplate < 0) update.vTemplate = 0;
+    update.vColor = gameState.currentVehicle.color;
+  }else{
+    update.vTemplate = null;
+    update.vColor = null;
+  }
+
+  mpLastSent = { x:pos.x, z:pos.z, rotY, inVehicle };
+  mpOwnRef.update(update);
+}
+
+function handlePlayersSnapshot(snapshot){
+  const data = snapshot.val() || {};
+  const seen = new Set();
+
+  Object.entries(data).forEach(([uid, entry]) => {
+    if(mpUser && uid === mpUser.uid) return;
+    seen.add(uid);
+
+    let rp = remotePlayers[uid];
+    if(!rp){
+      rp = remotePlayers[uid] = {
+        data: entry,
+        mesh: null,
+        nameSprite: null,
+        kind: null,
+        _lastRole: entry.pvpRole,
+        targetPos: new THREE.Vector3(entry.x, entry.y, entry.z),
+        targetRotY: entry.rotY || 0
+      };
+      spawnRemotePlayerMesh(uid, rp, entry);
+    }
+
+    rp.data = entry;
+    rp.targetPos.set(entry.x, entry.y, entry.z);
+    rp.targetRotY = entry.rotY || 0;
+
+    const prevRole = rp._lastRole;
+    const wantKind = entry.inVehicle ? 'vehicle' : 'pedestrian';
+    if(rp.kind !== wantKind){
+      spawnRemotePlayerMesh(uid, rp, entry);
+    }else if(prevRole !== entry.pvpRole){
+      refreshRemoteNameSprite(rp, entry);
+    }
+    rp._lastRole = entry.pvpRole;
+  });
+
+  Object.keys(remotePlayers).forEach(uid => {
+    if(!seen.has(uid)) removeRemotePlayerMesh(uid);
+  });
+
+  updateOnlineCount();
+  refreshPvpPanel();
+}
+
+function spawnRemotePlayerMesh(uid, rp, entry){
+  if(rp.mesh){
+    scene.remove(rp.mesh);
+    rp.mesh = null;
+  }
+
+  const color = hashColorForUid(uid);
+
+  if(entry.inVehicle){
+    const template = CAR_TEMPLATES[entry.vTemplate] || CAR_TEMPLATES[0];
+    const vColor = (typeof entry.vColor === 'number') ? entry.vColor : color;
+    const vObj = createVehicleMesh(template, vColor, entry.x, entry.z, entry.rotY || 0, 'remote_'+uid);
+    rp.mesh = vObj.group;
+    rp.kind = 'vehicle';
+  }else{
+    const group = new THREE.Group();
+    const bodyG = new THREE.BoxGeometry(0.5, 1.0, 0.3);
+    const bodyM = new THREE.MeshLambertMaterial({ color });
+    const body = new THREE.Mesh(bodyG, bodyM);
+    body.position.y = 0.5;
+    group.add(body);
+    const headG = new THREE.BoxGeometry(0.4, 0.4, 0.4);
+    const headM = new THREE.MeshLambertMaterial({ color:0xffcc80 });
+    const head = new THREE.Mesh(headG, headM);
+    head.position.y = 1.2;
+    group.add(head);
+    [[-0.13,0],[0.13,0]].forEach(off => {
+      const legG = new THREE.BoxGeometry(0.2, 0.6, 0.25);
+      const legM = new THREE.MeshLambertMaterial({ color:0x1a1a1a });
+      const leg = new THREE.Mesh(legG, legM);
+      leg.position.set(off[0], -0.3, 0);
+      group.add(leg);
+    });
+    group.position.set(entry.x, entry.y, entry.z);
+    scene.add(group);
+    rp.mesh = group;
+    rp.kind = 'pedestrian';
+  }
+
+  const nameSprite = makeNameSprite(entry.name || 'Player', entry.pvpRole);
+  nameSprite.position.y = entry.inVehicle ? 2.6 : 2.1;
+  rp.mesh.add(nameSprite);
+  rp.nameSprite = nameSprite;
+}
+
+function refreshRemoteNameSprite(rp, entry){
+  if(!rp.mesh) return;
+  if(rp.nameSprite) rp.mesh.remove(rp.nameSprite);
+  const nameSprite = makeNameSprite(entry.name || 'Player', entry.pvpRole);
+  nameSprite.position.y = entry.inVehicle ? 2.6 : 2.1;
+  rp.mesh.add(nameSprite);
+  rp.nameSprite = nameSprite;
+}
+
+function removeRemotePlayerMesh(uid){
+  const rp = remotePlayers[uid];
+  if(!rp) return;
+  if(rp.mesh) scene.remove(rp.mesh);
+  delete remotePlayers[uid];
+  updateOnlineCount();
+}
+
+function updateRemotePlayers(dt){
+  const lerpFactor = Math.min(1, dt * 8);
+  Object.values(remotePlayers).forEach(rp => {
+    if(!rp.mesh) return;
+    rp.mesh.position.lerp(rp.targetPos, lerpFactor);
+    let dr = rp.targetRotY - rp.mesh.rotation.y;
+    while(dr > Math.PI) dr -= Math.PI*2;
+    while(dr < -Math.PI) dr += Math.PI*2;
+    rp.mesh.rotation.y += dr * lerpFactor;
+  });
+}
+
+// =====================================================================
+// PVP — COPS AND ROBBERS CORE
+// =====================================================================
+
+function setPvpRole(role){
+  if(!onlineMode || !mpOwnRef){
+    showNotification('Go online first to play Cops & Robbers.');
+    return;
+  }
+  myPvpRole = (myPvpRole === role) ? null : role;
+  myBustedUntil = 0;
+  mpOwnRef.update({ pvpRole: myPvpRole, bustedUntil: 0 });
+  refreshPvpPanel();
+  refreshPvpHud();
+  if(myPvpRole === 'cop'){
+    showNotification('🚔 You are a COP — press B near a robber to bust them.');
+  }else if(myPvpRole === 'robber'){
+    showNotification('🏃 You are a ROBBER — stay away from cops!');
+  }else{
+    showNotification('PVP role cleared.');
+  }
+}
+
+function attemptBust(){
+  const now = Date.now();
+  if(now - lastBustAttempt < PVP_BUST_COOLDOWN) return;
+  lastBustAttempt = now;
+
+  const myPos = (gameState.inVehicle && gameState.currentVehicle)
+    ? gameState.currentVehicle.group.position
+    : player.pos;
+
+  let target = null;
+  let bestDist = PVP_BUST_RADIUS;
+
+  Object.entries(remotePlayers).forEach(([uid, rp]) => {
+    if(!rp.data || rp.data.pvpRole !== 'robber') return;
+    if(rp.data.bustedUntil && rp.data.bustedUntil > now) return; // grace period
+    const d = myPos.distanceTo(rp.targetPos);
+    if(d < bestDist){ bestDist = d; target = { uid, rp }; }
+  });
+
+  if(!target){
+    showNotification('No robber in range.');
+    return;
+  }
+
+  const eventRef = pvpEventsRef.push();
+  eventRef.set({
+    type: 'bust',
+    copUid: mpUser.uid,
+    copName: mpUser.displayName || mpUser.email?.split('@')[0] || 'Cop',
+    robberUid: target.uid,
+    robberName: target.rp.data.name || 'Robber',
+    at: now
+  });
+
+  pvpStatsRef.child(mpUser.uid).update({
+    name: mpUser.displayName || mpUser.email?.split('@')[0] || 'Cop',
+    busts: firebase.database.ServerValue.increment(1)
+  });
+
+  showNotification('🚔 Busted ' + (target.rp.data.name || 'Robber') + '!');
+}
+
+function handlePvpEvent(snapshot){
+  const event = snapshot.val();
+  if(!event || event.at < pvpListenerStartTime) return;
+  if(event.type !== 'bust') return;
+  if(!mpUser) return;
+
+  if(event.robberUid === mpUser.uid){
+    // I got busted.
+    const until = Date.now() + PVP_BUSTED_GRACE;
+    myBustedUntil = until;
+    if(mpOwnRef) mpOwnRef.update({ bustedUntil: until });
+
+    // Respawn at the game's default starting point.
+    player.pos.set(-280, 1.8, 0);
+    player.vel.set(0,0,0);
+    if(gameState.inVehicle) exitVehicle();
+
+    if(pvpStatsRef){
+      pvpStatsRef.child(mpUser.uid).update({
+        name: mpUser.displayName || mpUser.email?.split('@')[0] || 'Robber',
+        timesBusted: firebase.database.ServerValue.increment(1)
+      });
+    }
+
+    showNotification('🚔 BUSTED by ' + (event.copName || 'a cop') + '! (5s immunity)');
+  }
+
+  refreshPvpPanel();
+}
+
+function refreshPvpHud(){
+  const hud = document.getElementById('pvpRoleHud');
+  const warn = document.getElementById('pvpWarningHud');
+  if(!hud || !warn) return;
+
+  if(!onlineMode || !myPvpRole){
+    hud.style.display = 'none';
+    warn.style.display = 'none';
+    return;
+  }
+
+  hud.style.display = 'block';
+
+  if(myPvpRole === 'cop'){
+    const robberCount = Object.values(remotePlayers).filter(rp => rp.data?.pvpRole === 'robber').length;
+    hud.textContent = '🚔 COP MODE — ' + robberCount + (robberCount===1?' robber':' robbers') + ' online';
+    hud.className = 'pvp-hud pvp-cop';
+
+    const myPos = (gameState.inVehicle && gameState.currentVehicle) ? gameState.currentVehicle.group.position : player.pos;
+    const inRange = Object.values(remotePlayers).some(rp =>
+      rp.data?.pvpRole === 'robber' &&
+      !(rp.data.bustedUntil && rp.data.bustedUntil > Date.now()) &&
+      myPos.distanceTo(rp.targetPos) < PVP_BUST_RADIUS
+    );
+    if(inRange){
+      warn.textContent = '[B] BUST';
+      warn.className = 'pvp-warn pvp-warn-ready';
+      warn.style.display = 'block';
+    }else{
+      warn.style.display = 'none';
+    }
+  }else if(myPvpRole === 'robber'){
+    const busted = myBustedUntil > Date.now();
+    if(busted){
+      hud.textContent = '🏃 ROBBER MODE — IMMUNE';
+      hud.className = 'pvp-hud pvp-robber-immune';
+    }else{
+      hud.textContent = '🏃 ROBBER MODE — EVADE!';
+      hud.className = 'pvp-hud pvp-robber';
+    }
+
+    const myPos = (gameState.inVehicle && gameState.currentVehicle) ? gameState.currentVehicle.group.position : player.pos;
+    const copNearby = Object.values(remotePlayers).some(rp =>
+      rp.data?.pvpRole === 'cop' &&
+      myPos.distanceTo(rp.targetPos) < PVP_NEARBY_WARN_DIST
+    );
+    if(copNearby && !busted){
+      warn.textContent = '⚠ COP NEARBY';
+      warn.className = 'pvp-warn pvp-warn-danger';
+      warn.style.display = 'block';
+    }else{
+      warn.style.display = 'none';
+    }
+  }
+}
+
+function refreshPvpPanel(){
+  const panel = document.getElementById('pvpScreen');
+  if(!panel || panel.style.display === 'none' || !panel.style.display) return;
+
+  document.querySelectorAll('.pvp-role-btn').forEach(btn => {
+    btn.classList.toggle('pvp-role-active', btn.dataset.role === myPvpRole || (btn.dataset.role === 'off' && !myPvpRole));
+  });
+
+  const rosterEl = document.getElementById('pvpRoster');
+  if(!rosterEl) return;
+
+  if(!onlineMode){
+    rosterEl.innerHTML = '<div class="pvp-empty">Go online to see who\'s playing.</div>';
+    return;
+  }
+
+  const rows = [];
+
+  const meStats = pvpStats[mpUser?.uid] || { busts:0, timesBusted:0 };
+  rows.push({
+    name: (mpUser?.displayName || 'You') + ' (You)',
+    role: myPvpRole,
+    busts: meStats.busts || 0,
+    timesBusted: meStats.timesBusted || 0
+  });
+
+  Object.entries(remotePlayers).forEach(([uid, rp]) => {
+    const stats = pvpStats[uid] || {};
+    rows.push({
+      name: rp.data?.name || 'Player',
+      role: rp.data?.pvpRole || null,
+      busts: stats.busts || 0,
+      timesBusted: stats.timesBusted || 0
+    });
+  });
+
+  if(rows.length === 0){
+    rosterEl.innerHTML = '<div class="pvp-empty">No one else is online right now.</div>';
+    return;
+  }
+
+  rosterEl.innerHTML = rows.map(r => {
+    const roleLabel = r.role === 'cop' ? '🚔 Cop' : r.role === 'robber' ? '🏃 Robber' : '— Off';
+    const roleClass = r.role === 'cop' ? 'pvp-tag-cop' : r.role === 'robber' ? 'pvp-tag-robber' : 'pvp-tag-off';
+    return `
+      <div class="pvp-roster-row">
+        <div class="pvp-roster-name">${r.name}</div>
+        <div class="pvp-tag ${roleClass}">${roleLabel}</div>
+        <div class="pvp-roster-stats">🚔${r.busts} · 🏃${r.timesBusted}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function showPvpScreen(){
+  document.getElementById('pvpScreen').style.display = 'flex';
+  refreshPvpPanel();
+}
+
+function closePvpScreen(){
+  document.getElementById('pvpScreen').style.display = 'none';
+}
+
+// =====================================================================
 // HELPERS
 // =====================================================================
 function pseudoRand(n){
@@ -2168,6 +3077,9 @@ function onKeyDown(e){
     // the room, so there's no reason to lock it to outdoors-only anymore.
     cameraMode = (cameraMode + 1) % CAMERA_VIEWS.length;
     showNotification('📷 Camera: ' + CAMERA_VIEWS[cameraMode]);
+  }
+  if(e.code === 'KeyB' && gameState.started && !gameState.paused && onlineMode && myPvpRole === 'cop'){
+    attemptBust();
   }
 
   // Supermarket game key press
@@ -3756,6 +4668,29 @@ function updateMinimap(){
       ctx.arc(toMM(taxiDestPos.x, cx), toMM(taxiDestPos.z, cz), 5, 0, Math.PI*2);
       ctx.fill();
     }
+
+    // Online mode: other players as pulsing blips. Green = no PVP role,
+    // blue = cop, red = robber — distinct from every other marker color
+    // used on this minimap.
+    if(onlineMode){
+      const t = Date.now() * 0.004;
+      const pulse = 3 + Math.sin(t) * 1;
+      Object.values(remotePlayers).forEach(rp => {
+        const rx = toMM(rp.targetPos.x, cx), rz = toMM(rp.targetPos.z, cz);
+        if(rx < -10 || rx > 190 || rz < -10 || rz > 190) return;
+        const role = rp.data?.pvpRole;
+        const col = role === 'cop' ? '96,165,250' : role === 'robber' ? '232,121,249' : '74,222,128';
+        const solid = role === 'cop' ? '#60a5fa' : role === 'robber' ? '#e879f9' : '#4ade80';
+        ctx.fillStyle = 'rgba(' + col + ',0.25)';
+        ctx.beginPath();
+        ctx.arc(rx, rz, pulse + 4, 0, Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle = solid;
+        ctx.beginPath();
+        ctx.arc(rx, rz, 3.5, 0, Math.PI*2);
+        ctx.fill();
+      });
+    }
   }
 
   // Player dot
@@ -3775,11 +4710,30 @@ function updateMinimap(){
   ctx.lineTo(MM_CENTER + Math.sin(pYaw)*10, MM_CENTER - Math.cos(pYaw)*10);
   ctx.stroke();
 
+  // Online mode: slow rotating radar sweep, purely cosmetic — signals
+  // "this map is live" the same way a scanning sonar reads as active.
+  if(onlineMode){
+    const sweepAngle = (Date.now() * 0.0009) % (Math.PI*2);
+    const grad = ctx.createConicGradient
+      ? ctx.createConicGradient(sweepAngle, 90, 90)
+      : null;
+    if(grad){
+      grad.addColorStop(0, 'rgba(74,222,128,0.28)');
+      grad.addColorStop(0.06, 'rgba(74,222,128,0)');
+      grad.addColorStop(1, 'rgba(74,222,128,0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(90,90,88,0,Math.PI*2);
+      ctx.fill();
+    }
+  }
+
   ctx.restore();
 
-  // Minimap border
-  ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-  ctx.lineWidth = 2;
+  // Minimap border — green + thicker when online, matching the CSS glow
+  // on the canvas element itself, so the ring and the border agree.
+  ctx.strokeStyle = onlineMode ? 'rgba(74,222,128,0.55)' : 'rgba(255,255,255,0.2)';
+  ctx.lineWidth = onlineMode ? 3 : 2;
   ctx.beginPath();
   ctx.arc(90,90,88,0,Math.PI*2);
   ctx.stroke();
@@ -3792,10 +4746,57 @@ function toMM(worldCoord, playerCoord){
 // =====================================================================
 // FULL MAP
 // =====================================================================
+function setupMapTooltip(){
+  const canvas = document.getElementById('mapCanvas');
+  mapTooltipEl = document.getElementById('mapTooltip');
+  if(!canvas || !mapTooltipEl) return;
+
+  canvas.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    // Canvas is drawn at 700x500 internally but may be scaled by CSS —
+    // convert mouse position into canvas-space coordinates.
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const mx = (e.clientX - rect.left) * scaleX;
+    const my = (e.clientY - rect.top) * scaleY;
+
+    let hit = null;
+    let bestDist = Infinity;
+
+    mapHoverTargets.forEach(t => {
+      const dx = mx - t.x, dy = my - t.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if(dist <= t.r && dist < bestDist){
+        bestDist = dist;
+        hit = t;
+      }
+    });
+
+    if(hit){
+      mapTooltipEl.textContent = hit.name;
+      mapTooltipEl.style.left = (hit.x / scaleX) + 'px';
+      mapTooltipEl.style.top = (hit.y / scaleY) + 'px';
+      mapTooltipEl.style.display = 'block';
+      canvas.style.cursor = 'pointer';
+    }else{
+      mapTooltipEl.style.display = 'none';
+      canvas.style.cursor = 'default';
+    }
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    mapTooltipEl.style.display = 'none';
+  });
+}
+
 function drawFullMap(){
   const ctx = mapCtx;
   const W = 700, H = 500;
   ctx.clearRect(0,0,W,H);
+
+  // Hover targets for the tooltip system — rebuilt every draw so they
+  // always match what's currently on screen.
+  mapHoverTargets = [];
 
   // Ocean
   ctx.fillStyle = '#0d3b61';
@@ -3885,12 +4886,11 @@ function drawFullMap(){
   SPECIAL_BUILDINGS.forEach(b => {
     const col = dotMap[b.type] || '#a78bfa';
     ctx.fillStyle = col;
+    const bx = mapX(b.x), bz = mapZ(b.z);
     ctx.beginPath();
-    ctx.arc(mapX(b.x), mapZ(b.z), 5, 0, Math.PI*2);
+    ctx.arc(bx, bz, 5, 0, Math.PI*2);
     ctx.fill();
-    ctx.fillStyle = 'rgba(255,255,255,0.7)';
-    ctx.font = '9px Rajdhani';
-    ctx.fillText(b.name, mapX(b.x)+7, mapZ(b.z)+3);
+    mapHoverTargets.push({ x:bx, y:bz, r:8, name:b.name });
   });
 
   // Safehouses
@@ -3899,14 +4899,31 @@ function drawFullMap(){
     ctx.fillStyle = owned ? '#4ade80' : '#6b7280';
     ctx.strokeStyle = owned ? '#22c55e' : '#9ca3af';
     ctx.lineWidth = 1;
+    const sx3 = mapX(sh.x), sz3 = mapZ(sh.z);
     ctx.beginPath();
-    ctx.arc(mapX(sh.x), mapZ(sh.z), 5, 0, Math.PI*2);
+    ctx.arc(sx3, sz3, 5, 0, Math.PI*2);
     ctx.fill();
     ctx.stroke();
-    ctx.fillStyle = owned ? '#4ade80' : 'rgba(255,255,255,0.5)';
-    ctx.font = '9px Rajdhani';
-    ctx.fillText(sh.name, mapX(sh.x)+7, mapZ(sh.z)+3);
+    mapHoverTargets.push({ x:sx3, y:sz3, r:8, name:sh.name + (owned ? ' (Owned)' : '') });
   });
+
+  // Online players
+  if(onlineMode){
+    Object.values(remotePlayers).forEach(rp => {
+      const rx = mapX(rp.targetPos.x), rz = mapZ(rp.targetPos.z);
+      const role = rp.data?.pvpRole;
+      const col = role === 'cop' ? '#60a5fa' : role === 'robber' ? '#e879f9' : '#4ade80';
+      const roleLabel = role === 'cop' ? ' (Cop)' : role === 'robber' ? ' (Robber)' : '';
+      ctx.fillStyle = col;
+      ctx.strokeStyle = '#0d3b61';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(rx, rz, 5, 0, Math.PI*2);
+      ctx.fill();
+      ctx.stroke();
+      mapHoverTargets.push({ x:rx, y:rz, r:8, name:(rp.data?.name || 'Player') + roleLabel });
+    });
+  }
 
   // Player position
   let px, pz;
@@ -4320,6 +5337,8 @@ function gameLoop(){
   updateTrafficLights(dt);
   updateDayNight(dt);
   randomEventTick(dt);
+  if(onlineMode) updateRemotePlayers(dt);
+  if(onlineMode && myPvpRole) refreshPvpHud();
   if(frameCount % 3 === 0) updateSunFollow(); // shadow frustum is small now, doesn't need to track every frame
 
   // Update minimap every few frames

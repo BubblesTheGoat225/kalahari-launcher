@@ -8,6 +8,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:#000;overflow:hidden;user-select:none;}
@@ -271,6 +272,59 @@ body{background:#000;overflow:hidden;user-select:none;}
   text-align:center;
   margin:-2px 0 10px;
   letter-spacing:0.5px;
+}
+
+/* Online Profile screen */
+.online-profile-body{
+  margin:14px 0;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.online-profile-stat{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:9px 12px;
+  border-radius:8px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  font:13px 'Rajdhani',sans-serif;
+}
+.online-profile-stat span{
+  color:rgba(255,255,255,0.5);
+}
+.online-profile-stat b{
+  color:#fff;
+  font-weight:700;
+}
+.online-profile-loading{
+  color:rgba(255,255,255,0.5);
+  font:13px 'Rajdhani',sans-serif;
+  text-align:center;
+  padding:14px 4px;
+  line-height:1.6;
+}
+.online-enter-btn{
+  border-color:rgba(74,222,128,0.4)!important;
+  color:#4ade80!important;
+  font-weight:900!important;
+}
+.online-enter-btn:hover{
+  background:rgba(74,222,128,0.15)!important;
+  border-color:#4ade80!important;
+}
+.online-enter-btn:disabled{
+  opacity:0.5;
+  cursor:not-allowed;
+}
+.danger-menu-btn{
+  border-color:rgba(239,68,68,0.35)!important;
+  color:#f87171!important;
+}
+.danger-menu-btn:hover{
+  background:rgba(239,68,68,0.15)!important;
+  border-color:#ef4444!important;
 }
 
 /* PVP menu button (pause menu) */
@@ -824,10 +878,23 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
       <button class="menu-btn" onclick="startNewGame()">NEW GAME</button>
       <button class="menu-btn" onclick="showHowToPlay()">HOW TO PLAY</button>
       <button class="menu-btn" onclick="showPatchNotes()">UPDATE / PATCH NOTES</button>
-      <button class="menu-btn online-toggle-btn" onclick="toggleOnlineMode()">🌐 ONLINE MODE: OFF</button>
+      <button class="menu-btn online-toggle-btn" onclick="openOnlineProfileScreen()">🌐 PLAY TAXI ONLINE</button>
       <div class="online-status-line" id="startOnlineStatus">Checking session...</div>
       <div class="menu-meta">VERSION 4.6 · KALAHARI STUDIOS</div>
     </div>
+  </div>
+</div>
+
+<!-- Online Profile -->
+<div class="screen" id="onlineProfileScreen" style="display:none">
+  <div class="pause-panel" style="width:min(480px,92vw)">
+    <div class="pause-title">🌐 ONLINE PROFILE</div>
+    <div id="onlineProfileBody" class="online-profile-body">
+      <div class="online-profile-loading">Loading...</div>
+    </div>
+    <button class="menu-btn online-enter-btn" id="onlineEnterBtn" onclick="enterOnlineWorld()">ENTER Taxi Online</button>
+    <button class="menu-btn danger-menu-btn" onclick="resetOnlineProgress()">RESET ONLINE PROGRESS</button>
+    <button class="menu-btn" onclick="closeOnlineProfileScreen()">BACK</button>
   </div>
 </div>
 
@@ -895,7 +962,7 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
     <div class="pause-title">PAUSED</div>
     <button class="menu-btn" onclick="resumeGame()">▶ RESUME</button>
     <button class="menu-btn" onclick="showMap()">🗺 MAP</button><button class="menu-btn" onclick="showSaveSlots()">💾 SAVE SLOTS</button><button class="menu-btn" onclick="showAchievements()">🏆 ACHIEVEMENTS</button>
-    <button class="menu-btn online-toggle-btn" onclick="toggleOnlineMode()">🌐 ONLINE MODE: OFF</button>
+    <button class="menu-btn online-toggle-btn" id="pauseOnlineBtn" onclick="handlePauseOnlineClick()">🌐 ONLINE MODE: OFF</button>
     <div class="online-status-line" id="pauseOnlineStatus">Checking session...</div>
     <button class="menu-btn pvp-menu-btn" onclick="showPvpScreen()">🚔 COPS &amp; ROBBERS</button>
     <button class="menu-btn" onclick="location.reload()">↩ QUIT TO MENU</button>
@@ -1034,7 +1101,8 @@ const firebaseConfig = {
 };
 
 let mpAuth = null;
-let mpDb = null;
+let mpDb = null;      // Realtime Database — presence, position, PVP (high-frequency, ephemeral)
+let mpFs = null;      // Firestore — online saves, apartment ownership, garage storage (durable, shared)
 let mpUser = null;
 
 try{
@@ -1043,6 +1111,7 @@ try{
   }
   mpAuth = firebase.auth();
   mpDb = firebase.database();
+  mpFs = firebase.firestore();
 }catch(err){
   console.error('Multiplayer Firebase init failed:', err);
 }
@@ -1206,6 +1275,10 @@ const SPECIAL_BUILDINGS = [
   { id:'gasstation1',name:'KingFuel',          type:'gas',                            island:0, x:-400, z: 320, w:25, d:20, h: 8, color:0x6b7280 },
   { id:'gasstation2',name:'QuikFuel',          type:'gas',                            island:1, x: 60,  z: 300, w:25, d:20, h: 8, color:0x6b7280 },
   { id:'gasstation3',name:'BayFuel',           type:'gas',                            island:2, x:780,  z:-300, w:25, d:20, h: 8, color:0x6b7280 },
+
+  // --- Apartments (online mode exclusive — shared ownership, shared garage) ---
+  { id:'aptriver',   name:'Riverside Apartments', type:'apartment_complex',           island:0, x:-580, z: 150, w:34, d:30, h:26, color:0x3b82f6, desc:'Shared apartments for online players', units:6, unitPrice:3500 },
+  { id:'aptbay',     name:'Bayshore Towers',      type:'apartment_complex',           island:2, x: 900, z: 150, w:36, d:32, h:30, color:0x60a5fa, desc:'Luxury apartments for online players', units:6, unitPrice:5200 },
 ];
 
 // Cars spread throughout the world
@@ -1258,6 +1331,9 @@ let gameState = {
   trafficLightTimer: 0,
   achievements: {},
   dayTime: 10.5,
+  isOnlineWorld: false,       // true when gameState was loaded from the online (Firestore) save, not a local slot
+  ownedApartments: new Set(), // unit ids this player owns in online apartment complexes, e.g. "apt_riverside_3"
+  interiorReturnStack: [],    // nested-interior breadcrumb — lets "exit" from a personal apartment unit go back to the building lobby, not straight outside
 };
 
 let currentJobType = null;
@@ -1888,6 +1964,23 @@ function addExteriorDetails(b, target){
         const pump=new THREE.Mesh(new THREE.BoxGeometry(0.8,1.4,0.6),new THREE.MeshLambertMaterial({color:0x1f2937})); pump.position.set(b.x-b.w*0.5+i*b.w,0.7,b.z+b.d*0.6); target.add(pump);
       }
       break;
+    case 'apartment_complex':
+      // Rows of balconies climbing the face of the building, plus a small
+      // glowing "ONLINE" sign — this is an online-mode-only building, so
+      // it should read as visually distinct even from the outside.
+      for(let row=1;row<Math.floor(b.h/4);row++){
+        for(let i=0;i<3;i++){
+          const bx = b.x - b.w*0.3 + i*(b.w*0.3);
+          const rail = new THREE.Mesh(new THREE.BoxGeometry(2.4,0.15,1),new THREE.MeshLambertMaterial({color:0x1e293b}));
+          rail.position.set(bx, row*3.6, front+0.6);
+          target.add(rail);
+          const post = new THREE.Mesh(new THREE.BoxGeometry(2.4,0.9,0.08),new THREE.MeshLambertMaterial({color:0x475569}));
+          post.position.set(bx, row*3.6+0.45, front+1.05);
+          target.add(post);
+        }
+      }
+      addSign(0x4ade80, b.w*0.6, 1.6, b.h+1.2, .8);
+      break;
     case 'cinema':
       addSign(0xfbbf24, b.w*0.75, 2.6, doorH+1.8, .8);
       break;
@@ -2465,20 +2558,28 @@ function makeNameSprite(name, role){
 
 function refreshOnlineUI(){
   const signedIn = !!mpUser;
-  const label = onlineMode ? '🌐 ONLINE MODE: ON' : '🌐 ONLINE MODE: OFF';
-  document.querySelectorAll('.online-toggle-btn').forEach(btn => {
-    btn.textContent = label;
-    btn.classList.toggle('online-on', onlineMode);
-  });
+
+  const pauseBtn = document.getElementById('pauseOnlineBtn');
+  if(pauseBtn){
+    if(gameState.isOnlineWorld){
+      pauseBtn.textContent = onlineMode ? '🚪 LEAVE ONLINE MODE' : '🌐 RECONNECTING...';
+      pauseBtn.classList.toggle('online-on', onlineMode);
+    }else{
+      pauseBtn.textContent = '🌐 PLAY ONLINE (MAIN MENU)';
+      pauseBtn.classList.remove('online-on');
+    }
+  }
+
   document.querySelectorAll('.online-status-line').forEach(el => {
-    if(onlineMode){
-      el.textContent = 'Connected as ' + (mpUser.displayName || mpUser.email?.split('@')[0] || 'Player');
+    if(gameState.isOnlineWorld && onlineMode){
+      el.textContent = 'Online as ' + (mpUser.displayName || mpUser.email?.split('@')[0] || 'Player') + ' · autosaving';
     }else if(signedIn){
-      el.textContent = 'Signed in as ' + (mpUser.displayName || mpUser.email?.split('@')[0] || 'Player') + ' — ready to go online';
+      el.textContent = 'Signed in as ' + (mpUser.displayName || mpUser.email?.split('@')[0] || 'Player');
     }else{
       el.textContent = 'Not signed in — sign in via the Kalahari Launcher first';
     }
   });
+
   const mmBadge = document.getElementById('minimapOnlineBadge');
   if(mmBadge) mmBadge.style.display = onlineMode ? 'flex' : 'none';
   const mmCanvas = document.getElementById('minimapCanvas');
@@ -2494,21 +2595,12 @@ function updateOnlineCount(){
   el.textContent = n === 0 ? 'You\'re the only one online' : (n + (n===1?' other player':' other players') + ' online');
 }
 
-function toggleOnlineMode(){
-  if(mpConnecting) return;
-  if(onlineMode){
-    disableOnlineMode();
-    return;
+function handlePauseOnlineClick(){
+  if(gameState.isOnlineWorld){
+    if(confirm('Leave online mode? Your progress saves automatically first.')) leaveOnlineWorld();
+  }else{
+    showNotification('Quit to the main menu, then tap 🌐 PLAY ONLINE to switch modes.');
   }
-  if(!mpAuth || !mpDb){
-    showNotification('Multiplayer is unavailable right now.');
-    return;
-  }
-  if(!mpUser){
-    showNotification('Sign in via the Kalahari Launcher first, then come back to go online.');
-    return;
-  }
-  enableOnlineMode();
 }
 
 function enableOnlineMode(){
@@ -2526,7 +2618,7 @@ function enableOnlineMode(){
   myPvpRole = null;
   myBustedUntil = 0;
 
-  mpOwnRef.set({
+  return mpOwnRef.set({
     name,
     x: player.pos.x,
     y: player.pos.y,
@@ -2550,7 +2642,6 @@ function enableOnlineMode(){
     });
     mpBroadcastTimer = setInterval(broadcastPlayerState, 150);
     refreshOnlineUI();
-    showNotification('🌐 You\'re online — other Kalahari players can see you.');
   }).catch(err => {
     mpConnecting = false;
     console.error('Failed to go online:', err);
@@ -3859,6 +3950,7 @@ const CATEGORY_INTERIOR_SIZES = {
   food:{hw:14,hd:12}, taxi:{hw:16,hd:14}, supermarket:{hw:22,hd:18}, mechanic:{hw:20,hd:17},
   dockworker:{hw:22,hd:18}, courier:{hw:16,hd:14}, gas:{hw:12,hd:10}, clothing:{hw:14,hd:12},
   pawnshop:{hw:12,hd:10}, firestation:{hw:20,hd:17},
+  apartment_complex:{hw:30,hd:24}, apartment_unit:{hw:11,hd:9}, apartment_garage:{hw:28,hd:22},
 };
 
 // Dense, category-specific furniture so a hospital, a diner and a police
@@ -3964,6 +4056,71 @@ function furnishInterior(cat, HW, HD, CZ){
       for(let i=0;i<Math.floor(HW*1.3/1.6);i++) solid(1.5,0.15,HD*1.5,-HW*0.6+i*1.6,0.08,CZ,0x92400e); // dock planking
       { const boat=new THREE.Mesh(new THREE.BoxGeometry(2,0.8,4),m(0xf1f5f9)); deco(boat, HW*0.4, 0.4, CZ); }
       break;
+    case 'apartment_complex': {
+      // Online-exclusive lobby: a row of numbered unit doors (ownership is
+      // shared/global, fetched async from Firestore right after the room
+      // is built) plus a marked entrance down to the shared garage.
+      const buildingSrc = currentInteriorInfo?.source || {};
+      const buildingId = buildingSrc.id || 'apt';
+      const unitCount = buildingSrc.units || 6;
+      const unitPrice = buildingSrc.unitPrice || 3500;
+
+      solid(HW*1.6,0.4,1,0,0.2,CZ-HD*0.4,0x1e293b); // reception desk
+      deco(new THREE.Mesh(new THREE.BoxGeometry(2,1.4,0.2),new THREE.MeshLambertMaterial({color:0x0f172a,emissive:0x1e293b,emissiveIntensity:.4})),0,1.4,CZ-HD*0.4-0.7);
+
+      window._interiorApartmentUnits = [];
+      const perSide = Math.ceil(unitCount/2);
+      for(let i=0;i<unitCount;i++){
+        const side = i < perSide ? -1 : 1;
+        const idxOnSide = i < perSide ? i : i - perSide;
+        const spacing = (HD*1.6) / perSide;
+        const dx = side * (HW - 2);
+        const dz = CZ - HD*0.7 + idxOnSide * spacing + spacing*0.5;
+        const unitNum = i+1;
+        const unitId = buildingId + '_' + unitNum;
+
+        const doorMat = new THREE.MeshLambertMaterial({ color:0x64748b, emissive:0x334155, emissiveIntensity:.3 });
+        const door = new THREE.Mesh(new THREE.BoxGeometry(1, 2.4, 1.6), doorMat);
+        door.position.set(dx, 1.2, dz);
+        addInterior(door);
+        interiorColliders.push({x:dx, z:dz, w:1, d:1.6});
+
+        const label = makeNameSprite('UNIT ' + unitNum, null);
+        label.position.set(dx, 3.0, dz);
+        label.scale.set(2.2, 0.55, 1);
+        addInterior(label);
+
+        window._interiorApartmentUnits.push({ x:dx, z:dz, unitId, unitNum, buildingId, unitPrice, doorMesh:door, labelSprite:label });
+      }
+
+      const gx = 0, gz = CZ + HD - 3;
+      const gDoor = new THREE.Mesh(new THREE.BoxGeometry(3,2.6,0.6), new THREE.MeshLambertMaterial({color:0x374151,emissive:0x1f2937,emissiveIntensity:.4}));
+      gDoor.position.set(gx, 1.3, gz);
+      addInterior(gDoor);
+      const gLabel = makeNameSprite('🚗 GARAGE', null);
+      gLabel.position.set(gx, 3.0, gz);
+      addInterior(gLabel);
+      window._interiorGarage = { x:gx, z:gz, buildingId };
+
+      refreshApartmentUnitOwnership(buildingId);
+      break;
+    }
+    case 'apartment_unit':
+      solid(3,1,4.5,-HW+5,0.5,CZ-1,0xf1f5f9); // bed
+      solid(3,0.3,0.6,-HW+5,1.4,CZ-3,0x60a5fa); // pillow strip
+      solid(2.2,1.6,0.3,HW-4,0.8,CZ-HD+2.5,0x111827); // tv
+      solid(2,0.9,1.4,HW-4,0.45,CZ-2,0x6d28d9); // small sofa
+      solidR(0.5,0.5,1,-HW+4,0.5,CZ+HD-3,0x374151,0.5); // stool
+      solid(2,1,1,-HW+4,0.5,CZ+HD-4,0x1f2937); // kitchen counter
+      break;
+    case 'apartment_garage':
+      // Static room shell only — parked-vehicle meshes are added
+      // dynamically by populateGarageRoom() right after this builds,
+      // since ownership/vehicle data comes from an async Firestore query.
+      for(let i=-2;i<=2;i++){
+        solid(0.15,0.05,HD*1.6,i*(HW*1.7/5),0.03,CZ,0xfacc15); // parking lane markers
+      }
+      break;
     case 'cityhall':
       for(let i=0;i<4;i++) solidR(0.5,0.6,HD>18?7:5,-HW*0.6+i*(HW*1.2/3),(HD>18?3.5:2.5),CZ-HD*0.4,0xf8fafc,0.6); // interior columns
       solid(4,1.2,1.4,0,0.6,CZ+HD*0.5,0xf1f5f9); // reception desk
@@ -4031,7 +4188,7 @@ function buildActiveInterior(info){
   if(info.source?.type==='job'){
     const jx=0, jz=CZ-HD+4;
     addSolid(new THREE.Mesh(new THREE.BoxGeometry(3,1,2),new THREE.MeshLambertMaterial({color:JOB_DESK_COLOR[cat]||0xf59e0b})),jx,0.5,jz,3,2);
-    window._interiorJob={x:jx,z:jz,jobType:info.source.jobType};
+    window._interiorJob={x:jx,z:jz,jobType:info.source.jobType,name:info.source.name};
   }
   if(['food','hospital','dealership','police'].includes(info.source?.type)){
     const ax=0, az=CZ-HD+4;
@@ -4096,7 +4253,7 @@ function useElevator(){
   player.pos.y=1.8+next*6; playerGroup.position.y=player.pos.y-1.5;
   showNotification(next?'Elevator: Floor 2':'Elevator: Ground Floor');
 }
-function startInteriorJob(){ if(window._interiorJob?.jobType) startJob(window._interiorJob.jobType); }
+function startInteriorJob(){ if(window._interiorJob?.jobType) openJobScreen(window._interiorJob); }
 function startInteriorAction(){
   const a=window._interiorAction; if(!a) return;
   if(a.type==='food') buyFood(a.building);
@@ -4410,8 +4567,9 @@ let taxiDestPos = null;
 
 function startTaxiJob(){
   if(!gameState.inVehicle){
-    showNotification('You need to be in a vehicle to drive taxi!');
+    showNotification('Get in a vehicle first, then start your shift!');
     gameState.jobActive = false;
+    gameState.currentJob = null;
     return;
   }
   spawnTaxiPassenger();
@@ -5245,6 +5403,160 @@ function handleRandomEvent(){
 
 // =====================================================================
 // SLEEP / SAVE
+// =====================================================================
+// ONLINE SAVE SYSTEM
+// A separate persistent profile, stored in Firestore instead of
+// localStorage, keyed by Firebase uid. This is intentionally decoupled
+// from local save slots — single-player progress and online progress
+// never touch each other. gameState itself stays the single runtime
+// source of truth either way; only where it's persisted differs.
+// =====================================================================
+
+function onlineSaveRef(){
+  if(!mpFs || !mpUser) return null;
+  return mpFs.collection('taxi4OnlineSaves').doc(mpUser.uid);
+}
+
+async function fetchOnlineProfile(){
+  const ref = onlineSaveRef();
+  if(!ref) return null;
+  try{
+    const snap = await ref.get();
+    return snap.exists ? snap.data() : null;
+  }catch(err){
+    console.error('Failed to fetch online profile:', err);
+    return null;
+  }
+}
+
+function getOnlineSavePayload(){
+  const base = getSavePayload();
+  base.ownedApartments = [...gameState.ownedApartments];
+  return base;
+}
+
+function applyOnlineDefaults(){
+  gameState.money = 500; gameState.health = 100; gameState.armor = 0; gameState.wanted = 0;
+  gameState.reputation = 0; gameState.ownedSafehouses = new Set(); gameState.ownedVehicles = [];
+  gameState.vehicleGarage = {}; gameState.houseUpgrades = {}; gameState.achievements = {};
+  gameState.ownedApartments = new Set(); gameState.currentBuilding = null;
+  player.pos.set(-280, 1.8, 0);
+}
+
+function applyOnlineSave(d){
+  applySave(d, gameState.activeSaveSlot);
+  gameState.ownedApartments = new Set(d.ownedApartments || []);
+}
+
+async function saveOnlineGame(showMsg=true){
+  const ref = onlineSaveRef();
+  if(!ref) return false;
+  try{
+    await ref.set(getOnlineSavePayload());
+    if(showMsg) showNotification('🌐 Online progress saved.');
+    return true;
+  }catch(err){
+    console.error('Online save failed:', err);
+    if(showMsg) showNotification('Could not save online progress.');
+    return false;
+  }
+}
+
+let onlineAutosaveTimer = null;
+
+function startOnlineAutosave(){
+  if(onlineAutosaveTimer) clearInterval(onlineAutosaveTimer);
+  onlineAutosaveTimer = setInterval(() => saveOnlineGame(false), 60000);
+}
+
+function stopOnlineAutosave(){
+  if(onlineAutosaveTimer){ clearInterval(onlineAutosaveTimer); onlineAutosaveTimer = null; }
+}
+
+async function enterOnlineWorld(){
+  if(!mpUser){
+    showNotification('Sign in via the Kalahari Launcher first.');
+    return;
+  }
+  const btn = document.getElementById('onlineEnterBtn');
+  if(btn){ btn.disabled = true; btn.textContent = 'CONNECTING...'; }
+
+  const existing = await fetchOnlineProfile();
+  if(existing){
+    applyOnlineSave(existing);
+    showNotification('🌐 Online profile loaded — welcome back.');
+  }else{
+    applyOnlineDefaults();
+    showNotification('🌐 New online profile created.');
+  }
+
+  gameState.isOnlineWorld = true;
+  document.getElementById('onlineProfileScreen').style.display = 'none';
+  document.getElementById('startScreen').style.display = 'none';
+  startGame();
+  await enableOnlineMode();
+  startOnlineAutosave();
+}
+
+async function leaveOnlineWorld(){
+  await saveOnlineGame(false);
+  stopOnlineAutosave();
+  disableOnlineMode();
+  location.reload();
+}
+
+async function resetOnlineProgress(){
+  if(!confirm('Reset your online progress? This deletes your online save (apartments and garage vehicles you own stay owned — clear those separately from inside the game). This cannot be undone.')) return;
+  const ref = onlineSaveRef();
+  if(!ref) return;
+  try{
+    await ref.delete();
+    showNotification('Online progress reset.');
+    openOnlineProfileScreen();
+  }catch(err){
+    console.error('Reset failed:', err);
+    showNotification('Could not reset online progress.');
+  }
+}
+
+async function openOnlineProfileScreen(){
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('onlineProfileScreen').style.display = 'flex';
+
+  const body = document.getElementById('onlineProfileBody');
+  body.innerHTML = '<div class="online-profile-loading">Loading your online profile...</div>';
+
+  if(!mpUser){
+    body.innerHTML = '<div class="online-profile-loading">Sign in via the Kalahari Launcher first, then come back here.</div>';
+    document.getElementById('onlineEnterBtn').disabled = true;
+    return;
+  }
+
+  const data = await fetchOnlineProfile();
+  document.getElementById('onlineEnterBtn').disabled = false;
+
+  if(data){
+    body.innerHTML = `
+      <div class="online-profile-stat"><span>Player</span><b>${mpUser.displayName || mpUser.email?.split('@')[0] || 'You'}</b></div>
+      <div class="online-profile-stat"><span>Money</span><b>$${(data.money||0).toLocaleString()}</b></div>
+      <div class="online-profile-stat"><span>Reputation</span><b>${data.reputation||0}</b></div>
+      <div class="online-profile-stat"><span>Apartments Owned</span><b>${(data.ownedApartments||[]).length}</b></div>
+      <div class="online-profile-stat"><span>Vehicles Owned</span><b>${(data.ownedVehicles||[]).length}</b></div>
+      <div class="online-profile-stat"><span>Last Saved</span><b>${data.savedAt ? new Date(data.savedAt).toLocaleString() : '—'}</b></div>
+    `;
+  }else{
+    body.innerHTML = `
+      <div class="online-profile-stat"><span>Player</span><b>${mpUser.displayName || mpUser.email?.split('@')[0] || 'You'}</b></div>
+      <div class="online-profile-loading">No online save found — entering will start a fresh online profile with $500.</div>
+    `;
+  }
+}
+
+function closeOnlineProfileScreen(){
+  document.getElementById('onlineProfileScreen').style.display = 'none';
+  document.getElementById('startScreen').style.display = 'flex';
+}
+
 function getSavePayload(){
   return {version:2,money:gameState.money,health:gameState.health,armor:gameState.armor,wanted:gameState.wanted,
     reputation:gameState.reputation,ownedSafehouses:[...gameState.ownedSafehouses],ownedVehicles:[...gameState.ownedVehicles],
@@ -5252,6 +5564,15 @@ function getSavePayload(){
     currentBuilding:gameState.currentBuilding,player:{x:player.pos.x,y:player.pos.y,z:player.pos.z,yaw:player.yaw},savedAt:new Date().toISOString()};
 }
 function saveGame(slot=gameState.activeSaveSlot){
+  if(gameState.isOnlineWorld){
+    const unitId = gameState.currentBuilding;
+    if(!gameState.inBuilding || !unitId || !gameState.ownedApartments.has(unitId)){
+      showNotification('Save inside one of your owned apartments.');
+      return false;
+    }
+    saveOnlineGame(true);
+    return true;
+  }
   const sh=SAFEHOUSES.find(s=>s.id===gameState.currentBuilding);
   if(!gameState.inBuilding || !sh || !gameState.ownedSafehouses.has(sh.id)){showNotification('Save at one of your owned homes.');return false;}
   localStorage.setItem('taxi4SaveSlot'+slot,JSON.stringify(getSavePayload()));

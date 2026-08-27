@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -162,27 +163,19 @@ button{
 
 .field label{
   display:block;
-
   font-size:13px;
   font-weight:700;
-
   margin-bottom:8px;
-
   color:#cbd1da;
 }
 
 .field input{
   width:100%;
-
   padding:14px 15px;
-
   border-radius:11px;
-
   border:1px solid var(--border);
-
   background:var(--field);
   color:var(--text);
-
   outline:none;
 }
 
@@ -200,16 +193,11 @@ button{
 .login-btn{
   border:0;
   border-radius:11px;
-
   background:var(--accent);
   color:#101010;
-
   font-weight:850;
-
   padding:14px 18px;
-
   transition:.2s;
-
   flex:1;
 }
 
@@ -229,23 +217,16 @@ button{
 
 .error{
   color:#ff7272;
-
   font-size:13px;
-
   margin-top:12px;
-
   min-height:20px;
-
   text-align:center;
 }
 
 .auth-status{
   margin-top:12px;
-
   text-align:center;
-
   color:var(--muted);
-
   font-size:12px;
 }
 
@@ -260,17 +241,12 @@ button{
 .launcher-down-icon{
   width:82px;
   height:82px;
-
   border-radius:24px;
-
   background:#b93838;
   color:white;
-
   display:grid;
   place-items:center;
-
   margin:0 auto 24px;
-
   font-size:38px;
   font-weight:900;
 }
@@ -282,36 +258,26 @@ button{
 
 .down-subtitle{
   color:#ff7272;
-
   font-weight:800;
   font-size:13px;
-
   letter-spacing:1px;
   text-transform:uppercase;
-
   margin-bottom:18px;
 }
 
 .launcher-down-info{
   color:var(--muted);
-
   font-size:14px;
   line-height:1.7;
-
   margin-bottom:18px;
 }
 
 .launcher-down-date{
   color:var(--text);
-
   background:var(--soft);
-
   border:1px solid var(--border);
-
   border-radius:10px;
-
   padding:12px;
-
   font-size:12px;
 }
 
@@ -323,15 +289,10 @@ button{
   display:flex;
   align-items:center;
   justify-content:center;
-
   gap:8px;
-
   margin-top:24px;
-
   padding:8px 0;
-
   font-size:12px;
-
   color:var(--muted);
 }
 
@@ -378,9 +339,7 @@ header{
 .header-logo{
   display:flex;
   align-items:center;
-
   gap:10px;
-
   font-weight:900;
   font-size:20px;
 }
@@ -392,52 +351,37 @@ header{
 .header-logo .mini{
   width:34px;
   height:34px;
-
   border-radius:9px;
-
   background:var(--accent);
   color:#111;
-
   display:grid;
   place-items:center;
-
   font-weight:900;
 }
 
 .user-area{
   display:flex;
   align-items:center;
-
   gap:10px;
-
   color:var(--muted);
-
   font-size:13px;
 }
 
 .profile-mini{
   width:34px;
   height:34px;
-
   border-radius:50%;
-
   object-fit:cover;
-
   border:1px solid var(--border);
-
   background:var(--panel2);
 }
 
 .header-btn,
 .logout{
   background:transparent;
-
   color:var(--text);
-
   border:1px solid var(--border);
-
   border-radius:9px;
-
   padding:8px 11px;
 }
 
@@ -455,7 +399,6 @@ header{
   border-color:#b93838!important;
   color:#ff7777!important;
   background:#b9383812!important;
-
   font-weight:900;
 }
 
@@ -465,18 +408,21 @@ header{
 }
 
 /* =========================================================
-   MESSAGES BUTTON (HEADER)
+   MESSAGES BUTTON
 ========================================================= */
 
 .messages-btn{
   display:flex;
   align-items:center;
-
   gap:8px;
 
   border:1px solid #f5c54250;
 
-  background:linear-gradient(135deg,#f5c54216,#f5c54204);
+  background:linear-gradient(
+    135deg,
+    #f5c54216,
+    #f5c54204
+  );
 
   color:var(--accent);
 
@@ -501,13 +447,17 @@ header{
 .messages-badge{
   width:24px;
   height:24px;
-
   flex:none;
 
   background:var(--accent);
   color:#111;
 
-  clip-path:polygon(15% 0,100% 0,85% 100%,0 100%);
+  clip-path:polygon(
+    15% 0,
+    100% 0,
+    85% 100%,
+    0 100%
+  );
 
   display:grid;
   place-items:center;
@@ -518,41 +468,20 @@ header{
   transform:rotate(-4deg);
 }
 
-@media(max-width:600px){
-
-  .messages-btn span{
-    display:none;
-  }
-
-  .messages-btn{
-    padding:6px;
-  }
-
-}
-
 /* =========================================================
-   MAIN
+   CLASSIC MAIN
 ========================================================= */
 
 main{
   max-width:1250px;
-
   margin:auto;
-
   padding:42px 5% 70px;
 }
 
-/* =========================================================
-   HERO
-========================================================= */
-
 .hero{
   border:1px solid var(--border);
-
   border-radius:22px;
-
   padding:40px;
-
   min-height:280px;
 
   display:flex;
@@ -567,7 +496,6 @@ main{
     );
 
   overflow:hidden;
-
   position:relative;
 }
 
@@ -584,55 +512,38 @@ body.light-mode .hero{
 .hero-content{
   position:relative;
   z-index:1;
-
   max-width:750px;
 }
 
 .eyebrow{
   color:var(--accent);
-
   font-weight:850;
-
   font-size:12px;
-
   letter-spacing:1.5px;
-
   text-transform:uppercase;
-
   margin-bottom:10px;
 }
 
 .hero h2{
   font-size:42px;
-
   letter-spacing:-1.5px;
-
   margin-bottom:12px;
 }
 
 .hero p{
   color:#b6bdc8;
-
   line-height:1.6;
-
   margin-bottom:22px;
 }
 
 .hero-btn{
   display:inline-block;
-
   padding:12px 18px;
-
   background:var(--accent);
-
   color:#111;
-
   border-radius:10px;
-
   text-decoration:none;
-
   font-weight:850;
-
   margin-right:8px;
   margin-bottom:8px;
 }
@@ -643,44 +554,29 @@ body.light-mode .hero{
 
 .news-container{
   background:rgba(16,21,29,.85);
-
   border:1px solid var(--border);
-
   border-left:4px solid var(--accent);
-
   border-radius:14px;
-
   padding:18px 22px;
-
   margin-top:22px;
-
   backdrop-filter:blur(10px);
-
   box-shadow:0 10px 30px rgba(0,0,0,.35);
 }
 
 .news-header{
   display:flex;
-
   justify-content:space-between;
   align-items:center;
-
   margin-bottom:8px;
 }
 
 .news-badge{
   background:var(--accent);
-
   color:#111;
-
   font-weight:850;
-
   font-size:11px;
-
   padding:3px 8px;
-
   border-radius:5px;
-
   letter-spacing:.8px;
 }
 
@@ -691,30 +587,24 @@ body.light-mode .hero{
 
 .news-title{
   color:#fff;
-
   margin-bottom:6px;
-
   font-size:18px;
 }
 
 .news-content{
   color:#b6bdc8;
-
   font-size:13px;
-
   line-height:1.5;
 }
 
 /* =========================================================
-   GAMES
+   CLASSIC GAMES
 ========================================================= */
 
 .section-head{
   display:flex;
-
   align-items:end;
   justify-content:space-between;
-
   margin:42px 0 18px;
 }
 
@@ -735,15 +625,10 @@ body.light-mode .hero{
 .search,
 .filter-select{
   background:var(--input);
-
   border:1px solid var(--border);
-
   color:var(--text);
-
   border-radius:10px;
-
   padding:10px 13px;
-
   outline:none;
 }
 
@@ -762,29 +647,21 @@ body.light-mode .hero{
 
 .grid{
   display:grid;
-
   grid-template-columns:repeat(3,1fr);
-
   gap:18px;
 }
 
 .card{
   background:var(--panel);
-
   border:1px solid var(--border);
-
   border-radius:17px;
-
   overflow:hidden;
-
   transition:.2s;
 }
 
 .card:hover{
   transform:translateY(-3px);
-
   border-color:#465160;
-
   box-shadow:0 14px 35px #0004;
 }
 
@@ -795,68 +672,51 @@ body.light-mode .hero{
 .cover{
   height:165px;
 
-  background:linear-gradient(
-    135deg,
-    #242c37,
-    #11161d
-  );
+  background:
+    linear-gradient(
+      135deg,
+      #242c37,
+      #11161d
+    );
 
   display:flex;
-
   align-items:center;
   justify-content:center;
 
   position:relative;
-
   overflow:hidden;
 }
 
 .cover img{
   width:100%;
   height:100%;
-
   object-fit:cover;
 }
 
 .game-icon{
   width:90px;
   height:90px;
-
   border-radius:22px;
-
   background:var(--accent);
-
   color:#111;
-
   display:grid;
   place-items:center;
-
   font-size:23px;
   font-weight:950;
-
   box-shadow:0 12px 25px #0005;
-
   transform:rotate(-4deg);
 }
 
 .cover .badge{
   position:absolute;
-
   top:13px;
   left:13px;
-
   background:#080b10dd;
-
   color:#fff;
-
   padding:6px 9px;
-
   border-radius:7px;
-
   font-size:10px;
-
   font-weight:800;
-
   z-index:2;
 }
 
@@ -871,44 +731,31 @@ body.light-mode .hero{
 
 .desc{
   font-size:13px;
-
   color:var(--muted);
-
   min-height:38px;
-
   line-height:1.45;
 }
 
 .meta{
   display:flex;
-
   gap:7px;
-
   flex-wrap:wrap;
-
   margin:14px 0 17px;
 }
 
 .tag{
   font-size:11px;
-
   color:#cbd2dc;
-
   background:#ffffff08;
-
   border:1px solid var(--border);
-
   padding:6px 8px;
-
   border-radius:7px;
 }
 
 .card-bottom{
   display:flex;
-
   align-items:center;
   justify-content:space-between;
-
   gap:10px;
 }
 
@@ -919,15 +766,10 @@ body.light-mode .hero{
 
 .play-btn{
   border:0;
-
   border-radius:11px;
-
   background:var(--accent);
-
   color:#101010;
-
   font-weight:850;
-
   padding:9px 14px;
 }
 
@@ -965,38 +807,452 @@ body.light-mode .hero{
 
 .game-update{
   margin-top:15px;
-
   padding:12px 13px;
-
   border-radius:10px;
-
   border:1px solid #806b25;
-
   border-left:3px solid var(--accent);
-
   background:rgba(245,197,66,.08);
 }
 
 .game-update-title{
   color:var(--accent);
-
   font-size:11px;
-
   font-weight:900;
-
   letter-spacing:.7px;
-
   text-transform:uppercase;
-
   margin-bottom:5px;
 }
 
 .game-update-text{
   color:#cbd1da;
-
   font-size:12px;
-
   line-height:1.5;
+}
+
+/* =========================================================
+   =========================================================
+   MODERN LAUNCHER DESIGN
+   =========================================================
+========================================================= */
+
+body.modern-mode{
+  background:
+    radial-gradient(
+      circle at 15% 5%,
+      rgba(245,197,66,.08),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 90% 20%,
+      rgba(30,100,160,.12),
+      transparent 35%
+    ),
+    #070a0f;
+}
+
+body.modern-mode.light-mode{
+  background:
+    radial-gradient(
+      circle at 10% 0%,
+      rgba(255,210,26,.10),
+      transparent 32%
+    ),
+    #06182b;
+}
+
+/* Modern header */
+
+body.modern-mode header{
+  height:76px;
+  padding:0 4%;
+  background:rgba(7,10,15,.78);
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+
+body.modern-mode .header-logo{
+  font-size:21px;
+}
+
+body.modern-mode .header-logo .mini{
+  width:38px;
+  height:38px;
+  border-radius:11px;
+  box-shadow:0 7px 25px rgba(245,197,66,.18);
+}
+
+body.modern-mode main{
+  max-width:1450px;
+  padding:32px 4% 70px;
+}
+
+/* Modern hero */
+
+body.modern-mode .hero{
+  min-height:430px;
+  border-radius:28px;
+  padding:46px;
+  align-items:flex-end;
+
+  background:
+    linear-gradient(
+      120deg,
+      rgba(13,18,27,.98),
+      rgba(13,19,29,.88) 48%,
+      rgba(55,44,18,.92)
+    );
+
+  border:1px solid rgba(255,255,255,.09);
+
+  box-shadow:
+    0 25px 70px rgba(0,0,0,.30),
+    inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+body.modern-mode.light-mode .hero{
+  background:
+    linear-gradient(
+      120deg,
+      #09294a,
+      #092039 52%,
+      #263c2e
+    );
+}
+
+body.modern-mode .hero:before{
+  content:"";
+  position:absolute;
+  width:430px;
+  height:430px;
+  right:-100px;
+  top:-170px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(245,197,66,.24),
+      transparent 65%
+    );
+
+  pointer-events:none;
+}
+
+body.modern-mode .hero:after{
+  content:"KS";
+  position:absolute;
+  right:55px;
+  bottom:-55px;
+
+  font-size:220px;
+  font-weight:1000;
+
+  color:rgba(255,255,255,.025);
+
+  letter-spacing:-20px;
+
+  pointer-events:none;
+}
+
+body.modern-mode .hero-content{
+  max-width:850px;
+  z-index:2;
+}
+
+body.modern-mode .eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+
+  padding:7px 11px;
+
+  background:rgba(245,197,66,.10);
+
+  border:1px solid rgba(245,197,66,.22);
+
+  border-radius:99px;
+
+  margin-bottom:18px;
+
+  font-size:11px;
+}
+
+body.modern-mode .hero h2{
+  font-size:58px;
+  line-height:1.02;
+  letter-spacing:-3px;
+  max-width:750px;
+  margin-bottom:18px;
+}
+
+body.modern-mode .hero p{
+  max-width:650px;
+  font-size:15px;
+  color:#aeb8c7;
+  margin-bottom:25px;
+}
+
+body.modern-mode .hero-btn{
+  border-radius:12px;
+  padding:13px 19px;
+  transition:.2s;
+}
+
+body.modern-mode .hero-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 30px rgba(245,197,66,.14);
+}
+
+/* Modern news */
+
+body.modern-mode .news-container{
+  margin-top:25px;
+  border-radius:16px;
+  padding:17px 19px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(245,197,66,.08),
+      rgba(255,255,255,.025)
+    );
+
+  border:1px solid rgba(245,197,66,.20);
+  border-left:3px solid var(--accent);
+
+  max-width:720px;
+}
+
+/* Modern section header */
+
+body.modern-mode .section-head{
+  margin:38px 0 18px;
+  padding:0 3px;
+  align-items:center;
+}
+
+body.modern-mode .section-head h3{
+  font-size:27px;
+  letter-spacing:-.7px;
+}
+
+body.modern-mode .section-head p{
+  margin-top:4px;
+}
+
+body.modern-mode .game-tools{
+  background:rgba(255,255,255,.025);
+  padding:5px;
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:13px;
+}
+
+body.modern-mode .search,
+body.modern-mode .filter-select{
+  border:1px solid transparent;
+  background:transparent;
+  border-radius:9px;
+}
+
+body.modern-mode .search:focus,
+body.modern-mode .filter-select:focus{
+  background:rgba(255,255,255,.04);
+  border-color:rgba(245,197,66,.35);
+}
+
+/* Modern grid */
+
+body.modern-mode .grid{
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+}
+
+/* Modern cards */
+
+body.modern-mode .card{
+  position:relative;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(18,24,34,.96),
+      rgba(12,16,23,.96)
+    );
+
+  border:1px solid rgba(255,255,255,.075);
+
+  border-radius:19px;
+
+  box-shadow:
+    0 8px 30px rgba(0,0,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.025);
+
+  transition:
+    transform .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+
+body.modern-mode .card:hover{
+  transform:translateY(-6px);
+
+  border-color:rgba(245,197,66,.35);
+
+  box-shadow:
+    0 18px 45px rgba(0,0,0,.32),
+    0 0 0 1px rgba(245,197,66,.04);
+}
+
+body.modern-mode .card.wide-card{
+  grid-column:span 2;
+}
+
+body.modern-mode .cover{
+  height:185px;
+  background:
+    linear-gradient(
+      135deg,
+      #202a37,
+      #0d1219
+    );
+}
+
+body.modern-mode .cover img{
+  transition:transform .5s ease;
+}
+
+body.modern-mode .card:hover .cover img{
+  transform:scale(1.045);
+}
+
+body.modern-mode .cover:after{
+  content:"";
+  position:absolute;
+  inset:0;
+
+  background:
+    linear-gradient(
+      to bottom,
+      transparent 50%,
+      rgba(0,0,0,.28)
+    );
+
+  pointer-events:none;
+}
+
+body.modern-mode .cover .badge{
+  top:12px;
+  left:12px;
+
+  background:rgba(5,8,12,.72);
+
+  border:1px solid rgba(255,255,255,.09);
+
+  backdrop-filter:blur(8px);
+
+  border-radius:99px;
+
+  padding:6px 10px;
+
+  font-size:9px;
+
+  letter-spacing:.4px;
+}
+
+body.modern-mode .game-icon{
+  width:92px;
+  height:92px;
+  border-radius:25px;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--accent),
+      #c99e22
+    );
+
+  box-shadow:
+    0 15px 35px rgba(0,0,0,.35),
+    0 0 35px rgba(245,197,66,.08);
+
+  z-index:1;
+}
+
+body.modern-mode .card-body{
+  padding:19px;
+}
+
+body.modern-mode .card h4{
+  font-size:18px;
+  line-height:1.25;
+  min-height:45px;
+  margin-bottom:7px;
+}
+
+body.modern-mode .desc{
+  font-size:12px;
+  min-height:54px;
+  color:#929dac;
+}
+
+body.modern-mode .meta{
+  margin:12px 0 16px;
+}
+
+body.modern-mode .tag{
+  border-radius:99px;
+  background:rgba(255,255,255,.035);
+  border-color:rgba(255,255,255,.075);
+  padding:5px 8px;
+}
+
+body.modern-mode .card-bottom{
+  border-top:1px solid rgba(255,255,255,.055);
+  padding-top:14px;
+}
+
+body.modern-mode .release{
+  font-size:10px;
+}
+
+body.modern-mode .play-btn{
+  border-radius:9px;
+  padding:9px 13px;
+  transition:.2s;
+}
+
+body.modern-mode .play-btn:not(:disabled):hover{
+  transform:translateY(-1px);
+  box-shadow:0 8px 20px rgba(245,197,66,.15);
+}
+
+body.modern-mode .game-update{
+  border-radius:11px;
+  border-color:rgba(245,197,66,.18);
+  background:rgba(245,197,66,.045);
+}
+
+body.modern-mode footer{
+  opacity:.7;
+  margin-top:60px;
+}
+
+/* Modern light mode cards */
+
+body.modern-mode.light-mode .card{
+  background:
+    linear-gradient(
+      145deg,
+      rgba(8,34,58,.98),
+      rgba(6,25,45,.98)
+    );
+
+  border-color:rgba(100,170,220,.16);
+}
+
+body.modern-mode.light-mode .card:hover{
+  border-color:rgba(255,210,26,.45);
+}
+
+body.modern-mode.light-mode .game-tools{
+  background:rgba(255,255,255,.035);
 }
 
 /* =========================================================
@@ -1005,7 +1261,6 @@ body.light-mode .hero{
 
 .modal-overlay{
   position:fixed;
-
   inset:0;
 
   background:rgba(0,0,0,.68);
@@ -1042,10 +1297,8 @@ body.light-mode .hero{
 
 .modal-top{
   display:flex;
-
   align-items:center;
   justify-content:space-between;
-
   margin-bottom:22px;
 }
 
@@ -1055,16 +1308,11 @@ body.light-mode .hero{
 
 .close-modal{
   border:1px solid var(--border);
-
   background:transparent;
-
   color:var(--text);
-
   border-radius:9px;
-
   width:36px;
   height:36px;
-
   font-size:20px;
 }
 
@@ -1074,27 +1322,18 @@ body.light-mode .hero{
 
 .settings-tabs{
   display:flex;
-
   gap:8px;
-
   border-bottom:1px solid var(--border);
-
   padding-bottom:12px;
-
   margin-bottom:20px;
 }
 
 .settings-tab{
   border:0;
-
   background:transparent;
-
   color:var(--muted);
-
   padding:9px 12px;
-
   border-radius:8px;
-
   font-weight:700;
 }
 
@@ -1114,20 +1353,15 @@ body.light-mode .hero{
 
 .setting-row{
   display:flex;
-
   align-items:center;
   justify-content:space-between;
-
   gap:20px;
-
   padding:16px 0;
-
   border-bottom:1px solid var(--border);
 }
 
 .setting-info strong{
   display:block;
-
   margin-bottom:4px;
 }
 
@@ -1138,47 +1372,34 @@ body.light-mode .hero{
 
 .switch{
   position:relative;
-
   width:48px;
   height:26px;
-
   flex:none;
 }
 
 .switch input{
   opacity:0;
-
   width:0;
   height:0;
 }
 
 .slider{
   position:absolute;
-
   inset:0;
-
   background:#4a5563;
-
   border-radius:99px;
-
   transition:.2s;
 }
 
 .slider:before{
   content:"";
-
   position:absolute;
-
   width:20px;
   height:20px;
-
   left:3px;
   top:3px;
-
   background:white;
-
   border-radius:50%;
-
   transition:.2s;
 }
 
@@ -1193,55 +1414,36 @@ body.light-mode .hero{
 .account-avatar{
   width:82px;
   height:82px;
-
   border-radius:50%;
-
   object-fit:cover;
-
   background:var(--panel2);
-
   border:2px solid var(--border);
 }
 
 .avatar-row{
   display:flex;
-
   align-items:center;
-
   gap:18px;
-
   margin-bottom:22px;
 }
 
 .settings-input{
   width:100%;
-
   padding:12px 13px;
-
   border:1px solid var(--border);
-
   border-radius:10px;
-
   background:var(--field);
-
   color:var(--text);
-
   outline:none;
 }
 
 .save-btn{
   border:0;
-
   border-radius:10px;
-
   background:var(--accent);
-
   color:#111;
-
   padding:11px 15px;
-
   font-weight:850;
-
   margin-top:14px;
 }
 
@@ -1252,10 +1454,164 @@ body.light-mode .hero{
 
 .settings-message{
   font-size:12px;
-
   min-height:18px;
-
   margin-top:10px;
+}
+
+/* =========================================================
+   NEW DESIGN SELECTOR
+========================================================= */
+
+.design-selector{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:14px;
+}
+
+.design-option{
+  position:relative;
+
+  border:1px solid var(--border);
+
+  background:var(--field);
+
+  border-radius:14px;
+
+  padding:14px;
+
+  text-align:left;
+
+  color:var(--text);
+
+  transition:.2s;
+}
+
+.design-option:hover{
+  border-color:var(--accent);
+  transform:translateY(-1px);
+}
+
+.design-option.active{
+  border-color:var(--accent);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(245,197,66,.13),
+      rgba(245,197,66,.03)
+    );
+
+  box-shadow:
+    0 0 0 1px rgba(245,197,66,.12);
+}
+
+.design-option-preview{
+  height:75px;
+
+  border-radius:10px;
+
+  margin-bottom:11px;
+
+  overflow:hidden;
+
+  position:relative;
+}
+
+.classic-preview{
+  background:
+    linear-gradient(
+      135deg,
+      #171e28,
+      #11161e,
+      #252014
+    );
+}
+
+.classic-preview:after{
+  content:"";
+  position:absolute;
+  left:12px;
+  bottom:12px;
+  width:75px;
+  height:12px;
+  border-radius:4px;
+  background:#f5c542;
+}
+
+.modern-preview{
+  background:
+    linear-gradient(
+      135deg,
+      #090f18,
+      #172331,
+      #3a3018
+    );
+}
+
+.modern-preview:before{
+  content:"";
+  position:absolute;
+  left:12px;
+  top:12px;
+  width:40px;
+  height:40px;
+  border-radius:10px;
+  background:#f5c542;
+}
+
+.modern-preview:after{
+  content:"";
+  position:absolute;
+  right:12px;
+  bottom:12px;
+  width:70px;
+  height:8px;
+  border-radius:99px;
+  background:#f5c542;
+}
+
+.design-option strong{
+  display:block;
+  font-size:14px;
+  margin-bottom:4px;
+}
+
+.design-option small{
+  display:block;
+  color:var(--muted);
+  line-height:1.4;
+  font-size:11px;
+}
+
+.design-check{
+  position:absolute;
+  top:10px;
+  right:10px;
+
+  width:22px;
+  height:22px;
+
+  border-radius:50%;
+
+  display:grid;
+  place-items:center;
+
+  background:var(--accent);
+  color:#111;
+
+  font-size:12px;
+  font-weight:900;
+
+  opacity:0;
+  transform:scale(.7);
+
+  transition:.2s;
+}
+
+.design-option.active .design-check{
+  opacity:1;
+  transform:scale(1);
 }
 
 /* =========================================================
@@ -1279,46 +1635,30 @@ body.light-mode .hero{
 .admin-shield{
   width:38px;
   height:38px;
-
   border-radius:10px;
-
   background:#b93838;
-
   display:grid;
   place-items:center;
-
   color:white;
-
   font-weight:900;
 }
 
 .admin-warning{
   padding:14px;
-
   border-radius:10px;
-
   background:#b9383812;
-
   border:1px solid #b9383860;
-
   color:#ff8d8d;
-
   font-size:13px;
-
   line-height:1.5;
-
   margin-bottom:20px;
 }
 
 .admin-card{
   border:1px solid var(--border);
-
   border-radius:12px;
-
   padding:16px;
-
   margin-bottom:12px;
-
   background:var(--soft);
 }
 
@@ -1328,31 +1668,22 @@ body.light-mode .hero{
 
 .admin-card p{
   color:var(--muted);
-
   font-size:12px;
-
   line-height:1.5;
 }
 
 .admin-controls{
   display:flex;
-
   gap:8px;
-
   flex-wrap:wrap;
-
   margin-top:14px;
 }
 
 .admin-action{
   border:1px solid var(--border);
-
   background:var(--panel2);
-
   color:var(--text);
-
   padding:9px 12px;
-
   border-radius:8px;
 }
 
@@ -1368,11 +1699,8 @@ body.light-mode .hero{
 
 .admin-message{
   min-height:20px;
-
   margin-top:12px;
-
   color:var(--success);
-
   font-size:12px;
 }
 
@@ -1382,17 +1710,22 @@ body.light-mode .hero{
 
 footer{
   text-align:center;
-
   color:var(--muted);
-
   font-size:12px;
-
   margin-top:55px;
 }
 
 /* =========================================================
    MOBILE
 ========================================================= */
+
+@media(max-width:1100px){
+
+  body.modern-mode .grid{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+}
 
 @media(max-width:850px){
 
@@ -1402,6 +1735,14 @@ footer{
 
   .hero h2{
     font-size:34px;
+  }
+
+  body.modern-mode .hero h2{
+    font-size:43px;
+  }
+
+  body.modern-mode .grid{
+    grid-template-columns:1fr 1fr;
   }
 
 }
@@ -1449,15 +1790,12 @@ footer{
 
   .section-head{
     align-items:stretch;
-
     gap:14px;
-
     flex-direction:column;
   }
 
   .game-tools{
     width:100%;
-
     flex-direction:column;
   }
 
@@ -1472,6 +1810,88 @@ footer{
 
   .modal{
     padding:20px;
+  }
+
+  .design-selector{
+    grid-template-columns:1fr;
+  }
+
+  /* Modern mobile */
+
+  body.modern-mode main{
+    padding:20px 16px 50px;
+  }
+
+  body.modern-mode .hero{
+    min-height:430px;
+    padding:27px;
+    border-radius:22px;
+  }
+
+  body.modern-mode .hero h2{
+    font-size:38px;
+    letter-spacing:-2px;
+  }
+
+  body.modern-mode .hero p{
+    font-size:13px;
+  }
+
+  body.modern-mode .hero:after{
+    font-size:150px;
+    right:-15px;
+    bottom:-30px;
+  }
+
+  body.modern-mode .grid{
+    grid-template-columns:1fr;
+  }
+
+  body.modern-mode .card.wide-card{
+    grid-column:auto;
+  }
+
+  body.modern-mode .cover{
+    height:180px;
+  }
+
+  body.modern-mode .section-head{
+    margin-top:30px;
+  }
+
+  body.modern-mode .section-head h3{
+    font-size:24px;
+  }
+
+  body.modern-mode .game-tools{
+    background:transparent;
+    border:0;
+    padding:0;
+  }
+
+}
+
+/* =========================================================
+   VERY SMALL DEVICES
+========================================================= */
+
+@media(max-width:400px){
+
+  .messages-btn span{
+    display:none;
+  }
+
+  .messages-btn{
+    padding:6px;
+  }
+
+  .header-logo{
+    font-size:16px;
+  }
+
+  .header-logo .mini{
+    width:30px;
+    height:30px;
   }
 
 }
@@ -1673,7 +2093,6 @@ footer{
       </b>
     </span>
 
-    <!-- ADMIN BUTTON -->
     <button
       class="header-btn admin-btn hidden"
       id="adminBtn">
@@ -1758,6 +2177,10 @@ footer{
     </div>
 
 
+    <!-- =====================================================
+         APPEARANCE
+    ====================================================== -->
+
     <section
       class="settings-section active"
       id="appearanceTab">
@@ -1788,8 +2211,79 @@ footer{
 
       </div>
 
+
+      <div
+        class="setting-row"
+        style="display:block;">
+
+        <div class="setting-info">
+
+          <strong>
+            Launcher design
+          </strong>
+
+          <span>
+            Choose how the main game selection screen looks.
+          </span>
+
+        </div>
+
+
+        <div class="design-selector">
+
+          <button
+            type="button"
+            class="design-option"
+            id="classicDesignBtn">
+
+            <div class="design-check">
+              ✓
+            </div>
+
+            <div class="design-option-preview classic-preview"></div>
+
+            <strong>
+              Classic
+            </strong>
+
+            <small>
+              The original Kalahari Studios launcher design.
+            </small>
+
+          </button>
+
+
+          <button
+            type="button"
+            class="design-option"
+            id="modernDesignBtn">
+
+            <div class="design-check">
+              ✓
+            </div>
+
+            <div class="design-option-preview modern-preview"></div>
+
+            <strong>
+              Modern
+            </strong>
+
+            <small>
+              A redesigned, cleaner and more modern game launcher.
+            </small>
+
+          </button>
+
+        </div>
+
+      </div>
+
     </section>
 
+
+    <!-- =====================================================
+         ACCOUNT
+    ====================================================== -->
 
     <section
       class="settings-section"
@@ -1809,7 +2303,8 @@ footer{
             Profile icon
           </strong>
 
-          <p style="color:var(--muted);font-size:12px;margin-top:5px">
+          <p
+            style="color:var(--muted);font-size:12px;margin-top:5px">
             Use an image URL for your profile icon.
           </p>
 
@@ -1890,6 +2385,10 @@ footer{
     </section>
 
 
+    <!-- =====================================================
+         LAUNCHER
+    ====================================================== -->
+
     <section
       class="settings-section"
       id="launcherTab">
@@ -1921,11 +2420,34 @@ footer{
         <div class="setting-info">
 
           <strong>
+            Launcher design
+          </strong>
+
+          <span id="currentDesignText">
+            Classic design
+          </span>
+
+        </div>
+
+        <span
+          style="color:var(--accent);font-size:12px;font-weight:800"
+          id="currentDesignBadge">
+          CLASSIC
+        </span>
+
+      </div>
+
+
+      <div class="setting-row">
+
+        <div class="setting-info">
+
+          <strong>
             Reset launcher preferences
           </strong>
 
           <span>
-            Reset theme and game filters.
+            Reset theme, design and game filters.
           </span>
 
         </div>
@@ -2186,7 +2708,7 @@ footer{
 
 
 <footer>
-  © 2026 Kalahari Studios • Launcher v2.39
+  © 2026 Kalahari Studios • Launcher v2.40
 </footer>
 
 </main>
@@ -2228,19 +2750,15 @@ const firebaseConfig = {
 ========================================================= */
 
 let auth = null;
-
 let db = null;
 
 try{
 
   if(!firebase.apps.length){
-
     firebase.initializeApp(firebaseConfig);
-
   }
 
   auth = firebase.auth();
-
   db = firebase.firestore();
 
 }catch(err){
@@ -2254,7 +2772,7 @@ try{
 
 
 /* =========================================================
-   USER DIRECTORY SYNC (for Kalahari Messages)
+   USER DIRECTORY SYNC
 ========================================================= */
 
 function syncUserProfile(user){
@@ -2281,7 +2799,7 @@ function syncUserProfile(user){
       lastSeen:
         firebase.firestore.FieldValue.serverTimestamp()
 
-    }, { merge: true })
+    }, { merge:true })
     .catch(err => {
 
       console.error(
@@ -2300,14 +2818,11 @@ function syncUserProfile(user){
 
 const LAUNCHER_STATUS = "ON";
 
-
 const LAUNCHER_DOWN_TITLE =
   "Launcher Down";
 
-
 const LAUNCHER_DOWN_INFO =
   "The Kalahari Studios Launcher is currently unavailable while we perform maintenance. Please check back later.";
-
 
 const LAUNCHER_DOWN_DATE =
   "Status: Offline • Please check the Kalahari Studios announcements for updates.";
@@ -2349,7 +2864,6 @@ const games = [
     updateNotes:"TAXI is currently receiving maintenance."
   },
 
-
   {
     category:"taxi",
     name:"TAXI 3",
@@ -2363,7 +2877,6 @@ const games = [
     updateStatus:"ON",
     updateNotes:"TAXI 3 will be receiving a major remaster in Early 2027."
   },
-
 
   {
     category:"taxi",
@@ -2379,7 +2892,6 @@ const games = [
     updateNotes:"Expansion 1 is currently undergoing maintenance."
   },
 
-
   {
     category:"taxi",
     name:"TAXI 3 - Expansion 2",
@@ -2392,7 +2904,6 @@ const games = [
     updateStatus:"OFF",
     updateNotes:"Expansion 2 is currently unavailable."
   },
-
 
   {
     category:"taxi",
@@ -2408,20 +2919,18 @@ const games = [
     updateNotes:"Taxi 3 - Mobile is undergoing vital maintenance. DLC will be ported to Mobile in the near future."
   },
 
-
   {
     category:"other",
     name:"Taxi 4 Demo",
     icon:"Taxi 4",
     genre:"Driving • Open World • Upcoming • TBA",
     date:"Q3 2026",
-    description:"A new tie-in project to Taxi 4..",
+    description:"A new tie-in project to Taxi 4.",
     status:"AVAILABLE",
     url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi4demo.html",
     updateStatus:"ON",
     updateNotes:"The Demo for the Upcoming Open World Game reveals the games name, theme, and more."
   },
-
 
   {
     category:"other",
@@ -2437,6 +2946,18 @@ const games = [
     updateNotes:"This game is currently in active development. Features, release dates and gameplay systems are subject to change."
   },
 
+  {
+    category:"other",
+    name:"Upcoming Game",
+    icon:"?",
+    genre:"TBA",
+    date:"TBA",
+    description:"A new project is currently in development.",
+    status:"COMING SOON",
+    url:"#",
+    updateStatus:"OFF",
+    updateNotes:"Development information coming soon."
+  },
 
   {
     category:"other",
@@ -2451,7 +2972,6 @@ const games = [
     updateNotes:"Development information coming soon."
   },
 
-
   {
     category:"other",
     name:"Upcoming Game",
@@ -2464,21 +2984,6 @@ const games = [
     updateStatus:"OFF",
     updateNotes:"Development information coming soon."
   },
-
-
-  {
-    category:"other",
-    name:"Upcoming Game",
-    icon:"?",
-    genre:"TBA",
-    date:"TBA",
-    description:"A new project is currently in development.",
-    status:"COMING SOON",
-    url:"#",
-    updateStatus:"OFF",
-    updateNotes:"Development information coming soon."
-  },
-
 
   {
     category:"other",
@@ -2582,7 +3087,6 @@ function renderGames(
   const term =
     searchTerm.toLowerCase().trim();
 
-
   games
     .filter(game => {
 
@@ -2590,11 +3094,9 @@ function renderGames(
         game.name.toLowerCase().includes(term) ||
         game.genre.toLowerCase().includes(term);
 
-
       const matchesCategory =
         category === "all" ||
         game.category === category;
-
 
       return (
         matchesSearch &&
@@ -2604,34 +3106,39 @@ function renderGames(
     })
     .forEach(game => {
 
-     const available =
-  game.status === "AVAILABLE";
+      const available =
+        game.status === "AVAILABLE";
 
-const production =
-  game.status === "IN PRODUCTION";
+      const production =
+        game.status === "IN PRODUCTION";
 
-const coming =
-  game.status === "COMING SOON";
+      const coming =
+        game.status === "COMING SOON";
 
-const maintenance =
-  game.status === "MAINTENANCE";
+      const maintenance =
+        game.status === "MAINTENANCE";
 
-const isAdmin =
-  auth.currentUser &&
-  (
-    auth.currentUser.displayName || ""
-  ).toLowerCase() === "admin";
+      const isAdmin =
+        auth &&
+        auth.currentUser &&
+        (
+          auth.currentUser.displayName || ""
+        ).toLowerCase() === "admin";
 
-const hasValidLink =
-  !!game.url &&
-  game.url !== "#";
+      const hasValidLink =
+        !!game.url &&
+        game.url !== "#";
 
-const canLaunch =
-  available ||
-  (production && isAdmin && hasValidLink);
-       
-const card =
-  document.createElement("article");
+      const canLaunch =
+        available ||
+        (
+          production &&
+          isAdmin &&
+          hasValidLink
+        );
+
+      const card =
+        document.createElement("article");
 
       card.className =
         "card" +
@@ -2681,9 +3188,7 @@ const card =
         <div class="cover">
 
           <span class="badge">
-
             ${game.status}
-
           </span>
 
           ${
@@ -2767,7 +3272,6 @@ const card =
 
       `;
 
-
       grid.appendChild(card);
 
     });
@@ -2836,11 +3340,9 @@ document.addEventListener(
     const button =
       event.target.closest(".play-btn");
 
-
     if(!button || button.disabled){
       return;
     }
-
 
     if(LAUNCHER_STATUS !== "ON"){
 
@@ -2852,10 +3354,8 @@ document.addEventListener(
 
     }
 
-
     const url =
       button.dataset.url;
-
 
     if(url && url !== "#"){
 
@@ -2883,7 +3383,6 @@ function loadNews(){
   const newsBox =
     document.getElementById("news-box");
 
-
   if(IMPORTANT_NEWS === "ANN"){
 
     document.getElementById("news-date")
@@ -2898,15 +3397,11 @@ function loadNews(){
       .textContent =
       NEWS_INFO;
 
-    newsBox.classList.remove(
-      "hidden"
-    );
+    newsBox.classList.remove("hidden");
 
   }else{
 
-    newsBox.classList.add(
-      "hidden"
-    );
+    newsBox.classList.add("hidden");
 
   }
 
@@ -2938,7 +3433,6 @@ function setTheme(
   darkModeToggle.checked =
     isDark;
 
-
   if(save){
 
     localStorage.setItem(
@@ -2962,6 +3456,119 @@ const savedTheme =
 setTheme(
   savedTheme === "dark",
   false
+);
+
+
+/* =========================================================
+   LAUNCHER DESIGN SYSTEM
+========================================================= */
+
+const classicDesignBtn =
+  document.getElementById(
+    "classicDesignBtn"
+  );
+
+const modernDesignBtn =
+  document.getElementById(
+    "modernDesignBtn"
+  );
+
+const currentDesignText =
+  document.getElementById(
+    "currentDesignText"
+  );
+
+const currentDesignBadge =
+  document.getElementById(
+    "currentDesignBadge"
+  );
+
+
+function setLauncherDesign(
+  design,
+  save=true
+){
+
+  const modern =
+    design === "modern";
+
+  document.body.classList.toggle(
+    "modern-mode",
+    modern
+  );
+
+
+  classicDesignBtn.classList.toggle(
+    "active",
+    !modern
+  );
+
+  modernDesignBtn.classList.toggle(
+    "active",
+    modern
+  );
+
+
+  currentDesignText.textContent =
+    modern
+      ? "Modern launcher design"
+      : "Classic launcher design";
+
+
+  currentDesignBadge.textContent =
+    modern
+      ? "MODERN"
+      : "CLASSIC";
+
+
+  if(save){
+
+    localStorage.setItem(
+      "kalahariLauncherDesign",
+      design
+    );
+
+  }
+
+
+  updateGameList();
+
+}
+
+
+const savedLauncherDesign =
+  localStorage.getItem(
+    "kalahariLauncherDesign"
+  ) || "classic";
+
+
+setLauncherDesign(
+  savedLauncherDesign,
+  false
+);
+
+
+classicDesignBtn.addEventListener(
+  "click",
+  () => {
+
+    setLauncherDesign(
+      "classic"
+    );
+
+  }
+);
+
+
+modernDesignBtn.addEventListener(
+  "click",
+  () => {
+
+    setLauncherDesign(
+      "modern"
+    );
+
+  }
 );
 
 
@@ -3016,12 +3623,10 @@ function defaultAvatar(user){
     return user.photoURL;
   }
 
-
   const name =
     user?.displayName ||
     user?.email?.split("@")[0] ||
     "User";
-
 
   return (
     "https://ui-avatars.com/api/?name=" +
@@ -3038,28 +3643,22 @@ function populateAccount(user){
     return;
   }
 
-
   accountUsername.value =
     user.displayName ||
     user.email?.split("@")[0] ||
     "";
 
-
   accountEmail.value =
     user.email || "";
-
 
   accountPassword.value =
     "";
 
-
   accountAvatarUrl.value =
     user.photoURL || "";
 
-
   const avatar =
     defaultAvatar(user);
-
 
   accountAvatar.src =
     avatar;
@@ -3076,11 +3675,9 @@ function openSettings(){
     return;
   }
 
-
   populateAccount(
     auth.currentUser
   );
-
 
   settingsOverlay.classList.remove(
     "hidden"
@@ -3215,7 +3812,6 @@ document.getElementById(
     const user =
       auth?.currentUser;
 
-
     if(!user){
 
       accountMessage.style.color =
@@ -3227,7 +3823,6 @@ document.getElementById(
       return;
 
     }
-
 
     const username =
       accountUsername.value.trim();
@@ -3241,7 +3836,6 @@ document.getElementById(
     const photoURL =
       accountAvatarUrl.value.trim();
 
-
     if(!username || !email){
 
       accountMessage.style.color =
@@ -3254,13 +3848,11 @@ document.getElementById(
 
     }
 
-
     accountMessage.style.color =
       "var(--accent)";
 
     accountMessage.textContent =
       "Saving...";
-
 
     try{
 
@@ -3342,6 +3934,7 @@ document.getElementById(
       accountMessage.style.color =
         "#52d47b";
 
+
       accountMessage.textContent =
         "Account settings saved successfully.";
 
@@ -3398,9 +3991,18 @@ document.getElementById(
       "kalahariGameFilter"
     );
 
+    localStorage.removeItem(
+      "kalahariLauncherDesign"
+    );
+
 
     setTheme(
       true
+    );
+
+
+    setLauncherDesign(
+      "classic"
     );
 
 
@@ -3437,22 +4039,11 @@ const adminMessage =
   );
 
 
-/*
-   ADMIN ACCOUNT RULE
-
-   The Firebase display name must be:
-
-   admin
-
-   The comparison is case-insensitive.
-*/
-
 function isAdmin(user){
 
   if(!user){
     return false;
   }
-
 
   const displayName =
     (
@@ -3461,7 +4052,6 @@ function isAdmin(user){
     )
     .trim()
     .toLowerCase();
-
 
   return displayName === "admin";
 
@@ -3495,7 +4085,6 @@ function openAdmin(){
 
   const user =
     auth?.currentUser;
-
 
   if(!isAdmin(user)){
 
@@ -3580,7 +4169,6 @@ document.getElementById(
 
     const user =
       auth?.currentUser;
-
 
     if(!isAdmin(user)){
 
@@ -3691,6 +4279,9 @@ document.getElementById(
 
     errorBox.textContent =
       "";
+
+    errorBox.style.color =
+      "#ff7272";
 
     authStatus.textContent =
       "";
@@ -3808,6 +4399,7 @@ document.getElementById(
 
       errorBox.style.color =
         "#52d47b";
+
 
       errorBox.textContent =
         "Account created successfully!";
@@ -3948,6 +4540,7 @@ document.getElementById(
       errorBox.style.color =
         "#52d47b";
 
+
       errorBox.textContent =
         "Signed in successfully!";
 
@@ -3972,6 +4565,7 @@ document.getElementById(
 
       errorBox.style.color =
         "#ff7272";
+
 
       errorBox.textContent =
         firebaseErrorMessage(
@@ -4085,6 +4679,7 @@ if(auth){
         err
       );
 
+
       errorBox.textContent =
         "Unable to check your account. Please refresh the launcher.";
 
@@ -4118,13 +4713,16 @@ document.getElementById(
 
       await auth.signOut();
 
+
       adminOverlay.classList.add(
         "hidden"
       );
 
+
       adminBtn.classList.add(
         "hidden"
       );
+
 
       errorBox.textContent =
         "";
@@ -4179,7 +4777,6 @@ document.addEventListener(
       return;
     }
 
-
     closeSettings();
     closeAdmin();
 
@@ -4190,3 +4787,4 @@ document.addEventListener(
 
 </body>
 </html>
+```

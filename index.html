@@ -16,632 +16,4858 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
 <style>
-/* =========================================================
-   CORE / OLD THEME
-========================================================= */
-:root{
-  --bg:#080b10;--panel:#10151d;--panel2:#151c26;--text:#f5f7fa;
-  --muted:#929baa;--accent:#f5c542;--accent2:#ffdf73;--border:#27303c;
-  --header:#0a0e14e8;--input:#0d1219;--field:#0b0f15;--soft:#ffffff08;
-  --danger:#b93838;--success:#52d47b;
-}
-body.light-mode{
-  --bg:#061a31;--panel:#071d36;--panel2:#0a2744;--text:#f4f9ff;
-  --muted:#72a9c9;--accent:#ffd21a;--accent2:#ffe56a;--border:#17466c;
-  --header:rgba(5,20,38,.94);--input:#061a31;--field:#061a31;--soft:#ffffff0d;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}
-body.modern{
-  --bg:#050913;--panel:#0b1220;--panel2:#101a2b;--text:#f7fbff;
-  --muted:#91a1b7;--accent:#ffd447;--accent2:#fff0a3;--border:#203149;
-  --header:rgba(5,9,19,.82);--input:#080f1b;--field:#080f1b;--soft:#ffffff0a;
-}
-body.modern.light-mode{
-  --bg:#eaf4ff;--panel:#ffffff;--panel2:#f2f8ff;--text:#07192c;
-  --muted:#5c7893;--accent:#e9b900;--accent2:#ffd83e;--border:#c9dced;
-  --header:rgba(239,248,255,.88);--input:#f4f9fd;--field:#f5faff;--soft:#07192c08;
-}
 
 /* =========================================================
-   LOGIN - OLD + MODERN
+   CORE
 ========================================================= */
-#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
-  background:radial-gradient(circle at 50% 0%,#26303e 0,#11161e 35%,#080b10 75%)}
+
+:root{
+  --bg:#080b10;
+  --panel:#10151d;
+  --panel2:#151c26;
+  --text:#f5f7fa;
+  --muted:#929baa;
+  --accent:#f5c542;
+  --accent2:#ffdf73;
+  --border:#27303c;
+  --header:#0a0e14e8;
+  --input:#0d1219;
+  --field:#0b0f15;
+  --soft:#ffffff08;
+  --danger:#b93838;
+  --success:#52d47b;
+}
+
+body.light-mode{
+  --bg:#061a31;
+  --panel:#071d36;
+  --panel2:#0a2744;
+  --text:#f4f9ff;
+  --muted:#72a9c9;
+  --accent:#ffd21a;
+  --accent2:#ffe56a;
+  --border:#17466c;
+  --header:rgba(5,20,38,.94);
+  --input:#061a31;
+  --field:#061a31;
+  --soft:#ffffff0d;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:Inter,Segoe UI,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+
+button,
+input,
+select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.hidden{
+  display:none!important;
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+#loginScreen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+
+  background:
+    radial-gradient(circle at 50% 0%,#26303e 0,#11161e 35%,#080b10 75%);
+}
+
+.login-card{
+  width:100%;
+  max-width:430px;
+  background:rgba(16,21,29,.94);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:42px;
+  box-shadow:0 30px 80px #0009;
+  backdrop-filter:blur(14px);
+}
+
+.modern-login-brand{
+  display:none;
+}
+
+.modern-login-side{
+  display:block;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:34px;
+}
+
+.logo-mark{
+  width:48px;
+  height:48px;
+  border-radius:14px;
+  background:var(--accent);
+  color:#111;
+  display:grid;
+  place-items:center;
+  font-size:25px;
+  font-weight:900;
+  transform:rotate(-5deg);
+}
+
+.logo h1{
+  font-size:23px;
+}
+
+.logo span{
+  color:var(--accent);
+}
+
+.login-card h2{
+  font-size:28px;
+  margin-bottom:8px;
+}
+
+.subtitle{
+  color:var(--muted);
+  margin-bottom:28px;
+}
+
+.field{
+  margin-bottom:17px;
+}
+
+.field label{
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:8px;
+  color:#cbd1da;
+}
+
+.field input{
+  width:100%;
+  padding:14px 15px;
+  border-radius:11px;
+  border:1px solid var(--border);
+  background:var(--field);
+  color:var(--text);
+  outline:none;
+}
+
+.field input:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px #2388e818;
+}
+
+.btn-group{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
+.login-btn{
+  border:0;
+  border-radius:11px;
+  background:var(--accent);
+  color:#101010;
+  font-weight:850;
+  padding:14px 18px;
+  transition:.2s;
+  flex:1;
+}
+
+.login-btn:hover{
+  background:var(--accent2);
+  transform:translateY(-1px);
+}
+
+.signup-btn{
+  background:#27303c;
+  color:#fff;
+}
+
+.signup-btn:hover{
+  background:#384556;
+}
+
+.error{
+  color:#ff7272;
+  font-size:13px;
+  margin-top:12px;
+  min-height:20px;
+  text-align:center;
+}
+
+.auth-status{
+  margin-top:12px;
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.powered-by-badge{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  margin-top:24px;
+  padding:8px 0;
+  font-size:12px;
+  color:var(--muted);
+}
+
+.powered-by-badge .brand{
+  color:#cbd1da;
+  font-weight:700;
+}
+
+.powered-by-badge .divider{
+  width:1px;
+  height:12px;
+  background:var(--border);
+}
+
+
+/* =========================================================
+   MODERN LOGIN
+========================================================= */
+
+body.modern{
+  --bg:#050913;
+  --panel:#0b1220;
+  --panel2:#101a2b;
+  --text:#f7fbff;
+  --muted:#91a1b7;
+  --accent:#ffd447;
+  --accent2:#fff0a3;
+  --border:#203149;
+  --header:rgba(5,9,19,.82);
+  --input:#080f1b;
+  --field:#080f1b;
+  --soft:#ffffff0a;
+}
+
+body.modern.light-mode{
+  --bg:#eaf4ff;
+  --panel:#ffffff;
+  --panel2:#f2f8ff;
+  --text:#07192c;
+  --muted:#5c7893;
+  --accent:#e9b900;
+  --accent2:#ffd83e;
+  --border:#c9dced;
+  --header:rgba(239,248,255,.88);
+  --input:#f4f9fd;
+  --field:#f5faff;
+  --soft:#07192c08;
+}
+
 body.modern #loginScreen{
   background:
-    radial-gradient(circle at 15% 10%,rgba(255,212,71,.15),transparent 28%),
-    radial-gradient(circle at 90% 85%,rgba(38,137,232,.16),transparent 30%),
+    radial-gradient(circle at 12% 10%,rgba(255,212,71,.14),transparent 25%),
+    radial-gradient(circle at 90% 85%,rgba(38,137,232,.15),transparent 30%),
     linear-gradient(135deg,#030712,#0a1220 55%,#101927);
+
+  padding:30px;
 }
+
 body.modern.light-mode #loginScreen{
   background:
     radial-gradient(circle at 10% 10%,rgba(255,212,71,.23),transparent 30%),
     radial-gradient(circle at 90% 80%,rgba(39,132,218,.18),transparent 32%),
     #eaf4ff;
 }
-.login-card{width:100%;max-width:430px;background:rgba(16,21,29,.94);border:1px solid var(--border);
-  border-radius:22px;padding:42px;box-shadow:0 30px 80px #0009;backdrop-filter:blur(14px)}
+
 body.modern .login-card{
-  max-width:1060px;min-height:610px;padding:0;display:grid;grid-template-columns:1.08fr .92fr;
-  overflow:hidden;border-radius:30px;background:rgba(10,18,32,.82);border:1px solid #ffffff16;
-  box-shadow:0 35px 100px #0008;backdrop-filter:blur(22px)
-}
-body.modern.light-mode .login-card{background:rgba(255,255,255,.82);border-color:#ffffff}
-.modern-login-brand{display:none}
-body.modern .modern-login-brand{display:flex;flex-direction:column;justify-content:space-between;padding:58px;
-  background:linear-gradient(145deg,#0b1627,#111d30 52%,#191e22);position:relative;overflow:hidden}
-body.modern.light-mode .modern-login-brand{background:linear-gradient(145deg,#dff0ff,#f8fcff 60%,#fff3bd)}
-body.modern .modern-login-brand:after{
-  content:"";position:absolute;width:330px;height:330px;border:1px solid #ffd44735;border-radius:50%;
-  right:-100px;bottom:-110px;box-shadow:0 0 0 70px #ffd44708,0 0 0 140px #ffd44705
-}
-.modern-kicker{color:var(--accent);font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase}
-.modern-brand-title{font-size:58px;line-height:.95;letter-spacing:-4px;max-width:450px;margin-top:18px}
-.modern-brand-title span{color:var(--accent)}
-.modern-brand-copy{max-width:410px;color:var(--muted);line-height:1.7;margin-top:20px}
-.modern-feature-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
-.modern-chip{border:1px solid #ffffff14;background:#ffffff08;border-radius:999px;padding:9px 12px;font-size:11px;font-weight:800}
-.modern-login-side{padding:58px 54px;display:flex;flex-direction:column;justify-content:center}
-.logo{display:flex;align-items:center;gap:12px;margin-bottom:34px}.logo-mark{width:48px;height:48px;border-radius:14px;background:var(--accent);
-  color:#111;display:grid;place-items:center;font-size:25px;font-weight:900;transform:rotate(-5deg)}
-.logo h1{font-size:23px}.logo span{color:var(--accent)}.login-card h2{font-size:28px;margin-bottom:8px}
-.subtitle{color:var(--muted);margin-bottom:28px}.field{margin-bottom:17px}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:8px;color:#cbd1da}
-.field input{width:100%;padding:14px 15px;border-radius:11px;border:1px solid var(--border);background:var(--field);color:var(--text);outline:none}
-.field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px #2388e818}
-body.modern .field input{border-radius:13px;padding:15px 16px}
-.btn-group{display:flex;gap:10px;margin-top:20px}.login-btn{border:0;border-radius:11px;background:var(--accent);color:#101010;font-weight:850;padding:14px 18px;transition:.2s;flex:1}
-.login-btn:hover{background:var(--accent2);transform:translateY(-1px)}.signup-btn{background:#27303c;color:#fff}.signup-btn:hover{background:#384556}
-body.modern .login-btn{border-radius:13px;padding:15px}.body.modern .signup-btn{background:#ffffff10}
-.error{color:#ff7272;font-size:13px;margin-top:12px;min-height:20px;text-align:center}.auth-status{margin-top:12px;text-align:center;color:var(--muted);font-size:12px}
-.powered-by-badge{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:24px;padding:8px 0;font-size:12px;color:var(--muted)}
-.powered-by-badge .brand{color:#cbd1da;font-weight:700}.powered-by-badge .divider{width:1px;height:12px;background:var(--border)}
-.launcher-down{text-align:center}.launcher-down-icon{width:82px;height:82px;border-radius:24px;background:#b93838;color:white;display:grid;place-items:center;margin:0 auto 24px;font-size:38px;font-weight:900}
-.launcher-down h2{font-size:34px;margin-bottom:10px}.down-subtitle{color:#ff7272;font-weight:800;font-size:13px;letter-spacing:1px;text-transform:uppercase;margin-bottom:18px}
-.launcher-down-info{color:var(--muted);font-size:14px;line-height:1.7;margin-bottom:18px}.launcher-down-date{color:var(--text);background:var(--soft);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:12px}
+  width:min(1120px,100%);
+  max-width:none;
+  min-height:650px;
+  padding:0;
+  display:grid;
+  grid-template-columns:1.25fr .75fr;
+  overflow:hidden;
 
-/* =========================================================
-   HEADER
-========================================================= */
-#launcher{min-height:100vh}header{height:72px;border-bottom:1px solid var(--border);background:var(--header);backdrop-filter:blur(14px);
-  display:flex;align-items:center;justify-content:space-between;padding:0 5%;position:sticky;top:0;z-index:50}
-.header-logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:20px}.header-logo b{color:var(--accent)}
-.header-logo .mini{width:34px;height:34px;border-radius:9px;background:var(--accent);color:#111;display:grid;place-items:center;font-weight:900}
-.user-area{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px}.profile-mini{width:34px;height:34px;border-radius:50%;object-fit:cover;border:1px solid var(--border);background:var(--panel2)}
-.header-btn,.logout{background:transparent;color:var(--text);border:1px solid var(--border);border-radius:9px;padding:8px 11px}
-.header-btn:hover,.logout:hover{border-color:var(--accent);color:var(--accent)}
-.admin-btn{border-color:#b93838!important;color:#ff7777!important;background:#b9383812!important;font-weight:900}
-.messages-btn{display:flex;align-items:center;gap:8px;border:1px solid #f5c54250;background:linear-gradient(135deg,#f5c54216,#f5c54204);
-  color:var(--accent);border-radius:9px;padding:6px 13px 6px 6px;font-weight:800;font-size:13px;text-decoration:none;transition:.2s}
-.messages-btn:hover{border-color:var(--accent);background:#f5c54228;transform:translateY(-1px)}
-.messages-badge{width:24px;height:24px;background:var(--accent);color:#111;clip-path:polygon(15% 0,100% 0,85% 100%,0 100%);
-  display:grid;place-items:center;font-size:12px;font-weight:900;transform:rotate(-4deg)}
-body.modern header{height:82px;padding:0 max(5%,calc((100vw - 1440px)/2));border-bottom:1px solid #ffffff0c}
-body.modern .header-logo{font-size:18px}.modern-nav-pill{display:none}
-body.modern header .header-logo:after{content:"LAUNCHER";font-size:9px;letter-spacing:1.5px;color:var(--muted);font-weight:900;margin-left:5px}
+  border-radius:32px;
+  background:#080f1b;
+  border:1px solid rgba(255,255,255,.08);
 
-/* =========================================================
-   MAIN - MODERN SELECTION SCREEN
-========================================================= */
-main{max-width:1250px;margin:auto;padding:42px 5% 70px}
-body.modern main{max-width:1440px;padding:34px max(5%,calc((100vw - 1440px)/2)) 80px}
-.hero{border:1px solid var(--border);border-radius:22px;padding:40px;min-height:280px;display:flex;align-items:end;
-  background:linear-gradient(110deg,#171e28 0%,#11161e 48%,#252014 100%);overflow:hidden;position:relative}
-body.modern .hero{
-  min-height:390px;border-radius:28px;padding:48px;align-items:flex-end;
+  box-shadow:
+    0 50px 120px rgba(0,0,0,.65),
+    0 0 100px rgba(34,115,190,.05);
+}
+
+body.modern.light-mode .login-card{
+  background:rgba(255,255,255,.92);
+  border-color:#d7e6f2;
+}
+
+body.modern .modern-login-brand{
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+
+  padding:65px;
+
   background:
-    radial-gradient(circle at 80% 15%,#ffd44718,transparent 25%),
-    linear-gradient(125deg,#0b1422,#0a1422 55%,#151b1f);
-  border-color:#ffffff10
-}
-body.modern.light-mode .hero{background:radial-gradient(circle at 85% 10%,#ffd44725,transparent 28%),linear-gradient(125deg,#dceeff,#fff)}
-.hero-content{position:relative;z-index:1;max-width:750px}.eyebrow{color:var(--accent);font-weight:850;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
-.hero h2{font-size:42px;letter-spacing:-1.5px;margin-bottom:12px}.hero p{color:#b6bdc8;line-height:1.6;margin-bottom:22px}
-body.modern .hero h2{font-size:64px;letter-spacing:-3px;line-height:.98;max-width:760px}
-body.modern .hero p{font-size:15px;max-width:650px;color:var(--muted)}
-.hero-btn{display:inline-block;padding:12px 18px;background:var(--accent);color:#111;border-radius:10px;text-decoration:none;font-weight:850;margin-right:8px;margin-bottom:8px}
-body.modern .hero-btn{border-radius:12px;padding:13px 17px}.body.modern .hero-btn{}
-.news-container{background:rgba(16,21,29,.85);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:14px;padding:18px 22px;margin-top:22px;backdrop-filter:blur(10px);box-shadow:0 10px 30px rgba(0,0,0,.35)}
-.news-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.news-badge{background:var(--accent);color:#111;font-weight:850;font-size:11px;padding:3px 8px;border-radius:5px;letter-spacing:.8px}.news-date{color:var(--muted);font-size:12px}
-.news-title{color:#fff;margin-bottom:6px;font-size:18px}.news-content{color:#b6bdc8;font-size:13px;line-height:1.5}
-body.modern .news-container{border-left:0;border:1px solid #ffd44732;background:#ffd44709;border-radius:16px}
+    radial-gradient(circle at 80% 20%,rgba(255,212,71,.18),transparent 28%),
+    radial-gradient(circle at 15% 85%,rgba(24,113,201,.2),transparent 32%),
+    linear-gradient(145deg,#091321,#0b1727 55%,#111c2b);
 
-/* Modern game controls */
-.section-head{display:flex;align-items:end;justify-content:space-between;margin:42px 0 18px}
-body.modern .section-head{margin:42px 0 20px;align-items:center}.section-head h3{font-size:23px}.section-head p{color:var(--muted);font-size:13px}
-body.modern .section-head h3{font-size:28px;letter-spacing:-.7px}.game-tools{display:flex;gap:9px}
-.search,.filter-select{background:var(--input);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px 13px;outline:none}
-.search{width:220px}.filter-select{min-width:145px}.search:focus,.filter-select:focus{border-color:var(--accent)}
-body.modern .search,body.modern .filter-select{height:46px;border-radius:13px;padding:0 15px;border-color:#ffffff12}
-body.modern .search{width:280px}
-
-/* Modern game grid: dramatically different from old cards */
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-body.modern .grid{grid-template-columns:repeat(12,1fr);gap:18px}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:17px;overflow:hidden;transition:.2s}
-.card:hover{transform:translateY(-3px);border-color:#465160;box-shadow:0 14px 35px #0004}
-body.modern .card{
-  grid-column:span 4;border-radius:22px;background:linear-gradient(160deg,#0c1524,#09111e);
-  border-color:#ffffff0d;box-shadow:0 10px 35px #0003;position:relative
+  position:relative;
+  overflow:hidden;
 }
-body.modern.light-mode .card{background:#fff;border-color:#d5e4f1}
-body.modern .card:hover{transform:translateY(-6px);border-color:#ffd44755;box-shadow:0 22px 50px #0004}
-body.modern .card.wide-card{grid-column:span 8}
-.cover{height:165px;background:linear-gradient(135deg,#242c37,#11161d);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-body.modern .cover{height:210px;background:linear-gradient(135deg,#111d2d,#08101b)}
-body.modern .cover:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#050913cc,transparent 55%);pointer-events:none}
-body.modern .cover img{width:100%;height:100%;object-fit:cover}.game-icon{width:90px;height:90px;border-radius:22px;background:var(--accent);color:#111;display:grid;place-items:center;font-size:23px;font-weight:950;box-shadow:0 12px 25px #0005;transform:rotate(-4deg)}
-body.modern .game-icon{width:112px;height:112px;border-radius:30px;font-size:27px;box-shadow:0 20px 50px #0007;z-index:1}
-.cover .badge{position:absolute;top:13px;left:13px;background:#080b10dd;color:#fff;padding:6px 9px;border-radius:7px;font-size:10px;font-weight:800;z-index:2}
-body.modern .cover .badge{top:16px;left:16px;border:1px solid #ffffff16;background:#050913aa;border-radius:999px;padding:7px 11px}
-.card-body{padding:18px}.card h4{font-size:21px;margin-bottom:8px}.desc{font-size:13px;color:var(--muted);min-height:38px;line-height:1.45}
-body.modern .card-body{padding:22px}.body.modern .card h4{}
-body.modern .card h4{font-size:22px;letter-spacing:-.5px}.meta{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0 17px}.tag{font-size:11px;color:#cbd2dc;background:#ffffff08;border:1px solid var(--border);padding:6px 8px;border-radius:7px}
-body.modern .tag{border-radius:999px;background:#ffffff06;padding:7px 10px}
-.card-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px}.release{font-size:11px;color:#7f8997}.play-btn{border:0;border-radius:11px;background:var(--accent);color:#101010;font-weight:850;padding:9px 14px}
-body.modern .play-btn{border-radius:12px;padding:11px 17px}.play-btn:hover{background:var(--accent2)}
-.coming{opacity:.82}.coming .game-icon{background:#29313c;color:#8d97a5;box-shadow:none}.coming .play-btn,.production-btn{background:#252c36!important;color:#929baa!important;cursor:not-allowed}
-.maintenance .game-icon{background:#8b5a2b;color:#fff}.maintenance-btn{background:#8b5a2b!important;color:#fff!important;cursor:not-allowed}
-.game-update{margin-top:15px;padding:12px 13px;border-radius:10px;border:1px solid #806b25;border-left:3px solid var(--accent);background:rgba(245,197,66,.08)}
-.game-update-title{color:var(--accent);font-size:11px;font-weight:900;letter-spacing:.7px;text-transform:uppercase;margin-bottom:5px}.game-update-text{color:#cbd1da;font-size:12px;line-height:1.5}
-body.modern .game-update{border-radius:13px;border-left:0;border-color:#ffd44725}
+
+body.modern.light-mode .modern-login-brand{
+  background:
+    radial-gradient(circle at 80% 20%,rgba(255,212,71,.3),transparent 28%),
+    linear-gradient(145deg,#dceefe,#ffffff);
+}
+
+body.modern .modern-login-brand:after{
+  content:"";
+  position:absolute;
+  width:480px;
+  height:480px;
+  right:-200px;
+  bottom:-230px;
+  border:1px solid rgba(255,212,71,.15);
+  border-radius:50%;
+  box-shadow:
+    0 0 0 70px rgba(255,212,71,.035),
+    0 0 0 140px rgba(255,212,71,.02);
+}
+
+.modern-kicker{
+  color:var(--accent);
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+
+.modern-brand-title{
+  font-size:72px;
+  line-height:.9;
+  letter-spacing:-5px;
+  max-width:550px;
+  margin-top:25px;
+}
+
+.modern-brand-title span{
+  color:var(--accent);
+}
+
+.modern-brand-copy{
+  max-width:470px;
+  color:var(--muted);
+  line-height:1.75;
+  margin-top:25px;
+  font-size:15px;
+}
+
+.modern-feature-row{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:28px;
+}
+
+.modern-chip{
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.04);
+  border-radius:999px;
+  padding:9px 13px;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.4px;
+}
+
+body.modern .modern-login-side{
+  padding:60px 48px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  background:rgba(255,255,255,.018);
+}
+
+body.modern.light-mode .modern-login-side{
+  background:#fff;
+}
+
+body.modern .modern-login-side .logo{
+  margin-bottom:48px;
+}
+
+body.modern .modern-login-side .logo-mark{
+  width:44px;
+  height:44px;
+  border-radius:13px;
+}
+
+body.modern .login-card h2{
+  font-size:38px;
+  letter-spacing:-1.5px;
+}
+
+body.modern .subtitle{
+  line-height:1.55;
+}
+
+body.modern .field{
+  margin-bottom:19px;
+}
+
+body.modern .field label{
+  font-size:10px;
+  letter-spacing:1px;
+  color:#8395aa;
+}
+
+body.modern .field input{
+  height:52px;
+  padding:0 16px;
+  border-radius:14px;
+  background:#060d17;
+  border-color:rgba(255,255,255,.08);
+}
+
+body.modern.light-mode .field input{
+  background:#f5faff;
+  border-color:#cdddea;
+}
+
+body.modern .btn-group{
+  margin-top:24px;
+}
+
+body.modern .login-btn{
+  min-height:52px;
+  border-radius:14px;
+}
+
+body.modern .signup-btn{
+  background:rgba(255,255,255,.06);
+}
+
 
 /* =========================================================
-   MODALS / SETTINGS
+   MODERN HEADER
 ========================================================= */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.68);backdrop-filter:blur(7px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
-.modal{width:min(700px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--border);border-radius:20px;box-shadow:0 30px 90px #0008;padding:26px}
-.modal-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}.modal-top h2{font-size:25px}
-.close-modal{border:1px solid var(--border);background:transparent;color:var(--text);border-radius:9px;width:36px;height:36px;font-size:20px}
-.settings-tabs{display:flex;gap:8px;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:20px}
-.settings-tab{border:0;background:transparent;color:var(--muted);padding:9px 12px;border-radius:8px;font-weight:700}.settings-tab.active,.settings-tab:hover{background:var(--soft);color:var(--accent)}
-.settings-section{display:none}.settings-section.active{display:block}.setting-row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 0;border-bottom:1px solid var(--border)}
-.setting-info strong{display:block;margin-bottom:4px}.setting-info span{font-size:12px;color:var(--muted)}
-.switch{position:relative;width:48px;height:26px;flex:none}.switch input{opacity:0;width:0;height:0}.slider{position:absolute;inset:0;background:#4a5563;border-radius:99px;transition:.2s}
-.slider:before{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;background:white;border-radius:50%;transition:.2s}
-.switch input:checked+.slider{background:var(--accent)}.switch input:checked+.slider:before{transform:translateX(22px)}
-.account-avatar{width:82px;height:82px;border-radius:50%;object-fit:cover;background:var(--panel2);border:2px solid var(--border)}
-.avatar-row{display:flex;align-items:center;gap:18px;margin-bottom:22px}.settings-input{width:100%;padding:12px 13px;border:1px solid var(--border);border-radius:10px;background:var(--field);color:var(--text);outline:none}
-.save-btn{border:0;border-radius:10px;background:var(--accent);color:#111;padding:11px 15px;font-weight:850;margin-top:14px}.danger-btn{background:#b93838;color:#fff}.settings-message{font-size:12px;min-height:18px;margin-top:10px}
 
-/* New design selector */
-.design-choice{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:15px}
-.design-option{border:1px solid var(--border);background:var(--soft);color:var(--text);border-radius:15px;padding:17px;text-align:left;transition:.2s}
-.design-option:hover{border-color:var(--accent);transform:translateY(-2px)}.design-option.active{border-color:var(--accent);box-shadow:0 0 0 2px #ffd44718;background:#ffd4470c}
-.design-preview{height:62px;border-radius:10px;margin-bottom:12px;background:#171e28;position:relative;overflow:hidden}
-.design-preview.modern-preview{background:linear-gradient(135deg,#091321,#172334)}.modern-preview:after{content:"";position:absolute;left:12px;right:12px;bottom:10px;height:13px;border-radius:5px;background:#ffd447}
-.design-preview.old-preview:after{content:"";position:absolute;left:14px;right:30px;top:14px;height:32px;border-radius:7px;background:#242c37}
-.design-option strong{display:block;margin-bottom:4px}.design-option span{font-size:11px;color:var(--muted);line-height:1.4}
+body.modern header{
+  height:78px;
+  padding:0 34px;
+  background:rgba(5,9,19,.72);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  backdrop-filter:blur(24px);
+  position:sticky;
+  top:0;
+  z-index:80;
+}
 
-/* Admin */
-.admin-modal{border-color:#7d2e2e;box-shadow:0 30px 90px #0008,0 0 50px #b9383820}.admin-title{display:flex;align-items:center;gap:10px}
-.admin-shield{width:38px;height:38px;border-radius:10px;background:#b93838;display:grid;place-items:center;color:white;font-weight:900}
-.admin-warning{padding:14px;border-radius:10px;background:#b9383812;border:1px solid #b9383860;color:#ff8d8d;font-size:13px;line-height:1.5;margin-bottom:20px}
-.admin-card{border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;background:var(--soft)}.admin-card h3{margin-bottom:6px}
-.admin-card p{color:var(--muted);font-size:12px;line-height:1.5}.admin-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.admin-action{border:1px solid var(--border);background:var(--panel2);color:var(--text);padding:9px 12px;border-radius:8px}.admin-action:hover{border-color:var(--accent);color:var(--accent)}
-.admin-message{min-height:20px;margin-top:12px;color:var(--success);font-size:12px}
-footer{text-align:center;color:var(--muted);font-size:12px;margin-top:55px}
+body.modern.light-mode header{
+  background:rgba(245,250,255,.82);
+  border-color:#d9e7f2;
+}
+
+body.modern .header-logo{
+  font-size:18px;
+  letter-spacing:-.4px;
+}
+
+body.modern .header-logo .mini{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  box-shadow:0 8px 25px rgba(255,212,71,.18);
+}
+
+body.modern .header-logo:after{
+  content:"LAUNCHER";
+  margin-left:5px;
+  font-size:8px;
+  letter-spacing:1.7px;
+  color:#74869d;
+  font-weight:900;
+}
+
+body.modern .user-area{
+  gap:8px;
+}
+
+body.modern .user-area > span{
+  display:none;
+}
+
+body.modern .header-btn,
+body.modern .logout{
+  height:40px;
+  padding:0 13px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.035);
+  transition:.2s;
+}
+
+body.modern .header-btn:hover,
+body.modern .logout:hover{
+  background:rgba(255,255,255,.08);
+  border-color:rgba(255,212,71,.45);
+}
+
+body.modern .messages-btn{
+  height:40px;
+  padding:4px 13px 4px 5px;
+  border-radius:12px;
+  background:rgba(255,212,71,.08);
+  border:1px solid rgba(255,212,71,.16);
+}
+
+body.modern .messages-badge{
+  width:30px;
+  height:30px;
+}
+
+
+/* =========================================================
+   MODERN MAIN
+========================================================= */
+
+body.modern main{
+  max-width:1500px;
+  padding:0 38px 80px;
+}
+
+
+/* =========================================================
+   MODERN HERO
+========================================================= */
+
+body.modern .hero{
+  margin-top:28px;
+  min-height:500px;
+  padding:55px;
+  border-radius:32px;
+  border:1px solid rgba(255,255,255,.08);
+
+  background:
+    radial-gradient(circle at 82% 25%,rgba(255,212,71,.16),transparent 25%),
+    radial-gradient(circle at 70% 100%,rgba(30,118,210,.14),transparent 30%),
+    linear-gradient(135deg,#091321 0%,#0b1422 48%,#111b2b 100%);
+
+  overflow:hidden;
+  position:relative;
+  isolation:isolate;
+}
+
+body.modern.light-mode .hero{
+  background:
+    radial-gradient(circle at 80% 20%,rgba(255,212,71,.25),transparent 28%),
+    linear-gradient(135deg,#dceefe,#ffffff);
+  border-color:#d5e4ef;
+}
+
+body.modern .hero:before{
+  content:"";
+  position:absolute;
+  width:600px;
+  height:600px;
+  right:-160px;
+  top:-190px;
+  border-radius:50%;
+  border:1px solid rgba(255,212,71,.08);
+  box-shadow:
+    0 0 0 80px rgba(255,212,71,.025),
+    0 0 0 160px rgba(255,212,71,.015);
+  z-index:-1;
+}
+
+body.modern .hero:after{
+  content:"TAXI 3";
+  position:absolute;
+  right:7%;
+  bottom:-30px;
+  font-size:180px;
+  line-height:1;
+  font-weight:1000;
+  letter-spacing:-12px;
+  color:rgba(255,255,255,.025);
+  z-index:-1;
+  pointer-events:none;
+}
+
+body.modern.light-mode .hero:after{
+  color:rgba(5,25,45,.035);
+}
+
+body.modern .hero-content{
+  max-width:720px;
+}
+
+body.modern .hero .eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  border-radius:999px;
+  background:rgba(255,212,71,.09);
+  border:1px solid rgba(255,212,71,.18);
+  margin-bottom:20px;
+}
+
+body.modern .hero .eyebrow:before{
+  content:"";
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#ffd447;
+  box-shadow:0 0 12px #ffd447;
+}
+
+body.modern .hero h2{
+  font-size:76px;
+  line-height:.91;
+  letter-spacing:-5px;
+  max-width:650px;
+  margin-bottom:22px;
+}
+
+body.modern .hero p{
+  max-width:600px;
+  font-size:15px;
+  line-height:1.75;
+  color:#94a6bd;
+}
+
+body.modern .hero-btn{
+  border-radius:14px;
+  padding:14px 19px;
+  margin-top:8px;
+  transition:.2s;
+}
+
+body.modern .hero-btn:hover{
+  transform:translateY(-2px);
+}
+
+body.modern .hero-btn:first-of-type{
+  box-shadow:0 12px 35px rgba(255,212,71,.15);
+}
+
+
+/* =========================================================
+   NEWS
+========================================================= */
+
+.news-container{
+  background:rgba(16,21,29,.85);
+  border:1px solid var(--border);
+  border-left:4px solid var(--accent);
+  border-radius:14px;
+  padding:18px 22px;
+  margin-top:22px;
+  backdrop-filter:blur(10px);
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+}
+
+body.modern .news-container{
+  margin-top:28px;
+  border-left:0;
+  border:1px solid rgba(255,212,71,.18);
+  background:rgba(255,212,71,.055);
+  border-radius:16px;
+  padding:15px 18px;
+}
+
+.news-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:8px;
+}
+
+.news-badge{
+  background:var(--accent);
+  color:#111;
+  font-weight:850;
+  font-size:11px;
+  padding:3px 8px;
+  border-radius:5px;
+  letter-spacing:.8px;
+}
+
+.news-date{
+  color:var(--muted);
+  font-size:12px;
+}
+
+.news-title{
+  color:#fff;
+  margin-bottom:6px;
+  font-size:18px;
+}
+
+.news-content{
+  color:#b6bdc8;
+  font-size:13px;
+  line-height:1.5;
+}
+
+
+/* =========================================================
+   GAME SECTION
+========================================================= */
+
+body.modern .section-head{
+  display:block;
+  margin:52px 0 20px;
+}
+
+body.modern .section-head > div:first-child{
+  margin-bottom:23px;
+}
+
+body.modern .section-head h3{
+  font-size:34px;
+  letter-spacing:-1.3px;
+  margin-bottom:5px;
+}
+
+body.modern .section-head p{
+  font-size:13px;
+  color:var(--muted);
+}
+
+body.modern .game-tools{
+  display:flex;
+  width:100%;
+  gap:12px;
+  align-items:center;
+}
+
+body.modern .search{
+  flex:1;
+  width:auto;
+  height:54px;
+  padding:0 20px;
+  border-radius:16px;
+  background:#091321;
+  border:1px solid rgba(255,255,255,.08);
+  font-size:14px;
+}
+
+body.modern .search::placeholder{
+  color:#65758a;
+}
+
+body.modern .filter-select{
+  height:54px;
+  min-width:190px;
+  border-radius:16px;
+  background:#091321;
+  border:1px solid rgba(255,255,255,.08);
+  color:var(--text);
+  padding:0 15px;
+}
+
+body.modern.light-mode .search,
+body.modern.light-mode .filter-select{
+  background:#fff;
+  border-color:#d7e4ee;
+}
+
+
+/* =========================================================
+   MODERN FILTER PILLS
+========================================================= */
+
+.modern-filter-pills{
+  display:none;
+}
+
+body.modern .modern-filter-pills{
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+  margin:0 0 25px;
+}
+
+body.modern .modern-filter-pill{
+  border:1px solid rgba(255,255,255,.08);
+  background:#091321;
+  color:#71849b;
+  padding:10px 16px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.7px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+body.modern .modern-filter-pill:hover{
+  color:#fff;
+  border-color:rgba(255,212,71,.25);
+}
+
+body.modern .modern-filter-pill.active{
+  color:#111;
+  background:#ffd447;
+  border-color:#ffd447;
+  box-shadow:0 7px 22px rgba(255,212,71,.14);
+}
+
+body.modern.light-mode .modern-filter-pill{
+  background:#fff;
+  border-color:#d5e3ed;
+  color:#607991;
+}
+
+body.modern.light-mode .modern-filter-pill.active{
+  color:#111;
+  background:#e9b900;
+  border-color:#e9b900;
+}
+
+
+/* =========================================================
+   GAME GRID
+========================================================= */
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+}
+
+body.modern .grid{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:20px;
+}
+
+.card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:17px;
+  overflow:hidden;
+  transition:.2s;
+}
+
+.card:hover{
+  transform:translateY(-3px);
+  border-color:#465160;
+  box-shadow:0 14px 35px #0004;
+}
+
+body.modern .card{
+  grid-column:span 4;
+  min-height:430px;
+  border-radius:24px;
+  background:#091321;
+  border:1px solid rgba(255,255,255,.07);
+  box-shadow:0 15px 45px rgba(0,0,0,.25);
+  overflow:hidden;
+  transition:
+    transform .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+
+body.modern.light-mode .card{
+  background:#fff;
+  border-color:#d7e4ee;
+}
+
+body.modern .card:hover{
+  transform:translateY(-7px);
+  border-color:rgba(255,212,71,.28);
+  box-shadow:0 25px 60px rgba(0,0,0,.38);
+}
+
+/* TAXI 3 becomes the dominant card */
+
+body.modern .card:nth-child(2){
+  grid-column:span 8;
+  min-height:430px;
+}
+
+body.modern .card:nth-child(2) .cover{
+  height:250px;
+}
+
+body.modern .card:nth-child(2) .card-body{
+  padding:25px 28px;
+}
+
+body.modern .card:nth-child(2) h4{
+  font-size:30px;
+}
+
+
+/* =========================================================
+   GAME COVERS
+========================================================= */
+
+.cover{
+  height:165px;
+  background:linear-gradient(135deg,#242c37,#11161d);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
+}
+
+body.modern .cover{
+  height:205px;
+  background:
+    radial-gradient(circle at 80% 20%,rgba(255,212,71,.15),transparent 30%),
+    linear-gradient(135deg,#111d2d,#08101b);
+}
+
+body.modern .card:nth-child(2) .cover{
+  height:250px;
+}
+
+body.modern .cover img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:transform .5s ease;
+}
+
+body.modern .card:hover .cover img{
+  transform:scale(1.045);
+}
+
+body.modern .cover:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(
+      0deg,
+      #091321 0%,
+      rgba(9,19,33,.65) 18%,
+      transparent 65%
+    );
+  pointer-events:none;
+}
+
+.game-icon{
+  width:90px;
+  height:90px;
+  border-radius:22px;
+  background:var(--accent);
+  color:#111;
+  display:grid;
+  place-items:center;
+  font-size:23px;
+  font-weight:950;
+  box-shadow:0 12px 25px #0005;
+  transform:rotate(-4deg);
+}
+
+body.modern .game-icon{
+  width:112px;
+  height:112px;
+  border-radius:30px;
+  font-size:27px;
+  box-shadow:0 20px 50px #0007;
+  z-index:1;
+}
+
+.cover .badge{
+  position:absolute;
+  top:13px;
+  left:13px;
+  background:#080b10dd;
+  color:#fff;
+  padding:6px 9px;
+  border-radius:7px;
+  font-size:10px;
+  font-weight:800;
+  z-index:2;
+}
+
+body.modern .cover .badge{
+  top:16px;
+  left:16px;
+  border:1px solid rgba(255,255,255,.1);
+  background:rgba(5,9,19,.72);
+  border-radius:999px;
+  padding:8px 12px;
+}
+
+
+/* =========================================================
+   GAME BODY
+========================================================= */
+
+.card-body{
+  padding:18px;
+}
+
+.card h4{
+  font-size:21px;
+  margin-bottom:8px;
+}
+
+.desc{
+  font-size:13px;
+  color:var(--muted);
+  min-height:38px;
+  line-height:1.45;
+}
+
+body.modern .card-body{
+  padding:22px;
+}
+
+body.modern .card h4{
+  font-size:22px;
+  letter-spacing:-.6px;
+}
+
+body.modern .card:nth-child(2) h4{
+  font-size:30px;
+}
+
+body.modern .desc{
+  min-height:auto;
+  line-height:1.55;
+}
+
+.meta{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin:14px 0 17px;
+}
+
+body.modern .meta{
+  margin:17px 0;
+}
+
+.tag{
+  font-size:11px;
+  color:#cbd2dc;
+  background:#ffffff08;
+  border:1px solid var(--border);
+  padding:6px 8px;
+  border-radius:7px;
+}
+
+body.modern .tag{
+  border-radius:999px;
+  background:rgba(255,255,255,.035);
+  padding:7px 10px;
+  border-color:rgba(255,255,255,.07);
+}
+
+.card-bottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.release{
+  font-size:11px;
+  color:#7f8997;
+}
+
+body.modern .release{
+  font-weight:700;
+  color:#73869d;
+}
+
+.play-btn{
+  border:0;
+  border-radius:11px;
+  background:var(--accent);
+  color:#101010;
+  font-weight:850;
+  padding:9px 14px;
+}
+
+body.modern .play-btn{
+  padding:11px 18px;
+  border-radius:13px;
+  box-shadow:0 8px 25px rgba(255,212,71,.1);
+  transition:.2s;
+}
+
+body.modern .play-btn:hover:not(:disabled){
+  transform:translateY(-2px);
+  box-shadow:0 12px 30px rgba(255,212,71,.2);
+}
+
+.play-btn:hover{
+  background:var(--accent2);
+}
+
+
+/* =========================================================
+   GAME STATUS
+========================================================= */
+
+.coming{
+  opacity:.82;
+}
+
+.coming .game-icon{
+  background:#29313c;
+  color:#8d97a5;
+  box-shadow:none;
+}
+
+.coming .play-btn,
+.production-btn{
+  background:#252c36!important;
+  color:#929baa!important;
+  cursor:not-allowed;
+}
+
+.maintenance .game-icon{
+  background:#8b5a2b;
+  color:#fff;
+}
+
+.maintenance-btn{
+  background:#8b5a2b!important;
+  color:#fff!important;
+  cursor:not-allowed;
+}
+
+body.modern .coming{
+  opacity:.78;
+}
+
+body.modern .coming:hover{
+  opacity:1;
+}
+
+body.modern .coming .cover{
+  filter:saturate(.55);
+}
+
+
+/* =========================================================
+   WIDE GAME
+========================================================= */
+
+body.modern .card.wide-card{
+  grid-column:span 8;
+}
+
+body.modern .card.wide-card .cover{
+  height:240px;
+}
+
+body.modern .card.wide-card h4{
+  font-size:27px;
+}
+
+
+/* =========================================================
+   UPDATE NOTICE
+========================================================= */
+
+.game-update{
+  margin-top:15px;
+  padding:12px 13px;
+  border-radius:10px;
+  border:1px solid #806b25;
+  border-left:3px solid var(--accent);
+  background:rgba(245,197,66,.08);
+}
+
+.game-update-title{
+  color:var(--accent);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.7px;
+  text-transform:uppercase;
+  margin-bottom:5px;
+}
+
+.game-update-text{
+  color:#cbd1da;
+  font-size:12px;
+  line-height:1.5;
+}
+
+body.modern .game-update{
+  margin-top:17px;
+  padding:14px 15px;
+  border-radius:13px;
+  background:rgba(255,212,71,.055);
+  border:1px solid rgba(255,212,71,.12);
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer{
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:55px;
+}
+
+body.modern footer{
+  padding-top:30px;
+  margin-top:65px;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+
+
+/* =========================================================
+   MODALS
+========================================================= */
+
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.68);
+  backdrop-filter:blur(7px);
+  z-index:100;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.modal{
+  width:min(700px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:20px;
+  box-shadow:0 30px 90px #0008;
+  padding:26px;
+}
+
+.modal-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:22px;
+}
+
+.modal-top h2{
+  font-size:25px;
+}
+
+.close-modal{
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--text);
+  border-radius:9px;
+  width:36px;
+  height:36px;
+  font-size:20px;
+}
+
+.settings-tabs{
+  display:flex;
+  gap:8px;
+  border-bottom:1px solid var(--border);
+  padding-bottom:12px;
+  margin-bottom:20px;
+}
+
+.settings-tab{
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  padding:9px 12px;
+  border-radius:8px;
+  font-weight:700;
+}
+
+.settings-tab.active,
+.settings-tab:hover{
+  background:var(--soft);
+  color:var(--accent);
+}
+
+.settings-section{
+  display:none;
+}
+
+.settings-section.active{
+  display:block;
+}
+
+.setting-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  padding:16px 0;
+  border-bottom:1px solid var(--border);
+}
+
+.setting-info strong{
+  display:block;
+  margin-bottom:4px;
+}
+
+.setting-info span{
+  font-size:12px;
+  color:var(--muted);
+}
+
+.switch{
+  position:relative;
+  width:48px;
+  height:26px;
+  flex:none;
+}
+
+.switch input{
+  opacity:0;
+  width:0;
+  height:0;
+}
+
+.slider{
+  position:absolute;
+  inset:0;
+  background:#4a5563;
+  border-radius:99px;
+  transition:.2s;
+}
+
+.slider:before{
+  content:"";
+  position:absolute;
+  width:20px;
+  height:20px;
+  left:3px;
+  top:3px;
+  background:white;
+  border-radius:50%;
+  transition:.2s;
+}
+
+.switch input:checked+.slider{
+  background:var(--accent);
+}
+
+.switch input:checked+.slider:before{
+  transform:translateX(22px);
+}
+
+.account-avatar{
+  width:82px;
+  height:82px;
+  border-radius:50%;
+  object-fit:cover;
+  background:var(--panel2);
+  border:2px solid var(--border);
+}
+
+.avatar-row{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  margin-bottom:22px;
+}
+
+.settings-input{
+  width:100%;
+  padding:12px 13px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--field);
+  color:var(--text);
+  outline:none;
+}
+
+.save-btn{
+  border:0;
+  border-radius:10px;
+  background:var(--accent);
+  color:#111;
+  padding:11px 15px;
+  font-weight:850;
+  margin-top:14px;
+}
+
+.danger-btn{
+  background:#b93838;
+  color:#fff;
+}
+
+.settings-message{
+  font-size:12px;
+  min-height:18px;
+  margin-top:10px;
+}
+
+
+/* =========================================================
+   DESIGN SELECTOR
+========================================================= */
+
+.design-choice{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:15px;
+}
+
+.design-option{
+  border:1px solid var(--border);
+  background:var(--soft);
+  color:var(--text);
+  border-radius:15px;
+  padding:17px;
+  text-align:left;
+  transition:.2s;
+}
+
+.design-option:hover{
+  border-color:var(--accent);
+  transform:translateY(-2px);
+}
+
+.design-option.active{
+  border-color:var(--accent);
+  box-shadow:0 0 0 2px #ffd44718;
+  background:#ffd4470c;
+}
+
+.design-preview{
+  height:62px;
+  border-radius:10px;
+  margin-bottom:12px;
+  background:#171e28;
+  position:relative;
+  overflow:hidden;
+}
+
+.design-preview.modern-preview{
+  background:linear-gradient(135deg,#091321,#172334);
+}
+
+.modern-preview:after{
+  content:"";
+  position:absolute;
+  left:12px;
+  right:12px;
+  bottom:10px;
+  height:13px;
+  border-radius:5px;
+  background:#ffd447;
+}
+
+.design-preview.old-preview:after{
+  content:"";
+  position:absolute;
+  left:14px;
+  right:30px;
+  top:14px;
+  height:32px;
+  border-radius:7px;
+  background:#242c37;
+}
+
+.design-option strong{
+  display:block;
+  margin-bottom:4px;
+}
+
+.design-option span{
+  font-size:11px;
+  color:var(--muted);
+  line-height:1.4;
+}
+
+
+/* =========================================================
+   ADMIN
+========================================================= */
+
+.admin-modal{
+  border-color:#7d2e2e;
+  box-shadow:
+    0 30px 90px #0008,
+    0 0 50px #b9383820;
+}
+
+.admin-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.admin-shield{
+  width:38px;
+  height:38px;
+  border-radius:10px;
+  background:#b93838;
+  display:grid;
+  place-items:center;
+  color:white;
+  font-weight:900;
+}
+
+.admin-warning{
+  padding:14px;
+  border-radius:10px;
+  background:#b9383812;
+  border:1px solid #b9383860;
+  color:#ff8d8d;
+  font-size:13px;
+  line-height:1.5;
+  margin-bottom:20px;
+}
+
+.admin-card{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px;
+  margin-bottom:12px;
+  background:var(--soft);
+}
+
+.admin-card h3{
+  margin-bottom:6px;
+}
+
+.admin-card p{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+}
+
+.admin-controls{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
+
+.admin-action{
+  border:1px solid var(--border);
+  background:var(--panel2);
+  color:var(--text);
+  padding:9px 12px;
+  border-radius:8px;
+}
+
+.admin-action:hover{
+  border-color:var(--accent);
+  color:var(--accent);
+}
+
+.admin-message{
+  min-height:20px;
+  margin-top:12px;
+  color:var(--success);
+  font-size:12px;
+}
+
+
+/* =========================================================
+   LAUNCHER DOWN
+========================================================= */
+
+.launcher-down{
+  text-align:center;
+}
+
+.launcher-down-icon{
+  width:82px;
+  height:82px;
+  border-radius:24px;
+  background:#b93838;
+  color:white;
+  display:grid;
+  place-items:center;
+  margin:0 auto 24px;
+  font-size:38px;
+  font-weight:900;
+}
+
+.launcher-down h2{
+  font-size:34px;
+  margin-bottom:10px;
+}
+
+.down-subtitle{
+  color:#ff7272;
+  font-weight:800;
+  font-size:13px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  margin-bottom:18px;
+}
+
+.launcher-down-info{
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.7;
+  margin-bottom:18px;
+}
+
+.launcher-down-date{
+  color:var(--text);
+  background:var(--soft);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px;
+  font-size:12px;
+}
+
 
 /* =========================================================
    RESPONSIVE
 ========================================================= */
+
+@media(max-width:1100px){
+
+  body.modern .hero h2{
+    font-size:62px;
+  }
+
+  body.modern .card,
+  body.modern .card:nth-child(2),
+  body.modern .card.wide-card{
+    grid-column:span 6;
+  }
+
+}
+
 @media(max-width:900px){
-  body.modern .login-card{grid-template-columns:1fr;max-width:520px}
-  body.modern .modern-login-brand{display:none}
-  body.modern .modern-login-side{padding:42px}
-  body.modern .grid{grid-template-columns:repeat(2,1fr)}
-  body.modern .card,body.modern .card.wide-card{grid-column:span 1}
+
+  body.modern .login-card{
+    grid-template-columns:1fr;
+    max-width:520px;
+  }
+
+  body.modern .modern-login-brand{
+    display:none;
+  }
+
+  body.modern .modern-login-side{
+    padding:42px;
+  }
+
 }
-@media(max-width:600px){
-  header{padding:0 18px}.user-area span{display:none}.user-area{gap:5px}.header-btn,.logout{padding:7px 8px;font-size:11px}
-  main{padding:25px 18px 50px}.hero{padding:27px;min-height:300px}.hero h2{font-size:30px}
-  .grid{grid-template-columns:1fr}.card.wide-card{grid-column:auto}.section-head{align-items:stretch;gap:14px;flex-direction:column}
-  .game-tools{width:100%;flex-direction:column}.search,.filter-select{width:100%}.login-card{padding:30px 24px}.modal{padding:20px}
-  body.modern .modern-login-side{padding:34px 24px}.modern-brand-title{font-size:45px}
-  body.modern .hero h2{font-size:42px}.design-choice{grid-template-columns:1fr}
+
+@media(max-width:700px){
+
+  header{
+    padding:0 18px;
+  }
+
+  .user-area span{
+    display:none;
+  }
+
+  .user-area{
+    gap:5px;
+  }
+
+  .header-btn,
+  .logout{
+    padding:7px 8px;
+    font-size:11px;
+  }
+
+  main{
+    padding:25px 18px 50px;
+  }
+
+  .hero{
+    padding:27px;
+    min-height:300px;
+  }
+
+  .hero h2{
+    font-size:30px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .card.wide-card{
+    grid-column:auto;
+  }
+
+  .section-head{
+    align-items:stretch;
+    gap:14px;
+    flex-direction:column;
+  }
+
+  .game-tools{
+    width:100%;
+    flex-direction:column;
+  }
+
+  .search,
+  .filter-select{
+    width:100%;
+  }
+
+  .login-card{
+    padding:30px 24px;
+  }
+
+  .modal{
+    padding:20px;
+  }
+
+  body.modern main{
+    padding:0 16px 50px;
+  }
+
+  body.modern header{
+    padding:0 16px;
+  }
+
+  body.modern .header-logo:after{
+    display:none;
+  }
+
+  body.modern .messages-btn span:last-child{
+    display:none;
+  }
+
+  body.modern .hero{
+    margin-top:16px;
+    padding:32px 25px;
+    min-height:440px;
+    border-radius:25px;
+  }
+
+  body.modern .hero h2{
+    font-size:46px;
+    letter-spacing:-3px;
+  }
+
+  body.modern .hero p{
+    font-size:14px;
+  }
+
+  body.modern .section-head{
+    margin-top:38px;
+  }
+
+  body.modern .section-head h3{
+    font-size:28px;
+  }
+
+  body.modern .game-tools{
+    flex-direction:column;
+  }
+
+  body.modern .search,
+  body.modern .filter-select{
+    width:100%;
+    min-width:0;
+  }
+
+  body.modern .grid{
+    grid-template-columns:1fr;
+  }
+
+  body.modern .card,
+  body.modern .card:nth-child(2),
+  body.modern .card.wide-card{
+    grid-column:span 1;
+  }
+
+  body.modern .card:nth-child(2) .cover,
+  body.modern .card.wide-card .cover{
+    height:205px;
+  }
+
+  body.modern .card:nth-child(2) h4{
+    font-size:25px;
+  }
+
+  body.modern .modern-login-brand{
+    display:none;
+  }
+
+  body.modern .login-card{
+    display:block;
+    min-height:0;
+    max-width:500px;
+  }
+
+  body.modern .modern-login-side{
+    padding:42px 28px;
+  }
+
+  body.modern .modern-login-side .logo{
+    margin-bottom:35px;
+  }
+
+  body.modern .login-card h2{
+    font-size:34px;
+  }
+
+  .design-choice{
+    grid-template-columns:1fr;
+  }
+
 }
+
+@media(max-width:480px){
+
+  body.modern .hero h2{
+    font-size:40px;
+  }
+
+  body.modern .hero{
+    min-height:470px;
+  }
+
+  body.modern .messages-btn{
+    width:40px;
+    padding:4px;
+  }
+
+  body.modern .messages-badge{
+    margin:auto;
+  }
+
+  body.modern .logout{
+    font-size:0;
+  }
+
+  body.modern .logout:after{
+    content:"↪";
+    font-size:18px;
+  }
+
+}
+
 </style>
 </head>
 
+
 <body>
 
+<!-- =======================================================
+     LOGIN
+======================================================= -->
+
 <section id="loginScreen">
+
   <div class="login-card">
+
+    <!-- MODERN LOGIN LEFT PANEL -->
+
     <div class="modern-login-brand">
+
       <div>
-        <div class="modern-kicker">Kalahari Studios • 2026</div>
-        <div class="modern-brand-title">One launcher.<br><span>Every world.</span></div>
-        <p class="modern-brand-copy">Your Kalahari games, announcements and account tools brought together in one clean gaming hub.</p>
-        <div class="modern-feature-row">
-          <div class="modern-chip">GAME LIBRARY</div>
-          <div class="modern-chip">CLOUD ACCOUNT</div>
-          <div class="modern-chip">KALAHARI MESSAGES</div>
+
+        <div class="modern-kicker">
+          Kalahari Studios • 2026
         </div>
+
+        <div class="modern-brand-title">
+          One launcher.<br>
+          <span>Every world.</span>
+        </div>
+
+        <p class="modern-brand-copy">
+          Your Kalahari games, announcements and account tools
+          brought together in one clean gaming hub.
+        </p>
+
+        <div class="modern-feature-row">
+
+          <div class="modern-chip">
+            GAME LIBRARY
+          </div>
+
+          <div class="modern-chip">
+            CLOUD ACCOUNT
+          </div>
+
+          <div class="modern-chip">
+            KALAHARI MESSAGES
+          </div>
+
+        </div>
+
       </div>
-      <div class="modern-kicker">KS / GAME PLATFORM</div>
+
+      <div class="modern-kicker">
+        KS / GAME PLATFORM
+      </div>
+
     </div>
+
+
+    <!-- LOGIN PANEL -->
 
     <div class="modern-login-side">
-      <div class="logo"><div class="logo-mark">KS</div><h1>Kalahari <span>Studios</span></h1></div>
+
+      <div class="logo">
+
+        <div class="logo-mark">
+          KS
+        </div>
+
+        <h1>
+          Kalahari <span>Studios</span>
+        </h1>
+
+      </div>
+
+
+      <!-- NORMAL LOGIN -->
 
       <div id="normalLogin">
-        <h2>Welcome.</h2>
-        <p class="subtitle">Sign in or create an account to access games.</p>
 
-        <div class="field"><label for="displayName">DISPLAY USERNAME</label><input id="displayName" placeholder="Username"></div>
-        <div class="field"><label for="username">EMAIL ADDRESS</label><input id="username" type="email" autocomplete="current-email" placeholder="Enter your email"></div>
-        <div class="field"><label for="password">PASSWORD</label><input id="password" type="password" autocomplete="current-password" placeholder="Enter your password"></div>
+        <h2>
+          Welcome.
+        </h2>
+
+        <p class="subtitle">
+          Sign in or create an account to access games.
+        </p>
+
+
+        <div class="field">
+
+          <label for="displayName">
+            DISPLAY USERNAME
+          </label>
+
+          <input
+            id="displayName"
+            placeholder="Username"
+          >
+
+        </div>
+
+
+        <div class="field">
+
+          <label for="username">
+            EMAIL ADDRESS
+          </label>
+
+          <input
+            id="username"
+            type="email"
+            autocomplete="current-email"
+            placeholder="Enter your email"
+          >
+
+        </div>
+
+
+        <div class="field">
+
+          <label for="password">
+            PASSWORD
+          </label>
+
+          <input
+            id="password"
+            type="password"
+            autocomplete="current-password"
+            placeholder="Enter your password"
+          >
+
+        </div>
+
 
         <div class="btn-group">
-          <button class="login-btn" type="button" id="signInBtn">SIGN IN</button>
-          <button class="login-btn signup-btn" type="button" id="signUpBtn">SIGN UP</button>
+
+          <button
+            class="login-btn"
+            type="button"
+            id="signInBtn"
+          >
+            SIGN IN
+          </button>
+
+          <button
+            class="login-btn signup-btn"
+            type="button"
+            id="signUpBtn"
+          >
+            SIGN UP
+          </button>
+
         </div>
-        <div class="error" id="error"></div>
-        <div class="auth-status" id="authStatus"></div>
+
+
+        <div
+          class="error"
+          id="error"
+        ></div>
+
+        <div
+          class="auth-status"
+          id="authStatus"
+        ></div>
+
       </div>
 
-      <div id="launcherDownScreen" class="launcher-down hidden">
-        <div class="launcher-down-icon">!</div><h2 id="launcherDownTitle">Launcher Down</h2>
-        <div class="down-subtitle">Kalahari Studios Launcher</div>
-        <p class="launcher-down-info" id="launcherDownInfo">The Kalahari Studios Launcher is currently unavailable.</p>
-        <div class="launcher-down-date" id="launcherDownDate">Please check back later.</div>
+
+      <!-- LAUNCHER DOWN -->
+
+      <div
+        id="launcherDownScreen"
+        class="launcher-down hidden"
+      >
+
+        <div class="launcher-down-icon">
+          !
+        </div>
+
+        <h2 id="launcherDownTitle">
+          Launcher Down
+        </h2>
+
+        <div class="down-subtitle">
+          Kalahari Studios Launcher
+        </div>
+
+        <p
+          class="launcher-down-info"
+          id="launcherDownInfo"
+        >
+          The Kalahari Studios Launcher is currently unavailable.
+        </p>
+
+        <div
+          class="launcher-down-date"
+          id="launcherDownDate"
+        >
+          Please check back later.
+        </div>
+
       </div>
 
-      <div class="powered-by-badge"><span>Powered by</span><span style="font-size:18px">🔥</span><span class="divider"></span><span style="font-weight:900">G</span><span class="brand">Google Firebase</span></div>
+
+      <div class="powered-by-badge">
+
+        <span>
+          Powered by
+        </span>
+
+        <span style="font-size:18px">
+          🔥
+        </span>
+
+        <span class="divider"></span>
+
+        <span style="font-weight:900">
+          G
+        </span>
+
+        <span class="brand">
+          Google Firebase
+        </span>
+
+      </div>
+
     </div>
+
   </div>
+
 </section>
 
-<section id="launcher" class="hidden">
+
+<!-- =======================================================
+     LAUNCHER
+======================================================= -->
+
+<section
+  id="launcher"
+  class="hidden"
+>
+
 <header>
-  <div class="header-logo"><div class="mini">KS</div>Kalahari <b>Studios</b></div>
-  <div class="user-area">
-    <img id="headerAvatar" class="profile-mini" src="" alt="Profile">
-    <span>Signed in as <b id="userDisplay">User</b></span>
-    <button class="header-btn admin-btn hidden" id="adminBtn">🔒 ADMIN</button>
-    <a href="https://BubblesTheGoat225.github.io/kalahari-launcher/message.html" class="messages-btn"><span class="messages-badge">✉</span><span>Kalahari Messages</span></a>
-    <button class="header-btn" id="settingsBtn">⚙ Settings</button>
-    <button class="logout" id="logout">Log out</button>
+
+  <div class="header-logo">
+
+    <div class="mini">
+      KS
+    </div>
+
+    Kalahari <b>Studios</b>
+
   </div>
+
+
+  <div class="user-area">
+
+    <img
+      id="headerAvatar"
+      class="profile-mini"
+      src=""
+      alt="Profile"
+    >
+
+    <span>
+      Signed in as
+      <b id="userDisplay">
+        User
+      </b>
+    </span>
+
+
+    <button
+      class="header-btn admin-btn hidden"
+      id="adminBtn"
+    >
+      🔒 ADMIN
+    </button>
+
+
+    <a
+      href="https://BubblesTheGoat225.github.io/kalahari-launcher/message.html"
+      class="messages-btn"
+    >
+
+      <span class="messages-badge">
+        ✉
+      </span>
+
+      <span>
+        Kalahari Messages
+      </span>
+
+    </a>
+
+
+    <button
+      class="header-btn"
+      id="settingsBtn"
+    >
+      ⚙ Settings
+    </button>
+
+
+    <button
+      class="logout"
+      id="logout"
+    >
+      Log out
+    </button>
+
+  </div>
+
 </header>
 
-<div id="settingsOverlay" class="modal-overlay hidden">
-<div class="modal">
-  <div class="modal-top"><h2>Settings</h2><button class="close-modal" id="closeSettings">×</button></div>
-  <div class="settings-tabs">
-    <button class="settings-tab active" data-tab="appearanceTab">Appearance</button>
-    <button class="settings-tab" data-tab="accountTab">Account</button>
-    <button class="settings-tab" data-tab="launcherTab">Launcher</button>
+
+<!-- =======================================================
+     SETTINGS
+======================================================= -->
+
+<div
+  id="settingsOverlay"
+  class="modal-overlay hidden"
+>
+
+  <div class="modal">
+
+    <div class="modal-top">
+
+      <h2>
+        Settings
+      </h2>
+
+      <button
+        class="close-modal"
+        id="closeSettings"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="settings-tabs">
+
+      <button
+        class="settings-tab active"
+        data-tab="appearanceTab"
+      >
+        Appearance
+      </button>
+
+      <button
+        class="settings-tab"
+        data-tab="accountTab"
+      >
+        Account
+      </button>
+
+      <button
+        class="settings-tab"
+        data-tab="launcherTab"
+      >
+        Launcher
+      </button>
+
+    </div>
+
+
+    <!-- APPEARANCE -->
+
+    <section
+      class="settings-section active"
+      id="appearanceTab"
+    >
+
+      <div class="setting-row">
+
+        <div class="setting-info">
+
+          <strong>
+            Launcher design
+          </strong>
+
+          <span>
+            Switch between the original Kalahari layout
+            and the completely redesigned modern interface.
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="design-choice">
+
+        <button
+          class="design-option"
+          id="oldDesignBtn"
+        >
+
+          <div class="design-preview old-preview"></div>
+
+          <strong>
+            Original
+          </strong>
+
+          <span>
+            The classic Kalahari launcher design.
+          </span>
+
+        </button>
+
+
+        <button
+          class="design-option"
+          id="modernDesignBtn"
+        >
+
+          <div class="design-preview modern-preview"></div>
+
+          <strong>
+            Modern
+          </strong>
+
+          <span>
+            Completely redesigned dashboard,
+            game library and login experience.
+          </span>
+
+        </button>
+
+      </div>
+
+
+      <div
+        class="setting-row"
+        style="margin-top:12px"
+      >
+
+        <div class="setting-info">
+
+          <strong>
+            Dark mode
+          </strong>
+
+          <span>
+            Use the dark Kalahari Studios theme.
+          </span>
+
+        </div>
+
+        <label class="switch">
+
+          <input
+            type="checkbox"
+            id="darkModeToggle"
+          >
+
+          <span class="slider"></span>
+
+        </label>
+
+      </div>
+
+    </section>
+
+
+    <!-- ACCOUNT -->
+
+    <section
+      class="settings-section"
+      id="accountTab"
+    >
+
+      <div class="avatar-row">
+
+        <img
+          id="accountAvatar"
+          class="account-avatar"
+          src=""
+          alt="Profile icon"
+        >
+
+        <div>
+
+          <strong>
+            Profile icon
+          </strong>
+
+          <p
+            style="color:var(--muted);font-size:12px;margin-top:5px"
+          >
+            Use an image URL for your profile icon.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          USERNAME
+        </label>
+
+        <input
+          class="settings-input"
+          id="accountUsername"
+          placeholder="Username"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          EMAIL ADDRESS
+        </label>
+
+        <input
+          class="settings-input"
+          id="accountEmail"
+          type="email"
+          placeholder="Email"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          NEW PASSWORD
+        </label>
+
+        <input
+          class="settings-input"
+          id="accountPassword"
+          type="password"
+          placeholder="Leave blank to keep current password"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          PROFILE ICON URL
+        </label>
+
+        <input
+          class="settings-input"
+          id="accountAvatarUrl"
+          placeholder="https://example.com/profile.png"
+        >
+
+      </div>
+
+
+      <button
+        class="save-btn"
+        id="saveAccount"
+      >
+        Save account changes
+      </button>
+
+      <div
+        class="settings-message"
+        id="accountMessage"
+      ></div>
+
+    </section>
+
+
+    <!-- LAUNCHER SETTINGS -->
+
+    <section
+      class="settings-section"
+      id="launcherTab"
+    >
+
+      <div class="setting-row">
+
+        <div class="setting-info">
+
+          <strong>
+            Remember theme
+          </strong>
+
+          <span>
+            Your light/dark choice is saved on this device.
+          </span>
+
+        </div>
+
+        <span
+          style="color:var(--accent);font-size:12px;font-weight:800"
+        >
+          ENABLED
+        </span>
+
+      </div>
+
+
+      <div class="setting-row">
+
+        <div class="setting-info">
+
+          <strong>
+            Reset launcher preferences
+          </strong>
+
+          <span>
+            Reset theme, design and game filters.
+          </span>
+
+        </div>
+
+        <button
+          class="save-btn danger-btn"
+          id="resetPrefs"
+        >
+          Reset
+        </button>
+
+      </div>
+
+    </section>
+
   </div>
 
-  <section class="settings-section active" id="appearanceTab">
-    <div class="setting-row">
-      <div class="setting-info"><strong>Launcher design</strong><span>Switch between the original Kalahari layout and the completely redesigned modern interface.</span></div>
-    </div>
-    <div class="design-choice">
-      <button class="design-option" id="oldDesignBtn">
-        <div class="design-preview old-preview"></div><strong>Original</strong><span>The current classic launcher design.</span>
+</div>
+
+
+<!-- =======================================================
+     ADMIN
+======================================================= -->
+
+<div
+  id="adminOverlay"
+  class="modal-overlay hidden"
+>
+
+  <div class="modal admin-modal">
+
+    <div class="modal-top">
+
+      <div class="admin-title">
+
+        <div class="admin-shield">
+          !
+        </div>
+
+        <h2>
+          ADMIN ACCESS ONLY
+        </h2>
+
+      </div>
+
+      <button
+        class="close-modal"
+        id="closeAdmin"
+      >
+        ×
       </button>
-      <button class="design-option" id="modernDesignBtn">
-        <div class="design-preview modern-preview"></div><strong>Modern</strong><span>New dashboard layout, upgraded cards, cleaner spacing and redesigned login screen.</span>
-      </button>
+
     </div>
 
-    <div class="setting-row" style="margin-top:12px">
-      <div class="setting-info"><strong>Dark mode</strong><span>Use the dark Kalahari Studios theme.</span></div>
-      <label class="switch"><input type="checkbox" id="darkModeToggle"><span class="slider"></span></label>
+
+    <div class="admin-warning">
+
+      ⚠
+      <strong>Administrator Area</strong>
+
+      <br>
+
+      This area is restricted to the account named
+      <strong>admin</strong>.
+
     </div>
-  </section>
 
-  <section class="settings-section" id="accountTab">
-    <div class="avatar-row"><img id="accountAvatar" class="account-avatar" src="" alt="Profile icon"><div><strong>Profile icon</strong><p style="color:var(--muted);font-size:12px;margin-top:5px">Use an image URL for your profile icon.</p></div></div>
-    <div class="field"><label>USERNAME</label><input class="settings-input" id="accountUsername" placeholder="Username"></div>
-    <div class="field"><label>EMAIL ADDRESS</label><input class="settings-input" id="accountEmail" type="email" placeholder="Email"></div>
-    <div class="field"><label>NEW PASSWORD</label><input class="settings-input" id="accountPassword" type="password" placeholder="Leave blank to keep current password"></div>
-    <div class="field"><label>PROFILE ICON URL</label><input class="settings-input" id="accountAvatarUrl" placeholder="https://example.com/profile.png"></div>
-    <button class="save-btn" id="saveAccount">Save account changes</button>
-    <div class="settings-message" id="accountMessage"></div>
-  </section>
 
-  <section class="settings-section" id="launcherTab">
-    <div class="setting-row"><div class="setting-info"><strong>Remember theme</strong><span>Your light/dark choice is saved on this device.</span></div><span style="color:var(--accent);font-size:12px;font-weight:800">ENABLED</span></div>
-    <div class="setting-row"><div class="setting-info"><strong>Reset launcher preferences</strong><span>Reset theme, design and game filters.</span></div><button class="save-btn danger-btn" id="resetPrefs">Reset</button></div>
-  </section>
-</div>
+    <div class="admin-card">
+
+      <h3>
+        Launcher Status
+      </h3>
+
+      <p>
+        Current launcher status:
+        <strong id="adminLauncherStatus">
+          Loading...
+        </strong>
+      </p>
+
+      <div class="admin-controls">
+
+        <button
+          class="admin-action"
+          id="adminRefresh"
+        >
+          Refresh Admin Panel
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="admin-card">
+
+      <h3>
+        Account
+      </h3>
+
+      <p>
+        Currently authenticated administrator:
+        <strong id="adminAccountName">
+          admin
+        </strong>
+      </p>
+
+    </div>
+
+
+    <div class="admin-card">
+
+      <h3>
+        Quick Information
+      </h3>
+
+      <p>
+        This admin panel is currently designed as the launcher
+        administration area. Additional controls can be added here later.
+      </p>
+
+    </div>
+
+
+    <div
+      class="admin-message"
+      id="adminMessage"
+    ></div>
+
+  </div>
+
 </div>
 
-<div id="adminOverlay" class="modal-overlay hidden">
-<div class="modal admin-modal">
-  <div class="modal-top"><div class="admin-title"><div class="admin-shield">!</div><h2>ADMIN ACCESS ONLY</h2></div><button class="close-modal" id="closeAdmin">×</button></div>
-  <div class="admin-warning">⚠ <strong>Administrator Area</strong><br>This area is restricted to the account named <strong>admin</strong>.</div>
-  <div class="admin-card"><h3>Launcher Status</h3><p>Current launcher status: <strong id="adminLauncherStatus">Loading...</strong></p><div class="admin-controls"><button class="admin-action" id="adminRefresh">Refresh Admin Panel</button></div></div>
-  <div class="admin-card"><h3>Account</h3><p>Currently authenticated administrator: <strong id="adminAccountName">admin</strong></p></div>
-  <div class="admin-card"><h3>Quick Information</h3><p>This admin panel is currently designed as the launcher administration area. Additional controls can be added here later.</p></div>
-  <div class="admin-message" id="adminMessage"></div>
-</div>
-</div>
+
+<!-- =======================================================
+     MAIN LAUNCHER
+======================================================= -->
 
 <main>
+
+
 <section class="hero">
+
   <div class="hero-content">
-    <div class="eyebrow">Kalahari Studios • Game Launcher</div>
-    <h2>Your games. One place.</h2>
-    <p>Browse the entire Kalahari Games lineup, check upcoming releases and launch your games directly in browser.</p>
-    <a href="https://BubblesTheGoat225.github.io/kalahari-launcher/404.html" class="hero-btn">Recent Announcements</a>
-    <a href="https://BubblesTheGoat225.github.io/kalahari-launcher/taxi4placeholder.html" class="hero-btn">Check out the Upcoming Taxi Game</a>
-    <div id="news-box" class="news-container hidden">
-      <div class="news-header"><span class="news-badge">IMPORTANT ANNOUNCEMENT</span><span class="news-date" id="news-date"></span></div>
-      <h3 class="news-title" id="news-title"></h3><p class="news-content" id="news-info"></p>
+
+    <div class="eyebrow">
+      Kalahari Studios • Game Launcher
     </div>
+
+    <h2>
+      Your games.<br>
+      One place.
+    </h2>
+
+    <p>
+      Browse the entire Kalahari Games lineup,
+      check upcoming releases and launch your games
+      directly in browser.
+    </p>
+
+
+    <a
+      href="https://BubblesTheGoat225.github.io/kalahari-launcher/404.html"
+      class="hero-btn"
+    >
+      Recent Announcements
+    </a>
+
+
+    <a
+      href="https://BubblesTheGoat225.github.io/kalahari-launcher/taxi4placeholder.html"
+      class="hero-btn"
+    >
+      Check out the Upcoming Taxi Game
+    </a>
+
+
+    <div
+      id="news-box"
+      class="news-container hidden"
+    >
+
+      <div class="news-header">
+
+        <span class="news-badge">
+          IMPORTANT ANNOUNCEMENT
+        </span>
+
+        <span
+          class="news-date"
+          id="news-date"
+        ></span>
+
+      </div>
+
+      <h3
+        class="news-title"
+        id="news-title"
+      ></h3>
+
+      <p
+        class="news-content"
+        id="news-info"
+      ></p>
+
+    </div>
+
   </div>
+
 </section>
 
-<div class="section-head" id="games">
-  <div><h3>Your Games</h3><p>Available Games</p></div>
-  <div class="game-tools"><input class="search" id="search" placeholder="Search games..."><select class="filter-select" id="gameFilter"><option value="all">All Games</option><option value="taxi">Taxi</option><option value="other">Other</option></select></div>
+
+<!-- GAME SECTION -->
+
+<div
+  class="section-head"
+  id="games"
+>
+
+  <div>
+
+    <h3>
+      Explore Games
+    </h3>
+
+    <p>
+      Browse the Kalahari Studios game library
+    </p>
+
+  </div>
+
+
+  <div class="game-tools">
+
+    <input
+      class="search"
+      id="search"
+      placeholder="Search your games..."
+      aria-label="Search games"
+    >
+
+
+    <select
+      class="filter-select"
+      id="gameFilter"
+    >
+
+      <option value="all">
+        Recently Added
+      </option>
+
+      <option value="taxi">
+        TAXI Series
+      </option>
+
+      <option value="other">
+        Other Games
+      </option>
+
+    </select>
+
+  </div>
+
 </div>
-<div class="grid" id="gameGrid"></div>
-<footer>© 2026 Kalahari Studios • Launcher v2.40</footer>
+
+
+<!-- MODERN FILTER PILLS -->
+
+<div
+  class="modern-filter-pills"
+  id="modernFilterPills"
+>
+
+  <button
+    class="modern-filter-pill active"
+    data-filter="all"
+  >
+    ALL GAMES
+  </button>
+
+  <button
+    class="modern-filter-pill"
+    data-filter="taxi"
+  >
+    TAXI SERIES
+  </button>
+
+  <button
+    class="modern-filter-pill"
+    data-filter="other"
+  >
+    OTHER
+  </button>
+
+</div>
+
+
+<div
+  class="grid"
+  id="gameGrid"
+></div>
+
+
+<footer>
+  © 2026 Kalahari Studios • Launcher v2.40
+</footer>
+
 </main>
+
 </section>
+
 
 <script>
+
+/* =========================================================
+   FIREBASE
+========================================================= */
+
 const firebaseConfig={
- apiKey:"AIzaSyBUoUrDa7KVn9ab2NawytUIDZS-u6tSpWw",
- authDomain:"kalahari-launcher.firebaseapp.com",
- projectId:"kalahari-launcher",
- storageBucket:"kalahari-launcher.firebasestorage.app",
- messagingSenderId:"190018843174",
- appId:"1:190018843174:web:9be974026ea41ea9e92ce7"
+  apiKey:"AIzaSyBUoUrDa7KVn9ab2NawytUIDZS-u6tSpWw",
+  authDomain:"kalahari-launcher.firebaseapp.com",
+  projectId:"kalahari-launcher",
+  storageBucket:"kalahari-launcher.firebasestorage.app",
+  messagingSenderId:"190018843174",
+  appId:"1:190018843174:web:9be974026ea41ea9e92ce7"
 };
-let auth=null,db=null;
-try{if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);auth=firebase.auth();db=firebase.firestore()}catch(err){console.error("Firebase initialization failed:",err)}
+
+let auth=null,
+    db=null;
+
+try{
+
+  if(!firebase.apps.length){
+    firebase.initializeApp(firebaseConfig);
+  }
+
+  auth=firebase.auth();
+  db=firebase.firestore();
+
+}catch(err){
+
+  console.error(
+    "Firebase initialization failed:",
+    err
+  );
+
+}
+
+
+/* =========================================================
+   PROFILE SYNC
+========================================================= */
 
 function syncUserProfile(user){
- if(!db||!user)return;
- db.collection("users").doc(user.uid).set({
-  displayName:user.displayName||user.email?.split("@")[0]||"User",
-  email:user.email||null,photoURL:user.photoURL||null,
-  lastSeen:firebase.firestore.FieldValue.serverTimestamp()
- },{merge:true}).catch(err=>console.error("Profile sync error:",err));
+
+  if(!db || !user)return;
+
+  db.collection("users")
+    .doc(user.uid)
+    .set({
+
+      displayName:
+        user.displayName ||
+        user.email?.split("@")[0] ||
+        "User",
+
+      email:user.email || null,
+
+      photoURL:user.photoURL || null,
+
+      lastSeen:
+        firebase.firestore.FieldValue.serverTimestamp()
+
+    },{
+      merge:true
+    })
+    .catch(err=>{
+      console.error(
+        "Profile sync error:",
+        err
+      );
+    });
+
 }
+
+
+/* =========================================================
+   LAUNCHER CONFIG
+========================================================= */
 
 const LAUNCHER_STATUS="ON";
-const LAUNCHER_DOWN_TITLE="Launcher Down";
-const LAUNCHER_DOWN_INFO="The Kalahari Studios Launcher is currently unavailable while we perform maintenance. Please check back later.";
-const LAUNCHER_DOWN_DATE="Status: Offline • Please check the Kalahari Studios announcements for updates.";
+
+const LAUNCHER_DOWN_TITLE=
+  "Launcher Down";
+
+const LAUNCHER_DOWN_INFO=
+  "The Kalahari Studios Launcher is currently unavailable while we perform maintenance. Please check back later.";
+
+const LAUNCHER_DOWN_DATE=
+  "Status: Offline • Please check the Kalahari Studios announcements for updates.";
+
 const IMPORTANT_NEWS="ANN";
-const NEWS_DATE="August 24, 2026";
-const NEWS_TITLE="Kalahari Messages now Available!";
-const NEWS_INFO="Kalahari Messages is now available, check it out! You need to enter the page to register, even though it is linked to the launcher.";
+
+const NEWS_DATE=
+  "August 24, 2026";
+
+const NEWS_TITLE=
+  "Kalahari Messages now Available!";
+
+const NEWS_INFO=
+  "Kalahari Messages is now available, check it out! You need to enter the page to register, even though it is linked to the launcher.";
+
+
+/* =========================================================
+   GAMES
+========================================================= */
 
 const games=[
-{category:"taxi",name:"TAXI",icon:"TAXI",cover:"taxi1-cover.jpg",genre:"Driving",date:"March 2025",description:"Jump behind the wheel and build your taxi career.",status:"AVAILABLE",url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi.html",updateStatus:"OFF",updateNotes:"TAXI is currently receiving maintenance."},
-{category:"taxi",name:"TAXI 3",icon:"TAXI 3",cover:"taxi3-cover.jpg",genre:"Driving • Open World",date:"August 21, 2026",description:"The next chapter of the TAXI series. Bigger roads. Bigger jobs.",status:"AVAILABLE",url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3.html",updateStatus:"ON",updateNotes:"TAXI 3 will be receiving a major remaster in Early 2027."},
-{category:"taxi",name:"TAXI 3 - Expansion 1",icon:"Ex1",cover:"taxi3ex1-cover.jpg",genre:"Driving • Country Exploration • Expansion",date:"August 22, 2026",description:"Take fares beyond the city and explore the countryside.",status:"AVAILABLE",url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3ex.html",updateStatus:"OFF",updateNotes:"Expansion 1 is currently undergoing maintenance."},
-{category:"taxi",name:"TAXI 3 - Expansion 2",icon:"Ex2",genre:"Expansion • TBA",date:"Q4 2026",description:"A new project is currently in development.",status:"COMING SOON",url:"#",updateStatus:"OFF",updateNotes:"Expansion 2 is currently unavailable."},
-{category:"taxi",name:"Taxi 3 - Mobile Edition",icon:"TAXI 3",cover:"taxi3-cover.jpg",genre:"Driving • Open World",date:"August 22, 2026",description:"The next chapter of the TAXI series. Bigger roads. Bigger jobs. Now on IOS and Android. Note: Taxi 3 - Mobile Edition is only available on Mobile platforms.",status:"MAINTENANCE",url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3-mobile.html",updateStatus:"ON",updateNotes:"Taxi 3 - Mobile is undergoing vital maintenance. DLC will be ported to Mobile in the near future."},
-{category:"other",name:"Taxi 4 Demo",icon:"Taxi 4",genre:"Driving • Open World • Upcoming • TBA",date:"Q3 2026",description:"A new tie-in project to Taxi 4.",status:"AVAILABLE",url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi4demo.html",updateStatus:"ON",updateNotes:"The Demo for the Upcoming Open World Game reveals the games name, theme, and more."},
-{category:"other",name:"Upcoming Open World Game",icon:"TBD",cover:"kalaharilogo2026.jpg",genre:"Driving • Open World • Upcoming • TBA",date:"TBA",description:"Kingston City, 2025. You arrive in Kingston, broke and in need of accommodation and money. Over 70% of the buildings in Kingston are enterable. Explore a major city, and the Americana Countryside, doing jobs, buying houses and uncovering secrets. More information TBA. This game is currently in development.",status:"IN PRODUCTION",url:"https://BubblesTheGoat225.github.io/kalahari-launcher/taxi4.html",updateStatus:"ON",updateNotes:"This game is currently in active development. Features, release dates and gameplay systems are subject to change."},
-{category:"other",name:"Upcoming Game",icon:"?",genre:"TBA",date:"TBA",description:"A new project is currently in development.",status:"COMING SOON",url:"#",updateStatus:"OFF",updateNotes:"Development information coming soon."},
-{category:"other",name:"Upcoming Game",icon:"?",genre:"TBA",date:"TBA",description:"A new project is currently in development.",status:"COMING SOON",url:"#",updateStatus:"OFF",updateNotes:"Development information coming soon."},
-{category:"other",name:"Upcoming Game",icon:"?",genre:"TBA",date:"TBA",description:"A new project is currently in development.",status:"COMING SOON",url:"#",updateStatus:"OFF",updateNotes:"Development information coming soon."},
-{category:"other",name:"Upcoming Game",icon:"?",genre:"TBA",date:"TBA",description:"A new project is currently in development.",status:"COMING SOON",url:"#",updateStatus:"OFF",updateNotes:"Development information coming soon."}
+
+  {
+    category:"taxi",
+    name:"TAXI",
+    icon:"TAXI",
+    cover:"taxi1-cover.jpg",
+    genre:"Driving",
+    date:"March 2025",
+    description:
+      "Jump behind the wheel and build your taxi career.",
+    status:"AVAILABLE",
+    url:
+      "https://BubblesTheGoat225.github.io/kalahari-launcher/taxi.html",
+    updateStatus:"OFF",
+    updateNotes:
+      "TAXI is currently receiving maintenance."
+  },
+
+
+  {
+    category:"taxi",
+    name:"TAXI 3",
+    icon:"TAXI 3",
+    cover:"taxi3-cover.jpg",
+    genre:"Driving • Open World",
+    date:"August 21, 2026",
+    description:
+      "The next chapter of the TAXI series. Bigger roads. Bigger jobs.",
+    status:"AVAILABLE",
+    url:
+      "https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3.html",
+    updateStatus:"ON",
+    updateNotes:
+      "TAXI 3 will be receiving a major remaster in Early 2027."
+  },
+
+
+  {
+    category:"taxi",
+    name:"TAXI 3 - Expansion 1",
+    icon:"Ex1",
+    cover:"taxi3ex1-cover.jpg",
+    genre:
+      "Driving • Country Exploration • Expansion",
+    date:"August 22, 2026",
+    description:
+      "Take fares beyond the city and explore the countryside.",
+    status:"AVAILABLE",
+    url:
+      "https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3ex.html",
+    updateStatus:"OFF",
+    updateNotes:
+      "Expansion 1 is currently undergoing maintenance."
+  },
+
+
+  {
+    category:"taxi",
+    name:"TAXI 3 - Expansion 2",
+    icon:"Ex2",
+    genre:"Expansion • TBA",
+    date:"Q4 2026",
+    description:
+      "A new project is currently in development.",
+    status:"COMING SOON",
+    url:"#",
+    updateStatus:"OFF",
+    updateNotes:
+      "Expansion 2 is currently unavailable."
+  },
+
+
+  {
+    category:"taxi",
+    name:"Taxi 3 - Mobile Edition",
+    icon:"TAXI 3",
+    cover:"taxi3-cover.jpg",
+    genre:"Driving • Open World",
+    date:"August 22, 2026",
+    description:
+      "The next chapter of the TAXI series. Bigger roads. Bigger jobs. Now on IOS and Android. Note: Taxi 3 - Mobile Edition is only available on Mobile platforms.",
+    status:"MAINTENANCE",
+    url:
+      "https://BubblesTheGoat225.github.io/kalahari-launcher/taxi3-mobile.html",
+    updateStatus:"ON",
+    updateNotes:
+      "Taxi 3 - Mobile is undergoing vital maintenance. DLC will be ported to Mobile in the near future."
+  },
+
+
+  {
+    category:"other",
+    name:"Taxi 4 Demo",
+    icon:"Taxi 4",
+    genre:
+      "Driving • Open World • Upcoming • TBA",
+    date:"Q3 2026",
+    description:
+      "A new tie-in project to Taxi 4.",
+    status:"AVAILABLE",
+    url:
+      "https://BubblesTheGoat225.github.io/kalahari-launcher/taxi4demo.html",
+    updateStatus:"ON",
+    updateNotes:
+      "The Demo for the Upcoming Open World Game reveals the games name, theme, and more."
+  },
+
+
+  {
+    category:"other",
+    name:"Upcoming Open World Game",
+    icon:"TBD",
+    cover:"kalaharilogo2026.jpg",
+    genre:
+      "Driving • Open World • Upcoming • TBA",
+    date:"TBA",
+    description:
+      "Kingston City, 2025. You arrive in Kingston, broke and in need of accommodation and money. Over 70% of the buildings in Kingston are enterable. Explore a major city, and the Americana Countryside, doing jobs, buying houses and uncovering secrets. More information TBA. This game is currently in development.",
+    status:"IN PRODUCTION",
+    url:
+      "https://BubblesTheGoat225.github.io/kalahari-launcher/taxi4.html",
+    updateStatus:"ON",
+    updateNotes:
+      "This game is currently in active development. Features, release dates and gameplay systems are subject to change."
+  },
+
+
+  {
+    category:"other",
+    name:"Upcoming Game",
+    icon:"?",
+    genre:"TBA",
+    date:"TBA",
+    description:
+      "A new project is currently in development.",
+    status:"COMING SOON",
+    url:"#",
+    updateStatus:"OFF",
+    updateNotes:
+      "Development information coming soon."
+  },
+
+
+  {
+    category:"other",
+    name:"Upcoming Game",
+    icon:"?",
+    genre:"TBA",
+    date:"TBA",
+    description:
+      "A new project is currently in development.",
+    status:"COMING SOON",
+    url:"#",
+    updateStatus:"OFF",
+    updateNotes:
+      "Development information coming soon."
+  },
+
+
+  {
+    category:"other",
+    name:"Upcoming Game",
+    icon:"?",
+    genre:"TBA",
+    date:"TBA",
+    description:
+      "A new project is currently in development.",
+    status:"COMING SOON",
+    url:"#",
+    updateStatus:"OFF",
+    updateNotes:
+      "Development information coming soon."
+  },
+
+
+  {
+    category:"other",
+    name:"Upcoming Game",
+    icon:"?",
+    genre:"TBA",
+    date:"TBA",
+    description:
+      "A new project is currently in development.",
+    status:"COMING SOON",
+    url:"#",
+    updateStatus:"OFF",
+    updateNotes:
+      "Development information coming soon."
+  }
+
 ];
 
-const loginScreen=document.getElementById("loginScreen"),launcher=document.getElementById("launcher"),normalLogin=document.getElementById("normalLogin"),
-launcherDownScreen=document.getElementById("launcherDownScreen"),errorBox=document.getElementById("error"),authStatus=document.getElementById("authStatus"),
-grid=document.getElementById("gameGrid"),search=document.getElementById("search"),gameFilter=document.getElementById("gameFilter");
+
+/* =========================================================
+   DOM
+========================================================= */
+
+const loginScreen=
+  document.getElementById("loginScreen");
+
+const launcher=
+  document.getElementById("launcher");
+
+const normalLogin=
+  document.getElementById("normalLogin");
+
+const launcherDownScreen=
+  document.getElementById("launcherDownScreen");
+
+const errorBox=
+  document.getElementById("error");
+
+const authStatus=
+  document.getElementById("authStatus");
+
+const grid=
+  document.getElementById("gameGrid");
+
+const search=
+  document.getElementById("search");
+
+const gameFilter=
+  document.getElementById("gameFilter");
+
+const modernFilterPills=
+  document.querySelectorAll(
+    ".modern-filter-pill"
+  );
+
+
+/* =========================================================
+   LAUNCHER STATUS
+========================================================= */
 
 function applyLauncherStatus(){
- if(LAUNCHER_STATUS==="ON"){normalLogin.classList.remove("hidden");launcherDownScreen.classList.add("hidden")}
- else{normalLogin.classList.add("hidden");launcherDownScreen.classList.remove("hidden");document.getElementById("launcherDownTitle").textContent=LAUNCHER_DOWN_TITLE;document.getElementById("launcherDownInfo").textContent=LAUNCHER_DOWN_INFO;document.getElementById("launcherDownDate").textContent=LAUNCHER_DOWN_DATE}
+
+  if(LAUNCHER_STATUS==="ON"){
+
+    normalLogin.classList.remove("hidden");
+
+    launcherDownScreen.classList.add("hidden");
+
+  }else{
+
+    normalLogin.classList.add("hidden");
+
+    launcherDownScreen.classList.remove("hidden");
+
+    document.getElementById(
+      "launcherDownTitle"
+    ).textContent=
+      LAUNCHER_DOWN_TITLE;
+
+    document.getElementById(
+      "launcherDownInfo"
+    ).textContent=
+      LAUNCHER_DOWN_INFO;
+
+    document.getElementById(
+      "launcherDownDate"
+    ).textContent=
+      LAUNCHER_DOWN_DATE;
+
+  }
+
 }
+
 applyLauncherStatus();
 
-function renderGames(searchTerm="",category="all"){
- grid.innerHTML="";
- const term=searchTerm.toLowerCase().trim();
- games.filter(game=>{
-  const matchesSearch=game.name.toLowerCase().includes(term)||game.genre.toLowerCase().includes(term);
-  const matchesCategory=category==="all"||game.category===category;
-  return matchesSearch&&matchesCategory;
- }).forEach(game=>{
-  const available=game.status==="AVAILABLE",production=game.status==="IN PRODUCTION",coming=game.status==="COMING SOON",maintenance=game.status==="MAINTENANCE";
-  const isAdmin=auth?.currentUser&&(auth.currentUser.displayName||"").toLowerCase()==="admin";
-  const hasValidLink=!!game.url&&game.url!=="#";
-  const canLaunch=available||(production&&isAdmin&&hasValidLink);
-  const card=document.createElement("article");
-  card.className="card"+(coming?" coming":"")+(maintenance?" maintenance":"")+(game.name==="Upcoming Open World Game"?" wide-card":"");
-  const updateHTML=game.updateStatus==="ON"?`<div class="game-update"><div class="game-update-title">${maintenance?"Maintenance Notice":"Update Notice"}</div><div class="game-update-text">${game.updateNotes}</div></div>`:"";
-  card.innerHTML=`
-   <div class="cover"><span class="badge">${game.status}</span>
-   ${game.cover?`<img src="${game.cover}" alt="${game.name} cover art">`:`<div class="game-icon">${game.icon}</div>`}</div>
-   <div class="card-body"><h4>${game.name}</h4><div class="desc">${game.description}</div>
-   <div class="meta"><span class="tag">${game.genre}</span></div>
-   <div class="card-bottom"><span class="release">${game.date}</span>
-   <button class="play-btn ${production?"production-btn":""} ${maintenance?"maintenance-btn":""}" ${!canLaunch?"disabled":""} data-url="${game.url}">
-   ${canLaunch?"PLAY":maintenance?"MAINTENANCE":production?"IN PRODUCTION":"COMING SOON"}</button></div>${updateHTML}</div>`;
-  grid.appendChild(card);
- });
-}
-function updateGameList(){renderGames(search.value,gameFilter.value)}
-renderGames();
-search.addEventListener("input",updateGameList);
-gameFilter.addEventListener("change",()=>{localStorage.setItem("kalahariGameFilter",gameFilter.value);updateGameList()});
-const savedGameFilter=localStorage.getItem("kalahariGameFilter");if(savedGameFilter){gameFilter.value=savedGameFilter;updateGameList()}
 
-document.addEventListener("click",event=>{
- const button=event.target.closest(".play-btn");if(!button||button.disabled)return;
- if(LAUNCHER_STATUS!=="ON"){alert("The Kalahari Studios Launcher is currently offline.");return}
- const url=button.dataset.url;
- if(url&&url!=="#")window.location.href=url;else alert("Game launch link not set yet.");
-});
+/* =========================================================
+   GAME RENDERING
+========================================================= */
+
+function renderGames(
+  searchTerm="",
+  category="all"
+){
+
+  grid.innerHTML="";
+
+  const term=
+    searchTerm.toLowerCase().trim();
+
+  games
+    .filter(game=>{
+
+      const matchesSearch=
+        game.name
+          .toLowerCase()
+          .includes(term)
+        ||
+        game.genre
+          .toLowerCase()
+          .includes(term);
+
+      const matchesCategory=
+        category==="all" ||
+        game.category===category;
+
+      return matchesSearch &&
+             matchesCategory;
+
+    })
+    .forEach(game=>{
+
+      const available=
+        game.status==="AVAILABLE";
+
+      const production=
+        game.status==="IN PRODUCTION";
+
+      const coming=
+        game.status==="COMING SOON";
+
+      const maintenance=
+        game.status==="MAINTENANCE";
+
+      const isAdmin=
+        auth?.currentUser &&
+        (
+          auth.currentUser.displayName ||
+          ""
+        )
+        .toLowerCase()==="admin";
+
+      const hasValidLink=
+        !!game.url &&
+        game.url!=="#";
+
+      const canLaunch=
+        available ||
+        (
+          production &&
+          isAdmin &&
+          hasValidLink
+        );
+
+
+      const card=
+        document.createElement("article");
+
+
+      card.className=
+        "card"
+        +
+        (coming?" coming":"")
+        +
+        (maintenance?" maintenance":"")
+        +
+        (
+          game.name==="Upcoming Open World Game"
+            ?" wide-card"
+            :""
+        );
+
+
+      const updateHTML=
+        game.updateStatus==="ON"
+        ?
+        `
+        <div class="game-update">
+
+          <div class="game-update-title">
+            ${
+              maintenance
+                ?"Maintenance Notice"
+                :"Update Notice"
+            }
+          </div>
+
+          <div class="game-update-text">
+            ${game.updateNotes}
+          </div>
+
+        </div>
+        `
+        :"";
+
+
+      card.innerHTML=`
+
+        <div class="cover">
+
+          <span class="badge">
+            ${game.status}
+          </span>
+
+          ${
+            game.cover
+            ?
+            `
+            <img
+              src="${game.cover}"
+              alt="${game.name} cover art"
+            >
+            `
+            :
+            `
+            <div class="game-icon">
+              ${game.icon}
+            </div>
+            `
+          }
+
+        </div>
+
+
+        <div class="card-body">
+
+          <h4>
+            ${game.name}
+          </h4>
+
+          <div class="desc">
+            ${game.description}
+          </div>
+
+
+          <div class="meta">
+
+            <span class="tag">
+              ${game.genre}
+            </span>
+
+          </div>
+
+
+          <div class="card-bottom">
+
+            <span class="release">
+              ${game.date}
+            </span>
+
+
+            <button
+              class="
+                play-btn
+                ${production?"production-btn":""}
+                ${maintenance?"maintenance-btn":""}
+              "
+              ${!canLaunch?"disabled":""}
+              data-url="${game.url}"
+            >
+
+              ${
+                canLaunch
+                  ?"PLAY"
+                  :
+                  maintenance
+                    ?"MAINTENANCE"
+                    :
+                    production
+                      ?"IN PRODUCTION"
+                      :"COMING SOON"
+              }
+
+            </button>
+
+          </div>
+
+          ${updateHTML}
+
+        </div>
+
+      `;
+
+      grid.appendChild(card);
+
+    });
+
+}
+
+
+/* =========================================================
+   FILTER
+========================================================= */
+
+function updateGameList(){
+
+  renderGames(
+    search.value,
+    gameFilter.value
+  );
+
+  syncModernFilter();
+
+}
+
+search.addEventListener(
+  "input",
+  updateGameList
+);
+
+
+gameFilter.addEventListener(
+  "change",
+  ()=>{
+
+    localStorage.setItem(
+      "kalahariGameFilter",
+      gameFilter.value
+    );
+
+    updateGameList();
+
+  }
+);
+
+
+function syncModernFilter(){
+
+  modernFilterPills.forEach(
+    pill=>{
+
+      pill.classList.toggle(
+        "active",
+        pill.dataset.filter===
+        gameFilter.value
+      );
+
+    }
+  );
+
+}
+
+
+modernFilterPills.forEach(
+  pill=>{
+
+    pill.addEventListener(
+      "click",
+      ()=>{
+
+        const selected=
+          pill.dataset.filter;
+
+        gameFilter.value=
+          selected;
+
+        localStorage.setItem(
+          "kalahariGameFilter",
+          selected
+        );
+
+        updateGameList();
+
+      }
+    );
+
+  }
+);
+
+
+const savedGameFilter=
+  localStorage.getItem(
+    "kalahariGameFilter"
+  );
+
+if(savedGameFilter){
+
+  gameFilter.value=
+    savedGameFilter;
+
+}
+
+
+renderGames();
+
+syncModernFilter();
+
+
+/* =========================================================
+   PLAY BUTTONS
+========================================================= */
+
+document.addEventListener(
+  "click",
+  event=>{
+
+    const button=
+      event.target.closest(
+        ".play-btn"
+      );
+
+    if(!button ||
+       button.disabled)return;
+
+
+    if(LAUNCHER_STATUS!=="ON"){
+
+      alert(
+        "The Kalahari Studios Launcher is currently offline."
+      );
+
+      return;
+
+    }
+
+
+    const url=
+      button.dataset.url;
+
+
+    if(url && url!=="#"){
+
+      window.location.href=
+        url;
+
+    }else{
+
+      alert(
+        "Game launch link not set yet."
+      );
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   NEWS
+========================================================= */
 
 function loadNews(){
- const newsBox=document.getElementById("news-box");
- if(IMPORTANT_NEWS==="ANN"){
-  document.getElementById("news-date").textContent=NEWS_DATE;
-  document.getElementById("news-title").textContent=NEWS_TITLE;
-  document.getElementById("news-info").textContent=NEWS_INFO;
-  newsBox.classList.remove("hidden");
- }else newsBox.classList.add("hidden");
+
+  const newsBox=
+    document.getElementById(
+      "news-box"
+    );
+
+
+  if(IMPORTANT_NEWS==="ANN"){
+
+    document.getElementById(
+      "news-date"
+    ).textContent=
+      NEWS_DATE;
+
+    document.getElementById(
+      "news-title"
+    ).textContent=
+      NEWS_TITLE;
+
+    document.getElementById(
+      "news-info"
+    ).textContent=
+      NEWS_INFO;
+
+    newsBox.classList.remove(
+      "hidden"
+    );
+
+  }else{
+
+    newsBox.classList.add(
+      "hidden"
+    );
+
+  }
+
 }
+
 loadNews();
 
-const darkModeToggle=document.getElementById("darkModeToggle");
-function setTheme(isDark,save=true){
- document.body.classList.toggle("light-mode",!isDark);darkModeToggle.checked=isDark;
- if(save)localStorage.setItem("kalahariTheme",isDark?"dark":"light");
-}
-setTheme((localStorage.getItem("kalahariTheme")||"dark")==="dark",false);
 
-function setDesign(design,save=true){
- document.body.classList.toggle("modern",design==="modern");
- if(save)localStorage.setItem("kalahariDesign",design);
- document.getElementById("oldDesignBtn").classList.toggle("active",design==="old");
- document.getElementById("modernDesignBtn").classList.toggle("active",design==="modern");
-}
-setDesign(localStorage.getItem("kalahariDesign")||"old",false);
+/* =========================================================
+   THEME
+========================================================= */
 
-const settingsOverlay=document.getElementById("settingsOverlay"),accountUsername=document.getElementById("accountUsername"),
-accountEmail=document.getElementById("accountEmail"),accountPassword=document.getElementById("accountPassword"),accountAvatarUrl=document.getElementById("accountAvatarUrl"),
-accountAvatar=document.getElementById("accountAvatar"),headerAvatar=document.getElementById("headerAvatar"),accountMessage=document.getElementById("accountMessage");
+const darkModeToggle=
+  document.getElementById(
+    "darkModeToggle"
+  );
+
+
+function setTheme(
+  isDark,
+  save=true
+){
+
+  document.body.classList.toggle(
+    "light-mode",
+    !isDark
+  );
+
+  darkModeToggle.checked=
+    isDark;
+
+
+  if(save){
+
+    localStorage.setItem(
+      "kalahariTheme",
+      isDark
+        ?"dark"
+        :"light"
+    );
+
+  }
+
+}
+
+
+setTheme(
+  (
+    localStorage.getItem(
+      "kalahariTheme"
+    ) || "dark"
+  )==="dark",
+  false
+);
+
+
+/* =========================================================
+   DESIGN
+========================================================= */
+
+function setDesign(
+  design,
+  save=true
+){
+
+  document.body.classList.toggle(
+    "modern",
+    design==="modern"
+  );
+
+
+  if(save){
+
+    localStorage.setItem(
+      "kalahariDesign",
+      design
+    );
+
+  }
+
+
+  document
+    .getElementById(
+      "oldDesignBtn"
+    )
+    .classList.toggle(
+      "active",
+      design==="old"
+    );
+
+
+  document
+    .getElementById(
+      "modernDesignBtn"
+    )
+    .classList.toggle(
+      "active",
+      design==="modern"
+    );
+
+
+  setTimeout(
+    syncModernFilter,
+    10
+  );
+
+}
+
+
+setDesign(
+  localStorage.getItem(
+    "kalahariDesign"
+  ) || "old",
+  false
+);
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+const settingsOverlay=
+  document.getElementById(
+    "settingsOverlay"
+  );
+
+const accountUsername=
+  document.getElementById(
+    "accountUsername"
+  );
+
+const accountEmail=
+  document.getElementById(
+    "accountEmail"
+  );
+
+const accountPassword=
+  document.getElementById(
+    "accountPassword"
+  );
+
+const accountAvatarUrl=
+  document.getElementById(
+    "accountAvatarUrl"
+  );
+
+const accountAvatar=
+  document.getElementById(
+    "accountAvatar"
+  );
+
+const headerAvatar=
+  document.getElementById(
+    "headerAvatar"
+  );
+
+const accountMessage=
+  document.getElementById(
+    "accountMessage"
+  );
+
 
 function defaultAvatar(user){
- if(user?.photoURL)return user.photoURL;
- const name=user?.displayName||user?.email?.split("@")[0]||"User";
- return "https://ui-avatars.com/api/?name="+encodeURIComponent(name)+"&background=2388e8&color=fff";
+
+  if(user?.photoURL)
+    return user.photoURL;
+
+
+  const name=
+    user?.displayName ||
+    user?.email?.split("@")[0] ||
+    "User";
+
+
+  return(
+    "https://ui-avatars.com/api/?name="
+    +
+    encodeURIComponent(name)
+    +
+    "&background=2388e8&color=fff"
+  );
+
 }
+
+
 function populateAccount(user){
- if(!user)return;
- accountUsername.value=user.displayName||user.email?.split("@")[0]||"";
- accountEmail.value=user.email||"";accountPassword.value="";accountAvatarUrl.value=user.photoURL||"";
- const avatar=defaultAvatar(user);accountAvatar.src=avatar;headerAvatar.src=avatar;
+
+  if(!user)return;
+
+
+  accountUsername.value=
+    user.displayName ||
+    user.email?.split("@")[0] ||
+    "";
+
+
+  accountEmail.value=
+    user.email || "";
+
+
+  accountPassword.value=
+    "";
+
+
+  accountAvatarUrl.value=
+    user.photoURL || "";
+
+
+  const avatar=
+    defaultAvatar(user);
+
+
+  accountAvatar.src=
+    avatar;
+
+  headerAvatar.src=
+    avatar;
+
 }
-function openSettings(){if(!auth?.currentUser)return;populateAccount(auth.currentUser);settingsOverlay.classList.remove("hidden")}
-function closeSettings(){settingsOverlay.classList.add("hidden");accountMessage.textContent=""}
-document.getElementById("settingsBtn").addEventListener("click",openSettings);
-document.getElementById("closeSettings").addEventListener("click",closeSettings);
-settingsOverlay.addEventListener("click",e=>{if(e.target===settingsOverlay)closeSettings()});
-darkModeToggle.addEventListener("change",()=>setTheme(darkModeToggle.checked));
-document.getElementById("oldDesignBtn").addEventListener("click",()=>setDesign("old"));
-document.getElementById("modernDesignBtn").addEventListener("click",()=>setDesign("modern"));
 
-document.querySelectorAll(".settings-tab").forEach(tab=>tab.addEventListener("click",()=>{
- document.querySelectorAll(".settings-tab").forEach(x=>x.classList.remove("active"));
- document.querySelectorAll(".settings-section").forEach(x=>x.classList.remove("active"));
- tab.classList.add("active");document.getElementById(tab.dataset.tab)?.classList.add("active");
-}));
 
-document.getElementById("saveAccount").addEventListener("click",async()=>{
- const user=auth?.currentUser;if(!user){accountMessage.style.color="#ff7272";accountMessage.textContent="You are not signed in.";return}
- const username=accountUsername.value.trim(),email=accountEmail.value.trim(),password=accountPassword.value,photoURL=accountAvatarUrl.value.trim();
- if(!username||!email){accountMessage.style.color="#ff7272";accountMessage.textContent="Username and email are required.";return}
- accountMessage.style.color="var(--accent)";accountMessage.textContent="Saving...";
- try{
-  if(username!==(user.displayName||"")||photoURL!==(user.photoURL||""))await user.updateProfile({displayName:username,photoURL:photoURL||null});
-  if(email!==user.email)await user.updateEmail(email);
-  if(password)await user.updatePassword(password);
-  await user.reload();const freshUser=auth.currentUser;
-  document.getElementById("userDisplay").textContent=freshUser.displayName||freshUser.email.split("@")[0];
-  populateAccount(freshUser);updateAdminVisibility(freshUser);syncUserProfile(freshUser);updateGameList();accountPassword.value="";
-  accountMessage.style.color="#52d47b";accountMessage.textContent="Account settings saved successfully.";
- }catch(err){
-  console.error(err);accountMessage.style.color="#ff7272";
-  accountMessage.textContent=err.code==="auth/requires-recent-login"?"For security, please log out and sign in again before changing your email or password.":err.message||"Unable to save account changes.";
- }
-});
+function openSettings(){
 
-document.getElementById("resetPrefs").addEventListener("click",()=>{
- localStorage.removeItem("kalahariTheme");localStorage.removeItem("kalahariGameFilter");localStorage.removeItem("kalahariDesign");
- setTheme(true);setDesign("old");gameFilter.value="all";search.value="";updateGameList();
-});
+  if(!auth?.currentUser)
+    return;
 
-const adminBtn=document.getElementById("adminBtn"),adminOverlay=document.getElementById("adminOverlay"),adminMessage=document.getElementById("adminMessage");
-function isAdmin(user){return !!user&&(user.displayName||"").trim().toLowerCase()==="admin"}
+  populateAccount(
+    auth.currentUser
+  );
+
+  settingsOverlay.classList.remove(
+    "hidden"
+  );
+
+}
+
+
+function closeSettings(){
+
+  settingsOverlay.classList.add(
+    "hidden"
+  );
+
+  accountMessage.textContent="";
+
+}
+
+
+document
+  .getElementById("settingsBtn")
+  .addEventListener(
+    "click",
+    openSettings
+  );
+
+
+document
+  .getElementById("closeSettings")
+  .addEventListener(
+    "click",
+    closeSettings
+  );
+
+
+settingsOverlay.addEventListener(
+  "click",
+  e=>{
+
+    if(e.target===
+       settingsOverlay){
+
+      closeSettings();
+
+    }
+
+  }
+);
+
+
+darkModeToggle.addEventListener(
+  "change",
+  ()=>{
+
+    setTheme(
+      darkModeToggle.checked
+    );
+
+  }
+);
+
+
+document
+  .getElementById(
+    "oldDesignBtn"
+  )
+  .addEventListener(
+    "click",
+    ()=>setDesign("old")
+  );
+
+
+document
+  .getElementById(
+    "modernDesignBtn"
+  )
+  .addEventListener(
+    "click",
+    ()=>setDesign("modern")
+  );
+
+
+/* =========================================================
+   SETTINGS TABS
+========================================================= */
+
+document
+  .querySelectorAll(
+    ".settings-tab"
+  )
+  .forEach(
+    tab=>{
+
+      tab.addEventListener(
+        "click",
+        ()=>{
+
+          document
+            .querySelectorAll(
+              ".settings-tab"
+            )
+            .forEach(
+              x=>
+                x.classList.remove(
+                  "active"
+                )
+            );
+
+
+          document
+            .querySelectorAll(
+              ".settings-section"
+            )
+            .forEach(
+              x=>
+                x.classList.remove(
+                  "active"
+                )
+            );
+
+
+          tab.classList.add(
+            "active"
+          );
+
+
+          document
+            .getElementById(
+              tab.dataset.tab
+            )
+            ?.classList.add(
+              "active"
+            );
+
+        }
+      );
+
+    }
+  );
+
+
+/* =========================================================
+   SAVE ACCOUNT
+========================================================= */
+
+document
+  .getElementById(
+    "saveAccount"
+  )
+  .addEventListener(
+    "click",
+    async()=>{
+
+      const user=
+        auth?.currentUser;
+
+
+      if(!user){
+
+        accountMessage.style.color=
+          "#ff7272";
+
+        accountMessage.textContent=
+          "You are not signed in.";
+
+        return;
+
+      }
+
+
+      const username=
+        accountUsername.value.trim();
+
+      const email=
+        accountEmail.value.trim();
+
+      const password=
+        accountPassword.value;
+
+      const photoURL=
+        accountAvatarUrl.value.trim();
+
+
+      if(!username ||
+         !email){
+
+        accountMessage.style.color=
+          "#ff7272";
+
+        accountMessage.textContent=
+          "Username and email are required.";
+
+        return;
+
+      }
+
+
+      accountMessage.style.color=
+        "var(--accent)";
+
+      accountMessage.textContent=
+        "Saving...";
+
+
+      try{
+
+        if(
+          username!==
+          (user.displayName||"")
+          ||
+          photoURL!==
+          (user.photoURL||"")
+        ){
+
+          await user.updateProfile({
+
+            displayName:
+              username,
+
+            photoURL:
+              photoURL || null
+
+          });
+
+        }
+
+
+        if(email!==user.email){
+
+          await user.updateEmail(
+            email
+          );
+
+        }
+
+
+        if(password){
+
+          await user.updatePassword(
+            password
+          );
+
+        }
+
+
+        await user.reload();
+
+
+        const freshUser=
+          auth.currentUser;
+
+
+        document.getElementById(
+          "userDisplay"
+        ).textContent=
+          freshUser.displayName ||
+          freshUser.email.split("@")[0];
+
+
+        populateAccount(
+          freshUser
+        );
+
+
+        updateAdminVisibility(
+          freshUser
+        );
+
+
+        syncUserProfile(
+          freshUser
+        );
+
+
+        updateGameList();
+
+
+        accountPassword.value="";
+
+
+        accountMessage.style.color=
+          "#52d47b";
+
+        accountMessage.textContent=
+          "Account settings saved successfully.";
+
+      }catch(err){
+
+        console.error(err);
+
+        accountMessage.style.color=
+          "#ff7272";
+
+        accountMessage.textContent=
+          err.code==="auth/requires-recent-login"
+          ?
+          "For security, please log out and sign in again before changing your email or password."
+          :
+          err.message ||
+          "Unable to save account changes.";
+
+      }
+
+    }
+  );
+
+
+/* =========================================================
+   RESET PREFERENCES
+========================================================= */
+
+document
+  .getElementById(
+    "resetPrefs"
+  )
+  .addEventListener(
+    "click",
+    ()=>{
+
+      localStorage.removeItem(
+        "kalahariTheme"
+      );
+
+      localStorage.removeItem(
+        "kalahariGameFilter"
+      );
+
+      localStorage.removeItem(
+        "kalahariDesign"
+      );
+
+
+      setTheme(true);
+
+      setDesign("old");
+
+
+      gameFilter.value=
+        "all";
+
+      search.value=
+        "";
+
+      updateGameList();
+
+    }
+  );
+
+
+/* =========================================================
+   ADMIN
+========================================================= */
+
+const adminBtn=
+  document.getElementById(
+    "adminBtn"
+  );
+
+const adminOverlay=
+  document.getElementById(
+    "adminOverlay"
+  );
+
+const adminMessage=
+  document.getElementById(
+    "adminMessage"
+  );
+
+
+function isAdmin(user){
+
+  return(
+    !!user &&
+    (
+      user.displayName || ""
+    )
+    .trim()
+    .toLowerCase()==="admin"
+  );
+
+}
+
+
 function updateAdminVisibility(user){
- if(isAdmin(user))adminBtn.classList.remove("hidden");else{adminBtn.classList.add("hidden");adminOverlay.classList.add("hidden")}
+
+  if(isAdmin(user)){
+
+    adminBtn.classList.remove(
+      "hidden"
+    );
+
+  }else{
+
+    adminBtn.classList.add(
+      "hidden"
+    );
+
+    adminOverlay.classList.add(
+      "hidden"
+    );
+
+  }
+
 }
+
+
 function openAdmin(){
- const user=auth?.currentUser;if(!isAdmin(user)){alert("ACCESS DENIED\n\nAdministrator access is restricted.");adminOverlay.classList.add("hidden");return}
- document.getElementById("adminAccountName").textContent=user.displayName;
- document.getElementById("adminLauncherStatus").textContent=LAUNCHER_STATUS;
- adminMessage.textContent="Administrator authentication verified.";adminOverlay.classList.remove("hidden");
-}
-function closeAdmin(){adminOverlay.classList.add("hidden")}
-adminBtn.addEventListener("click",openAdmin);document.getElementById("closeAdmin").addEventListener("click",closeAdmin);
-adminOverlay.addEventListener("click",e=>{if(e.target===adminOverlay)closeAdmin()});
-document.getElementById("adminRefresh").addEventListener("click",()=>{if(!isAdmin(auth?.currentUser)){closeAdmin();return}document.getElementById("adminLauncherStatus").textContent=LAUNCHER_STATUS;adminMessage.textContent="Admin panel refreshed."});
 
-function showLogin(){launcher.classList.add("hidden");loginScreen.classList.remove("hidden");updateAdminVisibility(null)}
+  const user=
+    auth?.currentUser;
+
+
+  if(!isAdmin(user)){
+
+    alert(
+      "ACCESS DENIED\n\nAdministrator access is restricted."
+    );
+
+    adminOverlay.classList.add(
+      "hidden"
+    );
+
+    return;
+
+  }
+
+
+  document.getElementById(
+    "adminAccountName"
+  ).textContent=
+    user.displayName;
+
+
+  document.getElementById(
+    "adminLauncherStatus"
+  ).textContent=
+    LAUNCHER_STATUS;
+
+
+  adminMessage.textContent=
+    "Administrator authentication verified.";
+
+
+  adminOverlay.classList.remove(
+    "hidden"
+  );
+
+}
+
+
+function closeAdmin(){
+
+  adminOverlay.classList.add(
+    "hidden"
+  );
+
+}
+
+
+adminBtn.addEventListener(
+  "click",
+  openAdmin
+);
+
+
+document
+  .getElementById(
+    "closeAdmin"
+  )
+  .addEventListener(
+    "click",
+    closeAdmin
+  );
+
+
+adminOverlay.addEventListener(
+  "click",
+  e=>{
+
+    if(e.target===
+       adminOverlay){
+
+      closeAdmin();
+
+    }
+
+  }
+);
+
+
+document
+  .getElementById(
+    "adminRefresh"
+  )
+  .addEventListener(
+    "click",
+    ()=>{
+
+      if(
+        !isAdmin(
+          auth?.currentUser
+        )
+      ){
+
+        closeAdmin();
+        return;
+
+      }
+
+
+      document.getElementById(
+        "adminLauncherStatus"
+      ).textContent=
+        LAUNCHER_STATUS;
+
+
+      adminMessage.textContent=
+        "Admin panel refreshed.";
+
+    }
+  );
+
+
+/* =========================================================
+   LOGIN / LAUNCHER
+========================================================= */
+
+function showLogin(){
+
+  launcher.classList.add(
+    "hidden"
+  );
+
+  loginScreen.classList.remove(
+    "hidden"
+  );
+
+  updateAdminVisibility(
+    null
+  );
+
+}
+
+
 function showLauncher(user){
- if(LAUNCHER_STATUS!=="ON"){showLogin();return}
- loginScreen.classList.add("hidden");launcher.classList.remove("hidden");
- document.getElementById("userDisplay").textContent=user.displayName||user.email?.split("@")[0]||"User";
- populateAccount(user);updateAdminVisibility(user);syncUserProfile(user);updateGameList();
+
+  if(LAUNCHER_STATUS!=="ON"){
+
+    showLogin();
+
+    return;
+
+  }
+
+
+  loginScreen.classList.add(
+    "hidden"
+  );
+
+  launcher.classList.remove(
+    "hidden"
+  );
+
+
+  document.getElementById(
+    "userDisplay"
+  ).textContent=
+    user.displayName ||
+    user.email?.split("@")[0] ||
+    "User";
+
+
+  populateAccount(
+    user
+  );
+
+
+  updateAdminVisibility(
+    user
+  );
+
+
+  syncUserProfile(
+    user
+  );
+
+
+  updateGameList();
+
 }
 
-document.getElementById("signUpBtn").addEventListener("click",async()=>{
- errorBox.textContent="";errorBox.style.color="#ff7272";authStatus.textContent="";
- if(!auth){errorBox.textContent="Firebase authentication is unavailable.";return}
- if(LAUNCHER_STATUS!=="ON")return;
- const username=document.getElementById("displayName").value.trim(),email=document.getElementById("username").value.trim(),password=document.getElementById("password").value;
- if(!username){errorBox.textContent="Please enter a username.";return}
- if(!email){errorBox.textContent="Please enter your email address.";return}
- if(!password){errorBox.textContent="Please enter a password.";return}
- if(password.length<6){errorBox.textContent="Password must be at least 6 characters.";return}
- authStatus.textContent="Creating account...";
- try{
-  const credential=await auth.createUserWithEmailAndPassword(email,password);
-  await credential.user.updateProfile({displayName:username});await credential.user.reload();
-  errorBox.style.color="#52d47b";errorBox.textContent="Account created successfully!";authStatus.textContent="Signing you in...";showLauncher(auth.currentUser);
- }catch(err){console.error("SIGN UP ERROR:",err);errorBox.style.color="#ff7272";errorBox.textContent=firebaseErrorMessage(err);authStatus.textContent=""}
-});
 
-document.getElementById("signInBtn").addEventListener("click",async()=>{
- errorBox.textContent="";errorBox.style.color="#ff7272";authStatus.textContent="";
- if(!auth){errorBox.textContent="Firebase authentication is unavailable.";return}
- if(LAUNCHER_STATUS!=="ON")return;
- const email=document.getElementById("username").value.trim(),password=document.getElementById("password").value;
- if(!email){errorBox.textContent="Please enter your email address.";return}
- if(!password){errorBox.textContent="Please enter your password.";return}
- authStatus.textContent="Signing in...";
- try{
-  const credential=await auth.signInWithEmailAndPassword(email,password);errorBox.style.color="#52d47b";errorBox.textContent="Signed in successfully!";authStatus.textContent="";showLauncher(credential.user);
- }catch(err){console.error("LOGIN ERROR:",err);errorBox.style.color="#ff7272";errorBox.textContent=firebaseErrorMessage(err);authStatus.textContent=""}
-});
+/* =========================================================
+   SIGN UP
+========================================================= */
+
+document
+  .getElementById(
+    "signUpBtn"
+  )
+  .addEventListener(
+    "click",
+    async()=>{
+
+      errorBox.textContent="";
+      errorBox.style.color=
+        "#ff7272";
+
+      authStatus.textContent="";
+
+
+      if(!auth){
+
+        errorBox.textContent=
+          "Firebase authentication is unavailable.";
+
+        return;
+
+      }
+
+
+      if(LAUNCHER_STATUS!=="ON")
+        return;
+
+
+      const username=
+        document
+          .getElementById(
+            "displayName"
+          )
+          .value
+          .trim();
+
+
+      const email=
+        document
+          .getElementById(
+            "username"
+          )
+          .value
+          .trim();
+
+
+      const password=
+        document
+          .getElementById(
+            "password"
+          )
+          .value;
+
+
+      if(!username){
+
+        errorBox.textContent=
+          "Please enter a username.";
+
+        return;
+
+      }
+
+
+      if(!email){
+
+        errorBox.textContent=
+          "Please enter your email address.";
+
+        return;
+
+      }
+
+
+      if(!password){
+
+        errorBox.textContent=
+          "Please enter a password.";
+
+        return;
+
+      }
+
+
+      if(password.length<6){
+
+        errorBox.textContent=
+          "Password must be at least 6 characters.";
+
+        return;
+
+      }
+
+
+      authStatus.textContent=
+        "Creating account...";
+
+
+      try{
+
+        const credential=
+          await auth
+            .createUserWithEmailAndPassword(
+              email,
+              password
+            );
+
+
+        await credential.user.updateProfile({
+
+          displayName:
+            username
+
+        });
+
+
+        await credential.user.reload();
+
+
+        errorBox.style.color=
+          "#52d47b";
+
+        errorBox.textContent=
+          "Account created successfully!";
+
+        authStatus.textContent=
+          "Signing you in...";
+
+
+        showLauncher(
+          auth.currentUser
+        );
+
+      }catch(err){
+
+        console.error(
+          "SIGN UP ERROR:",
+          err
+        );
+
+        errorBox.style.color=
+          "#ff7272";
+
+        errorBox.textContent=
+          firebaseErrorMessage(
+            err
+          );
+
+        authStatus.textContent="";
+
+      }
+
+    }
+  );
+
+
+/* =========================================================
+   SIGN IN
+========================================================= */
+
+document
+  .getElementById(
+    "signInBtn"
+  )
+  .addEventListener(
+    "click",
+    async()=>{
+
+      errorBox.textContent="";
+      errorBox.style.color=
+        "#ff7272";
+
+      authStatus.textContent="";
+
+
+      if(!auth){
+
+        errorBox.textContent=
+          "Firebase authentication is unavailable.";
+
+        return;
+
+      }
+
+
+      if(LAUNCHER_STATUS!=="ON")
+        return;
+
+
+      const email=
+        document
+          .getElementById(
+            "username"
+          )
+          .value
+          .trim();
+
+
+      const password=
+        document
+          .getElementById(
+            "password"
+          )
+          .value;
+
+
+      if(!email){
+
+        errorBox.textContent=
+          "Please enter your email address.";
+
+        return;
+
+      }
+
+
+      if(!password){
+
+        errorBox.textContent=
+          "Please enter your password.";
+
+        return;
+
+      }
+
+
+      authStatus.textContent=
+        "Signing in...";
+
+
+      try{
+
+        const credential=
+          await auth
+            .signInWithEmailAndPassword(
+              email,
+              password
+            );
+
+
+        errorBox.style.color=
+          "#52d47b";
+
+        errorBox.textContent=
+          "Signed in successfully!";
+
+        authStatus.textContent="";
+
+
+        showLauncher(
+          credential.user
+        );
+
+      }catch(err){
+
+        console.error(
+          "LOGIN ERROR:",
+          err
+        );
+
+        errorBox.style.color=
+          "#ff7272";
+
+        errorBox.textContent=
+          firebaseErrorMessage(
+            err
+          );
+
+        authStatus.textContent="";
+
+      }
+
+    }
+  );
+
+
+/* =========================================================
+   FIREBASE ERROR MESSAGES
+========================================================= */
 
 function firebaseErrorMessage(err){
- switch(err.code){
-  case"auth/invalid-email":return"That email address is not valid.";
-  case"auth/user-not-found":return"No account exists with that email address.";
-  case"auth/wrong-password":return"Incorrect password.";
-  case"auth/invalid-credential":return"Incorrect email or password.";
-  case"auth/email-already-in-use":return"An account already exists with that email.";
-  case"auth/weak-password":return"Password is too weak. Use at least 6 characters.";
-  case"auth/network-request-failed":return"Network error. Check your internet connection.";
-  case"auth/too-many-requests":return"Too many attempts. Please wait and try again.";
-  case"auth/user-disabled":return"This account has been disabled.";
-  case"auth/operation-not-allowed":return"Email/password authentication is not enabled in Firebase.";
-  default:return err.message||"Authentication failed. Please try again.";
- }
+
+  switch(err.code){
+
+    case"auth/invalid-email":
+      return "That email address is not valid.";
+
+    case"auth/user-not-found":
+      return "No account exists with that email address.";
+
+    case"auth/wrong-password":
+      return "Incorrect password.";
+
+    case"auth/invalid-credential":
+      return "Incorrect email or password.";
+
+    case"auth/email-already-in-use":
+      return "An account already exists with that email.";
+
+    case"auth/weak-password":
+      return "Password is too weak. Use at least 6 characters.";
+
+    case"auth/network-request-failed":
+      return "Network error. Check your internet connection.";
+
+    case"auth/too-many-requests":
+      return "Too many attempts. Please wait and try again.";
+
+    case"auth/user-disabled":
+      return "This account has been disabled.";
+
+    case"auth/operation-not-allowed":
+      return "Email/password authentication is not enabled in Firebase.";
+
+    default:
+      return err.message ||
+        "Authentication failed. Please try again.";
+
+  }
+
 }
 
-if(auth){
- auth.onAuthStateChanged(user=>{
-  if(LAUNCHER_STATUS!=="ON"){showLogin();return}
-  if(user)showLauncher(user);else showLogin();
- },err=>{console.error("AUTH STATE ERROR:",err);errorBox.textContent="Unable to check your account. Please refresh the launcher."});
-}else errorBox.textContent="Firebase failed to initialize. Check your Firebase configuration.";
 
-document.getElementById("logout").addEventListener("click",async()=>{
- if(!auth)return;try{await auth.signOut();adminOverlay.classList.add("hidden");adminBtn.classList.add("hidden");errorBox.textContent=""}catch(err){console.error("LOGOUT ERROR:",err)}
-});
-document.getElementById("password").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("signInBtn").click()});
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeSettings();closeAdmin()}});
+/* =========================================================
+   AUTH STATE
+========================================================= */
+
+if(auth){
+
+  auth.onAuthStateChanged(
+
+    user=>{
+
+      if(
+        LAUNCHER_STATUS!=="ON"
+      ){
+
+        showLogin();
+
+        return;
+
+      }
+
+
+      if(user){
+
+        showLauncher(
+          user
+        );
+
+      }else{
+
+        showLogin();
+
+      }
+
+    },
+
+    err=>{
+
+      console.error(
+        "AUTH STATE ERROR:",
+        err
+      );
+
+      errorBox.textContent=
+        "Unable to check your account. Please refresh the launcher.";
+
+    }
+
+  );
+
+}else{
+
+  errorBox.textContent=
+    "Firebase failed to initialize. Check your Firebase configuration.";
+
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+document
+  .getElementById(
+    "logout"
+  )
+  .addEventListener(
+    "click",
+    async()=>{
+
+      if(!auth)
+        return;
+
+
+      try{
+
+        await auth.signOut();
+
+        adminOverlay.classList.add(
+          "hidden"
+        );
+
+        adminBtn.classList.add(
+          "hidden"
+        );
+
+        errorBox.textContent="";
+
+      }catch(err){
+
+        console.error(
+          "LOGOUT ERROR:",
+          err
+        );
+
+      }
+
+    }
+  );
+
+
+/* =========================================================
+   KEYBOARD SHORTCUTS
+========================================================= */
+
+document
+  .getElementById(
+    "password"
+  )
+  .addEventListener(
+    "keydown",
+    e=>{
+
+      if(e.key==="Enter"){
+
+        document
+          .getElementById(
+            "signInBtn"
+          )
+          .click();
+
+      }
+
+    }
+  );
+
+
+document.addEventListener(
+  "keydown",
+  e=>{
+
+    if(e.key==="Escape"){
+
+      closeSettings();
+      closeAdmin();
+
+    }
+
+  }
+);
+
 </script>
+
 </body>
 </html>

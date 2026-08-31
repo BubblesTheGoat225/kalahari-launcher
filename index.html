@@ -253,6 +253,335 @@ button{
 }
 
 
+
+/* =========================================================
+   BASE LAUNCHER LAYOUT
+   Restored base styles. Modern mode overrides these below.
+========================================================= */
+
+header{
+  height:70px;
+  padding:0 30px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  background:var(--header);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(16px);
+  position:sticky;
+  top:0;
+  z-index:80;
+}
+
+.header-logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:var(--text);
+  font-size:18px;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.header-logo b{color:var(--accent)}
+
+.header-logo .mini{
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  background:var(--accent);
+  color:#111;
+  font-size:12px;
+  font-weight:950;
+}
+
+.user-area{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:10px;
+  min-width:0;
+}
+
+.user-area > span{
+  color:var(--muted);
+  font-size:12px;
+}
+
+.user-area > span b{color:var(--text)}
+
+.profile-mini{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  object-fit:cover;
+  background:var(--panel2);
+  border:1px solid var(--border);
+}
+
+.header-btn,
+.logout,
+.messages-btn{
+  min-height:38px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:var(--panel2);
+  color:var(--text);
+  padding:8px 12px;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  font-size:12px;
+  font-weight:750;
+  transition:.2s;
+}
+
+.header-btn:hover,
+.logout:hover,
+.messages-btn:hover{
+  border-color:var(--accent);
+  color:var(--accent);
+  transform:translateY(-1px);
+}
+
+.messages-btn{background:var(--soft)}
+
+.messages-badge{
+  width:26px;
+  height:26px;
+  border-radius:8px;
+  display:grid;
+  place-items:center;
+  background:var(--accent);
+  color:#111;
+  font-size:13px;
+  font-weight:900;
+}
+
+main{
+  width:min(1200px,100%);
+  margin:0 auto;
+  padding:30px 25px 60px;
+}
+
+.hero{
+  min-height:310px;
+  padding:38px;
+  border:1px solid var(--border);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 85% 20%,rgba(245,197,66,.12),transparent 28%),
+    linear-gradient(135deg,var(--panel2),var(--panel));
+  display:flex;
+  align-items:center;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero-content{max-width:720px;position:relative;z-index:1}
+
+.hero .eyebrow{
+  display:inline-block;
+  color:var(--accent);
+  font-size:11px;
+  font-weight:850;
+  letter-spacing:.8px;
+  margin-bottom:14px;
+}
+
+.hero h2{
+  font-size:48px;
+  line-height:1;
+  letter-spacing:-2px;
+  margin-bottom:16px;
+}
+
+.hero p{
+  color:var(--muted);
+  max-width:620px;
+  line-height:1.6;
+  font-size:14px;
+  margin-bottom:18px;
+}
+
+.hero-btn{
+  display:inline-flex;
+  align-items:center;
+  min-height:40px;
+  padding:10px 14px;
+  margin:4px 6px 0 0;
+  border-radius:10px;
+  background:var(--accent);
+  color:#111;
+  text-decoration:none;
+  font-size:12px;
+  font-weight:850;
+  transition:.2s;
+}
+
+.hero-btn:hover{background:var(--accent2);transform:translateY(-1px)}
+
+.section-head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:20px;
+  margin:42px 0 20px;
+}
+
+.section-head h3{font-size:27px;letter-spacing:-.8px;margin-bottom:5px}
+.section-head p{color:var(--muted);font-size:12px}
+
+.game-tools{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:min(500px,100%);
+}
+
+.search,
+.filter-select{
+  height:42px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--input);
+  color:var(--text);
+  outline:none;
+  padding:0 12px;
+  font-size:12px;
+}
+
+.search{flex:1;min-width:0}
+.filter-select{width:165px}
+.search:focus,
+.filter-select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(245,197,66,.08)}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:17px;
+}
+
+.card{
+  min-width:0;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:17px;
+  overflow:hidden;
+  transition:.2s;
+}
+
+.card:hover{
+  transform:translateY(-3px);
+  border-color:#465160;
+  box-shadow:0 14px 35px #0004;
+}
+
+.cover{
+  height:165px;
+  background:linear-gradient(135deg,#242c37,#11161d);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
+}
+
+.cover img{width:100%;height:100%;object-fit:cover}
+
+.game-icon{
+  width:90px;
+  height:90px;
+  border-radius:22px;
+  background:var(--accent);
+  color:#111;
+  display:grid;
+  place-items:center;
+  font-size:23px;
+  font-weight:950;
+  box-shadow:0 12px 25px #0005;
+  transform:rotate(-4deg);
+}
+
+.cover .badge{
+  position:absolute;
+  top:12px;
+  left:12px;
+  z-index:2;
+  background:#080b10dd;
+  color:#fff;
+  padding:5px 8px;
+  border-radius:6px;
+  font-size:9px;
+  font-weight:800;
+}
+
+.card-body{padding:18px}
+.card h4{font-size:20px;margin-bottom:8px}
+.desc{font-size:12px;color:var(--muted);line-height:1.45;min-height:38px}
+
+.meta{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin:13px 0 16px;
+}
+
+.tag{
+  font-size:10px;
+  color:#cbd2dc;
+  background:#ffffff08;
+  border:1px solid var(--border);
+  padding:5px 7px;
+  border-radius:6px;
+}
+
+.card-bottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.release{font-size:10px;color:#7f8997}
+
+.play-btn{
+  border:0;
+  border-radius:9px;
+  background:var(--accent);
+  color:#101010;
+  font-weight:850;
+  padding:9px 14px;
+  transition:.2s;
+}
+
+.play-btn:hover:not(:disabled){background:var(--accent2);transform:translateY(-1px)}
+
+.news-container{ /* base styling is defined further below */ }
+
+@media(max-width:900px){
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .section-head{align-items:stretch;flex-direction:column}
+  .game-tools{width:100%}
+}
+
+@media(max-width:700px){
+  header{padding:0 15px}
+  .user-area > span{display:none}
+  .header-btn,.logout,.messages-btn{padding:7px 9px;font-size:10px}
+  main{padding:20px 15px 45px}
+  .hero{padding:28px;min-height:280px}
+  .hero h2{font-size:34px}
+  .grid{grid-template-columns:1fr}
+  .game-tools{flex-direction:column}
+  .search,.filter-select{width:100%}
+}
+
 /* =========================================================
    MODERN LOGIN
 ========================================================= */
@@ -1179,6 +1508,260 @@ body.modern .coming .cover{
 }
 
 
+
+/* =========================================================
+   SIMPLE DESIGN
+   Minimal launcher: small typography, simple slots,
+   title + play button only.
+========================================================= */
+
+body.simple{
+  --bg:#f1f3f5;
+  --panel:#ffffff;
+  --panel2:#f8f9fa;
+  --text:#17191c;
+  --muted:#737980;
+  --accent:#e7b900;
+  --accent2:#f3cf38;
+  --border:#d9dde2;
+  --header:#ffffff;
+  --input:#ffffff;
+  --field:#ffffff;
+  --soft:#00000006;
+}
+
+body.simple #loginScreen{
+  background:#f1f3f5;
+}
+
+body.simple .login-card{
+  border-radius:12px;
+  box-shadow:0 12px 35px rgba(0,0,0,.08);
+  background:#fff;
+}
+
+body.simple .modern-login-brand{
+  display:none;
+}
+
+body.simple .modern-login-side{
+  padding:38px;
+}
+
+body.simple header{
+  height:58px;
+  padding:0 22px;
+  background:#fff;
+  border-bottom:1px solid #dfe2e6;
+  box-shadow:0 1px 0 rgba(0,0,0,.02);
+}
+
+body.simple .header-logo{
+  font-size:14px;
+  font-weight:750;
+}
+
+body.simple .header-logo .mini{
+  width:28px;
+  height:28px;
+  border-radius:6px;
+  font-size:9px;
+  transform:none;
+  box-shadow:none;
+}
+
+body.simple .header-logo b{
+  color:inherit;
+}
+
+body.simple .user-area{
+  gap:6px;
+}
+
+body.simple .profile-mini{
+  width:28px;
+  height:28px;
+}
+
+body.simple .header-btn,
+body.simple .logout,
+body.simple .messages-btn{
+  min-height:30px;
+  padding:5px 8px;
+  border-radius:6px;
+  background:#fff;
+  color:#5d636a;
+  font-size:9px;
+  box-shadow:none;
+}
+
+body.simple .messages-badge{
+  width:20px;
+  height:20px;
+  border-radius:5px;
+  font-size:9px;
+}
+
+body.simple main{
+  max-width:980px;
+  padding:24px 22px 45px;
+}
+
+body.simple .hero,
+body.simple .news-container,
+body.simple .section-head > div:first-child,
+body.simple .game-tools,
+body.simple .modern-filter-pills{
+  display:none;
+}
+
+body.simple .section-head{
+  margin:0 0 12px;
+  display:block;
+}
+
+body.simple .section-head:before{
+  content:"GAMES";
+  color:#8a9097;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:1.2px;
+}
+
+body.simple .grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+}
+
+body.simple .card,
+body.simple .card:nth-child(2),
+body.simple .card.wide-card{
+  grid-column:auto;
+  min-height:0;
+  height:auto;
+  border:1px solid #dfe2e6;
+  border-radius:7px;
+  background:#fff;
+  box-shadow:none;
+  overflow:visible;
+  opacity:1;
+}
+
+body.simple .card:hover{
+  transform:none;
+  border-color:#bfc4ca;
+  box-shadow:0 3px 10px rgba(0,0,0,.05);
+}
+
+body.simple .cover{
+  display:none;
+}
+
+body.simple .card-body{
+  padding:10px 11px;
+  min-height:48px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+body.simple .card h4,
+body.simple .card:nth-child(2) h4{
+  margin:0;
+  font-size:12px;
+  line-height:1.2;
+  font-weight:700;
+  letter-spacing:0;
+  color:#202327;
+}
+
+body.simple .desc,
+body.simple .meta,
+body.simple .release,
+body.simple .game-update{
+  display:none;
+}
+
+body.simple .card-bottom{
+  margin:0;
+  flex:none;
+}
+
+body.simple .play-btn{
+  padding:6px 10px;
+  min-width:48px;
+  border-radius:5px;
+  font-size:9px;
+  line-height:1;
+  box-shadow:none;
+}
+
+body.simple .play-btn:hover:not(:disabled){
+  transform:none;
+  box-shadow:none;
+}
+
+body.simple .coming .play-btn,
+body.simple .production-btn,
+body.simple .maintenance-btn{
+  color:#858b92!important;
+  background:#eceef0!important;
+}
+
+body.simple .coming .card-body{
+  opacity:.65;
+}
+
+body.simple footer{
+  margin-top:35px;
+  padding-top:18px;
+  border-top:1px solid #dfe2e6;
+  font-size:9px;
+}
+
+body.simple .modal{
+  border-radius:10px;
+  box-shadow:0 20px 50px rgba(0,0,0,.15);
+}
+
+body.simple .design-choice{
+  grid-template-columns:repeat(3,1fr);
+}
+
+body.simple .design-option{
+  border-radius:8px;
+  padding:10px;
+}
+
+body.simple .design-preview{
+  height:48px;
+  border-radius:6px;
+}
+
+body.simple .design-option strong{
+  font-size:12px;
+}
+
+body.simple .design-option span{
+  font-size:9px;
+}
+
+.simple-slot{ /* fallback class for future simple launcher extensions */ }
+
+@media(max-width:700px){
+  body.simple main{padding:18px 12px 35px}
+  body.simple .grid{grid-template-columns:1fr}
+  body.simple .header-logo{font-size:12px}
+  body.simple .header-btn,
+  body.simple .logout,
+  body.simple .messages-btn{font-size:0;padding:5px}
+  body.simple .header-btn:first-letter,
+  body.simple .logout:first-letter{font-size:14px}
+}
+
+
 /* =========================================================
    WIDE GAME
 ========================================================= */
@@ -1493,6 +2076,24 @@ body.modern footer{
   border-radius:5px;
   background:#ffd447;
 }
+
+
+.design-preview.simple-preview{
+  background:#f5f7fa;
+}
+.simple-preview:before,
+.simple-preview:after{
+  content:"";
+  position:absolute;
+  left:12px;
+  right:12px;
+  height:10px;
+  border:1px solid #cfd5dc;
+  background:#fff;
+  border-radius:4px;
+}
+.simple-preview:before{top:13px}
+.simple-preview:after{top:34px}
 
 .design-preview.old-preview:after{
   content:"";
@@ -1881,6 +2482,98 @@ body.modern footer{
 
 }
 
+
+/* =========================================================
+   LOGIN THEME SELECTOR + LOGIN THEMES
+========================================================= */
+.login-theme-selector{margin-top:26px;padding-top:18px;border-top:1px solid var(--border);text-align:center}
+.login-theme-label{font-size:9px;font-weight:900;letter-spacing:1.6px;color:var(--muted);margin-bottom:10px}
+.login-theme-options{display:flex;justify-content:center;gap:7px;flex-wrap:wrap}
+.login-theme-btn{border:1px solid var(--border);background:var(--soft);color:var(--muted);border-radius:999px;padding:7px 11px;font-size:10px;font-weight:800;cursor:pointer;transition:.2s}
+.login-theme-btn:hover,.login-theme-btn.active{color:var(--text);border-color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,transparent)}
+body.login-simple-light #loginScreen{background:#f4f6f8}
+body.login-simple-light .login-card{max-width:410px;background:#fff;border:1px solid #dfe4e8;border-radius:14px;box-shadow:0 18px 55px rgba(20,35,50,.10);padding:34px}
+body.login-simple-light .modern-login-brand{display:none}
+body.login-simple-light .modern-login-side{padding:0}
+body.login-simple-light .logo{margin-bottom:28px}
+body.login-simple-light .logo-mark{width:38px;height:38px;border-radius:9px;font-size:17px;transform:none}
+body.login-simple-light .logo h1{font-size:18px}
+body.login-simple-light .login-card h2{font-size:25px}
+body.login-simple-light .subtitle{font-size:13px}
+body.login-simple-light .field input{background:#f8fafb;border-color:#dce2e7;color:#17212b;border-radius:9px;padding:12px}
+body.login-simple-light .field label{color:#687581;font-size:10px}
+body.login-simple-light .login-btn{border-radius:9px;padding:12px}
+body.login-simple-light .signup-btn{background:#edf0f2;color:#27313a}
+body.login-simple-light .powered-by-badge{color:#8a949c}
+body.login-2050 #loginScreen{background:radial-gradient(circle at 20% 15%,#183b5b 0,transparent 30%),radial-gradient(circle at 85% 80%,#27304d 0,transparent 32%),#03070d}
+body.login-2050 #loginScreen:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to bottom,#000,transparent 85%)}
+body.login-2050 .login-card{max-width:470px;background:rgba(7,13,22,.82);border:1px solid rgba(121,190,255,.18);border-radius:18px;box-shadow:0 30px 90px #000b,0 0 70px rgba(48,151,235,.08);backdrop-filter:blur(20px);padding:34px}
+body.login-2050 .modern-login-brand{display:none}
+body.login-2050 .modern-login-side{padding:0}
+body.login-2050 .logo-mark{width:40px;height:40px;border-radius:8px;transform:none;background:#dff2ff;color:#071421;box-shadow:0 0 28px rgba(95,190,255,.2)}
+body.login-2050 .logo h1{font-size:18px;letter-spacing:.2px}
+body.login-2050 .login-card h2{font-size:30px;letter-spacing:-1px}
+body.login-2050 .subtitle{font-size:12px}
+body.login-2050 .field label{font-size:9px;letter-spacing:1.5px;color:#6f8ca8}
+body.login-2050 .field input{height:46px;border-radius:8px;background:#050b13;border-color:#18334b}
+body.login-2050 .login-btn{border-radius:8px;min-height:46px;background:#dff2ff;color:#071421}
+body.login-2050 .signup-btn{background:#0c1724;color:#c9e8ff;border:1px solid #18334b}
+body.login-2050 .login-theme-btn.active{color:#dff2ff;border-color:#75c7ff;background:#75c7ff12}
+.guest-btn{width:100%;margin-top:10px;border:1px solid var(--border);background:transparent;color:var(--muted);border-radius:11px;padding:12px;font-size:12px;font-weight:850;transition:.2s}
+.guest-btn:hover{border-color:var(--accent);color:var(--text);background:var(--soft)}
+
+/* =========================================================
+   REVAMPED SETTINGS
+========================================================= */
+.settings-shell{width:min(1050px,94vw);max-height:86vh;display:grid;grid-template-columns:205px 1fr;overflow:hidden;background:var(--panel);border:1px solid var(--border);border-radius:22px;box-shadow:0 35px 100px #0009}
+.settings-sidebar{background:var(--soft);border-right:1px solid var(--border);padding:18px 12px;display:flex;flex-direction:column;gap:5px}
+.settings-side-title{padding:9px 11px 15px;font-size:11px;font-weight:950;letter-spacing:1.6px;color:var(--muted)}
+.settings-tab{border:0;background:transparent;color:var(--muted);text-align:left;border-radius:9px;padding:10px 11px;font-size:11px;font-weight:800;cursor:pointer}
+.settings-tab:hover{background:var(--soft);color:var(--text)}
+.settings-tab.active{background:var(--accent);color:#111}
+.settings-content{min-width:0;overflow:auto;padding:25px 28px 30px}
+.settings-content .modal-top{margin-bottom:18px}
+.settings-content .modal-top h2{font-size:27px}
+.settings-intro{color:var(--muted);font-size:12px;line-height:1.6;margin:-10px 0 20px}
+.settings-section{display:none}.settings-section.active{display:block}
+.settings-card{border:1px solid var(--border);background:var(--soft);border-radius:14px;padding:16px;margin-bottom:12px}
+.settings-card h3{font-size:13px;margin-bottom:5px}.settings-card p{font-size:11px;color:var(--muted);line-height:1.5}
+.settings-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+.setting-select{border:1px solid var(--border);background:var(--field);color:var(--text);border-radius:9px;padding:9px 11px;font-size:11px}
+.check-row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:12px 0;border-bottom:1px solid var(--border)}
+.check-row:last-child{border-bottom:0}.check-copy strong{display:block;font-size:11px}.check-copy span{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+/* Proper launcher toggle switches */
+.check-row .switch{position:relative;display:inline-block;width:42px;height:24px;flex:0 0 auto}
+.check-row .switch input{opacity:0;width:0;height:0;position:absolute}
+.check-row .switch .slider{position:absolute;inset:0;background:#303946;border:1px solid #4a5665;border-radius:999px;transition:.2s}
+.check-row .switch .slider:before{content:"";position:absolute;width:18px;height:18px;left:2px;top:2px;border-radius:50%;background:#fff;box-shadow:0 2px 5px #0005;transition:.2s}
+.check-row .switch input:checked + .slider{background:var(--accent);border-color:var(--accent)}
+.check-row .switch input:checked + .slider:before{transform:translateX(18px);background:#111}
+.check-row .switch input:focus-visible + .slider{outline:2px solid var(--accent);outline-offset:2px}
+body.light-mode .check-row .switch .slider{background:#d9e1e8;border-color:#c4ced7}
+body.light-mode .check-row .switch input:checked + .slider{background:var(--accent);border-color:var(--accent)}
+
+.settings-status{font-size:10px;color:var(--muted);margin-top:9px}
+@media(max-width:700px){.settings-shell{grid-template-columns:1fr;max-height:92vh}.settings-sidebar{border-right:0;border-bottom:1px solid var(--border);flex-direction:row;overflow:auto}.settings-side-title{display:none}.settings-tab{white-space:nowrap}.settings-content{padding:18px}.login-theme-selector{margin-top:18px}}
+
+.reduced-motion *, .reduced-motion *::before, .reduced-motion *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+.reduced-transparency .settings-shell,.reduced-transparency .modal,.reduced-transparency .login-card{backdrop-filter:none!important;background:var(--panel)!important}
+.high-contrast{--border:#697582}.high-contrast .card,.high-contrast .settings-card,.high-contrast .field input{border-width:2px!important}
+
+/* =========================================================
+   SPECIAL TAXI 4 / OPEN WORLD CARD
+========================================================= */
+.card.taxi4-special{grid-column:1/-1!important;min-height:470px!important;border-radius:24px!important;position:relative;overflow:hidden;border:1px solid rgba(255,212,71,.35)!important;background:linear-gradient(135deg,#080d14,#101c2b 55%,#17283a)!important;box-shadow:0 25px 70px rgba(0,0,0,.4),0 0 50px rgba(255,212,71,.05)!important}
+.taxi4-release{position:absolute;top:0;left:0;right:0;height:38px;display:flex;align-items:center;justify-content:center;background:#ffd447;color:#101010;font-size:10px;font-weight:950;letter-spacing:2px;z-index:5;text-transform:uppercase}
+.taxi4-special .taxi4-visual{height:285px;margin-top:38px;position:relative;overflow:hidden;background:radial-gradient(circle at 70% 35%,rgba(255,212,71,.18),transparent 25%),linear-gradient(120deg,#0b1522,#101c2d 45%,#1b2e40)}
+.taxi4-special .taxi4-visual:before{content:"TAXI 4";position:absolute;right:3%;bottom:-38px;font-size:170px;line-height:1;font-weight:1000;letter-spacing:-10px;color:#ffffff08}
+.taxi4-special .taxi4-visual:after{content:"UNTITLED OPEN WORLD";position:absolute;left:28px;bottom:20px;font-size:11px;letter-spacing:3px;font-weight:950;color:#ffd447}
+.taxi4-lines{position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.035) 35.2%,transparent 35.5%),linear-gradient(165deg,transparent 58%,rgba(255,212,71,.08) 58.2%,transparent 58.5%)}
+.taxi4-body{padding:22px 28px 25px;display:flex;justify-content:space-between;gap:25px;align-items:end}.taxi4-body h4{font-size:31px;letter-spacing:-1px;margin-bottom:7px}.taxi4-body p{max-width:700px;color:#91a4b8;font-size:12px;line-height:1.6}.taxi4-meta{display:flex;gap:8px;margin-top:13px;flex-wrap:wrap}.taxi4-pill{font-size:9px;padding:6px 9px;border:1px solid rgba(255,255,255,.09);border-radius:999px;color:#a9bacb}.taxi4-action{min-width:145px}.taxi4-action .play-btn{width:100%;padding:13px 18px;border-radius:11px}
+body.light-mode .card.taxi4-special{background:linear-gradient(135deg,#f5f9fd,#e9f2f8)!important;border-color:#d9b72d!important}.light-mode .taxi4-special .taxi4-visual{background:linear-gradient(120deg,#dceefe,#f8fbff)}.light-mode .taxi4-special .taxi4-visual:before{color:#06192c08}.light-mode .taxi4-special .taxi4-body p{color:#5f7890}.light-mode .taxi4-pill{color:#526b80;border-color:#cbdce8}
+body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;background:#fff!important;border:1px solid #dfe2e6!important;box-shadow:none!important;border-radius:10px!important}.simple .taxi4-release{position:static;height:27px;font-size:8px}.simple .taxi4-special .taxi4-visual{height:80px;margin-top:0;background:#f1f3f5}.simple .taxi4-special .taxi4-visual:before,.simple .taxi4-special .taxi4-visual:after,.simple .taxi4-lines{display:none}.simple .taxi4-body{padding:10px;display:flex;align-items:center}.simple .taxi4-body h4{font-size:12px;margin:0}.simple .taxi4-body p,.simple .taxi4-meta{display:none}.simple .taxi4-action{min-width:70px}.simple .taxi4-action .play-btn{font-size:9px;padding:7px 9px}
+@media(max-width:700px){.taxi4-body{align-items:stretch;flex-direction:column}.taxi4-action{min-width:0}.taxi4-special .taxi4-visual{height:220px}}
+
 </style>
 </head>
 
@@ -2036,6 +2729,16 @@ body.modern footer{
 
         </div>
 
+        <button class="guest-btn" id="guestBtn" type="button">CONTINUE AS GUEST</button>
+
+        <div class="login-theme-selector">
+          <div class="login-theme-label">LOGIN EXPERIENCE</div>
+          <div class="login-theme-options">
+            <button class="login-theme-btn" data-login-theme="classic">Classic</button>
+            <button class="login-theme-btn" data-login-theme="simple-light">Simple Light</button>
+            <button class="login-theme-btn" data-login-theme="2050">2050</button>
+          </div>
+        </div>
 
         <div
           class="error"
@@ -2202,321 +2905,71 @@ body.modern footer{
      SETTINGS
 ======================================================= -->
 
-<div
-  id="settingsOverlay"
-  class="modal-overlay hidden"
->
+<div id="settingsOverlay" class="modal-overlay hidden">
+  <div class="settings-shell">
+    <aside class="settings-sidebar">
+      <div class="settings-side-title">KALAHARI SETTINGS</div>
+      <button class="settings-tab active" data-tab="appearanceTab">◈ Appearance</button>
+      <button class="settings-tab" data-tab="gamesTab">▣ Games</button>
+      <button class="settings-tab" data-tab="notificationsTab">◇ Notifications</button>
+      <button class="settings-tab" data-tab="accountTab">◎ Account</button>
+      <button class="settings-tab" data-tab="dataTab">▤ Data & Storage</button>
+      <button class="settings-tab" data-tab="privacyTab">⌁ Privacy & Security</button>
+      <button class="settings-tab" data-tab="accessibilityTab">◐ Accessibility</button>
+      <button class="settings-tab" data-tab="advancedTab">⚙ Advanced</button>
+      <button class="settings-tab" data-tab="aboutTab">ⓘ About</button>
+    </aside>
+    <div class="settings-content">
+      <div class="modal-top"><div><h2>Settings</h2></div><button class="close-modal" id="closeSettings">×</button></div>
+      <p class="settings-intro">Control the launcher, your account, game library, notifications and visual experience.</p>
 
-  <div class="modal">
+      <section class="settings-section active" id="appearanceTab">
+        <div class="settings-card"><h3>Launcher design</h3><p>Choose the layout used after you sign in.</p><div class="design-choice">
+          <button class="design-option" id="oldDesignBtn"><div class="design-preview old-preview"></div><strong>Original</strong><span>Classic Kalahari launcher.</span></button>
+          <button class="design-option" id="modernDesignBtn"><div class="design-preview modern-preview"></div><strong>Modern</strong><span>Redesigned gaming dashboard.</span></button>
+          <button class="design-option" id="simpleDesignBtn"><div class="design-preview simple-preview"></div><strong>Simple</strong><span>Minimal slots, small text and Play.</span></button>
+        </div></div>
+        <div class="settings-card"><h3>Display</h3>
+          <div class="check-row"><div class="check-copy"><strong>Dark mode</strong><span>Use the dark Kalahari colour system.</span></div><label class="switch" aria-label="Dark mode"><input type="checkbox" id="darkModeToggle"><span class="slider"></span></label></div>
+          <div class="check-row"><div class="check-copy"><strong>Reduce animations</strong><span>Use shorter transitions and fewer motion effects.</span></div><input type="checkbox" id="reduceMotionToggle"></div>
+          <div class="check-row"><div class="check-copy"><strong>Reduce transparency</strong><span>Make glass and translucent panels more solid.</span></div><input type="checkbox" id="reduceTransparencyToggle"></div>
+        </div>
+      </section>
 
-    <div class="modal-top">
+      <section class="settings-section" id="gamesTab"><div class="settings-card"><h3>Game library</h3><p>Choose how games are presented and launched.</p>
+        <div class="check-row"><div class="check-copy"><strong>Remember last filter</strong><span>Keep your game filter between visits.</span></div><input type="checkbox" id="rememberFilterToggle"></div>
+        <div class="check-row"><div class="check-copy"><strong>Confirm before launching</strong><span>Ask before opening a game.</span></div><input type="checkbox" id="confirmLaunchToggle"></div>
+        <div class="check-row"><div class="check-copy"><strong>Open games in a new tab</strong><span>Keep the launcher open when launching games.</span></div><input type="checkbox" id="newTabToggle"></div>
+        <div style="margin-top:13px"><label style="display:block;font-size:10px;color:var(--muted);margin-bottom:6px">DEFAULT SORT</label><select class="setting-select" id="gameSort"><option value="default">Launcher order</option><option value="az">A–Z</option><option value="release">Release date</option></select></div>
+      </div></section>
 
-      <h2>
-        Settings
-      </h2>
+      <section class="settings-section" id="notificationsTab"><div class="settings-card"><h3>Notifications</h3><p>Choose what the launcher is allowed to surface.</p>
+        <div class="check-row"><div class="check-copy"><strong>Game updates</strong><span>Updates and patch announcements.</span></div><input type="checkbox" id="notifyUpdates"></div>
+        <div class="check-row"><div class="check-copy"><strong>Important announcements</strong><span>Critical launcher or service notices.</span></div><input type="checkbox" id="notifyImportant"></div>
+        <div class="check-row"><div class="check-copy"><strong>New games</strong><span>Notify when a new game appears.</span></div><input type="checkbox" id="notifyGames"></div>
+        <div class="check-row"><div class="check-copy"><strong>Maintenance</strong><span>Maintenance and availability notices.</span></div><input type="checkbox" id="notifyMaintenance"></div>
+      </div></section>
 
-      <button
-        class="close-modal"
-        id="closeSettings"
-      >
-        ×
-      </button>
+      <section class="settings-section" id="accountTab">
+        <div class="settings-card"><h3>Profile</h3><p>Manage the information shown by the launcher.</p><div class="avatar-row"><img id="accountAvatar" class="account-avatar" src="" alt="Profile icon"><div><strong>Profile icon</strong><p>Use an image URL for your profile icon.</p></div></div>
+          <div class="field"><label>USERNAME</label><input class="settings-input" id="accountUsername" placeholder="Username"></div>
+          <div class="field"><label>EMAIL ADDRESS</label><input class="settings-input" id="accountEmail" type="email" placeholder="Email"></div>
+          <div class="field"><label>NEW PASSWORD</label><input class="settings-input" id="accountPassword" type="password" placeholder="Leave blank to keep current password"></div>
+          <div class="field"><label>PROFILE ICON URL</label><input class="settings-input" id="accountAvatarUrl" placeholder="https://example.com/profile.png"></div>
+          <div class="settings-actions"><button class="save-btn" id="saveAccount">Save account changes</button></div><div class="settings-message" id="accountMessage"></div>
+        </div>
+      </section>
 
+      <section class="settings-section" id="dataTab"><div class="settings-card"><h3>Data & Storage</h3><p>Manage local launcher preferences stored on this device.</p><div class="settings-status" id="storageStatus">Local preferences are active.</div><div class="settings-actions"><button class="save-btn" id="resetPrefs">Reset launcher preferences</button><button class="save-btn" id="reloadLauncher">Reload launcher</button></div></div></section>
+      <section class="settings-section" id="privacyTab"><div class="settings-card"><h3>Privacy & Security</h3><p>Your authentication session is handled by Firebase. Anonymous accounts are identified as guest accounts until upgraded.</p><div class="check-row"><div class="check-copy"><strong>Remember launcher preferences</strong><span>Store appearance choices locally.</span></div><input type="checkbox" checked disabled></div><div class="settings-actions"><button class="save-btn danger-btn" id="signOutAll">Sign out</button></div></div></section>
+      <section class="settings-section" id="accessibilityTab"><div class="settings-card"><h3>Accessibility</h3><p>Make the interface easier to use.</p><div class="check-row"><div class="check-copy"><strong>Reduce animations</strong><span>Syncs with Appearance.</span></div><input type="checkbox" id="accessibilityMotion"></div><div class="check-row"><div class="check-copy"><strong>High contrast</strong><span>Increase borders and text contrast.</span></div><input type="checkbox" id="highContrastToggle"></div></div></section>
+      <section class="settings-section" id="advancedTab"><div class="settings-card"><h3>Advanced</h3><p>Tools for troubleshooting the launcher.</p><div class="settings-actions"><button class="save-btn" id="clearLocalData">Clear local settings</button><button class="save-btn" id="reloadLauncher2">Reload</button></div><div class="settings-status" id="advancedStatus">Firebase connection is managed automatically.</div></div></section>
+      <section class="settings-section" id="aboutTab">
+  <div class="settings-card"><h3>Kalahari Studios Launcher</h3><p>Launcher v2.38</p><p style="margin-top:8px">Games, accounts, announcements and Kalahari experiences in one place.</p></div>
+  <div class="settings-card"><h3>Need help?</h3><p>You can chat to a moderator through the <strong>Messages</strong> page if you need help, want to report an issue, or have a question about the launcher.</p><div class="settings-actions"><button class="save-btn" id="openMessagesFromAbout">Open Messages</button></div></div>
+</section>
     </div>
-
-
-    <div class="settings-tabs">
-
-      <button
-        class="settings-tab active"
-        data-tab="appearanceTab"
-      >
-        Appearance
-      </button>
-
-      <button
-        class="settings-tab"
-        data-tab="accountTab"
-      >
-        Account
-      </button>
-
-      <button
-        class="settings-tab"
-        data-tab="launcherTab"
-      >
-        Launcher
-      </button>
-
-    </div>
-
-
-    <!-- APPEARANCE -->
-
-    <section
-      class="settings-section active"
-      id="appearanceTab"
-    >
-
-      <div class="setting-row">
-
-        <div class="setting-info">
-
-          <strong>
-            Launcher design
-          </strong>
-
-          <span>
-            Switch between the original Kalahari layout
-            and the completely redesigned modern interface.
-          </span>
-
-        </div>
-
-      </div>
-
-
-      <div class="design-choice">
-
-        <button
-          class="design-option"
-          id="oldDesignBtn"
-        >
-
-          <div class="design-preview old-preview"></div>
-
-          <strong>
-            Original
-          </strong>
-
-          <span>
-            The classic Kalahari launcher design.
-          </span>
-
-        </button>
-
-
-        <button
-          class="design-option"
-          id="modernDesignBtn"
-        >
-
-          <div class="design-preview modern-preview"></div>
-
-          <strong>
-            Modern
-          </strong>
-
-          <span>
-            Completely redesigned dashboard,
-            game library and login experience.
-          </span>
-
-        </button>
-
-      </div>
-
-
-      <div
-        class="setting-row"
-        style="margin-top:12px"
-      >
-
-        <div class="setting-info">
-
-          <strong>
-            Dark mode
-          </strong>
-
-          <span>
-            Use the dark Kalahari Studios theme.
-          </span>
-
-        </div>
-
-        <label class="switch">
-
-          <input
-            type="checkbox"
-            id="darkModeToggle"
-          >
-
-          <span class="slider"></span>
-
-        </label>
-
-      </div>
-
-    </section>
-
-
-    <!-- ACCOUNT -->
-
-    <section
-      class="settings-section"
-      id="accountTab"
-    >
-
-      <div class="avatar-row">
-
-        <img
-          id="accountAvatar"
-          class="account-avatar"
-          src=""
-          alt="Profile icon"
-        >
-
-        <div>
-
-          <strong>
-            Profile icon
-          </strong>
-
-          <p
-            style="color:var(--muted);font-size:12px;margin-top:5px"
-          >
-            Use an image URL for your profile icon.
-          </p>
-
-        </div>
-
-      </div>
-
-
-      <div class="field">
-
-        <label>
-          USERNAME
-        </label>
-
-        <input
-          class="settings-input"
-          id="accountUsername"
-          placeholder="Username"
-        >
-
-      </div>
-
-
-      <div class="field">
-
-        <label>
-          EMAIL ADDRESS
-        </label>
-
-        <input
-          class="settings-input"
-          id="accountEmail"
-          type="email"
-          placeholder="Email"
-        >
-
-      </div>
-
-
-      <div class="field">
-
-        <label>
-          NEW PASSWORD
-        </label>
-
-        <input
-          class="settings-input"
-          id="accountPassword"
-          type="password"
-          placeholder="Leave blank to keep current password"
-        >
-
-      </div>
-
-
-      <div class="field">
-
-        <label>
-          PROFILE ICON URL
-        </label>
-
-        <input
-          class="settings-input"
-          id="accountAvatarUrl"
-          placeholder="https://example.com/profile.png"
-        >
-
-      </div>
-
-
-      <button
-        class="save-btn"
-        id="saveAccount"
-      >
-        Save account changes
-      </button>
-
-      <div
-        class="settings-message"
-        id="accountMessage"
-      ></div>
-
-    </section>
-
-
-    <!-- LAUNCHER SETTINGS -->
-
-    <section
-      class="settings-section"
-      id="launcherTab"
-    >
-
-      <div class="setting-row">
-
-        <div class="setting-info">
-
-          <strong>
-            Remember theme
-          </strong>
-
-          <span>
-            Your light/dark choice is saved on this device.
-          </span>
-
-        </div>
-
-        <span
-          style="color:var(--accent);font-size:12px;font-weight:800"
-        >
-          ENABLED
-        </span>
-
-      </div>
-
-
-      <div class="setting-row">
-
-        <div class="setting-info">
-
-          <strong>
-            Reset launcher preferences
-          </strong>
-
-          <span>
-            Reset theme, design and game filters.
-          </span>
-
-        </div>
-
-        <button
-          class="save-btn danger-btn"
-          id="resetPrefs"
-        >
-          Reset
-        </button>
-
-      </div>
-
-    </section>
-
   </div>
-
 </div>
 
 
@@ -3299,7 +3752,64 @@ function renderGames(
         :"";
 
 
-      card.innerHTML=`
+      if(document.body.classList.contains("simple")){
+
+        card.innerHTML=`
+
+          <div class="simple-slot">
+
+            <div class="simple-game-title">
+              ${game.name}
+            </div>
+
+            <button
+              class="
+                play-btn
+                simple-play
+                ${production?"production-btn":""}
+                ${maintenance?"maintenance-btn":""}
+              "
+              ${!canLaunch?"disabled":""}
+              data-url="${game.url}"
+            >
+              ${
+                canLaunch
+                  ?"PLAY"
+                  :
+                  maintenance
+                    ?"MAINTENANCE"
+                    :
+                    production
+                      ?"IN PRODUCTION"
+                      :"COMING SOON"
+              }
+            </button>
+
+          </div>
+
+        `;
+
+      }else if(game.name==="Upcoming Open World Game"){
+
+        card.classList.add("taxi4-special");
+        card.innerHTML=`
+          <div class="taxi4-release">RELEASE DATE • ${game.date}</div>
+          <div class="taxi4-visual"><div class="taxi4-lines"></div></div>
+          <div class="taxi4-body">
+            <div>
+              <h4>TAXI 4 <span style="color:var(--accent);font-size:.55em">• UNTITLED OPEN WORLD GAME</span></h4>
+              <p>${game.description}</p>
+              <div class="taxi4-meta"><span class="taxi4-pill">DRIVING</span><span class="taxi4-pill">OPEN WORLD</span><span class="taxi4-pill">IN DEVELOPMENT</span><span class="taxi4-pill">KINGSTON CITY</span></div>
+            </div>
+            <div class="taxi4-action">
+              <button class="play-btn ${production?"production-btn":""} ${maintenance?"maintenance-btn":""}" ${!canLaunch?"disabled":""} data-url="${game.url}">${canLaunch?"PLAY":production?"IN PRODUCTION":maintenance?"MAINTENANCE":"COMING SOON"}</button>
+            </div>
+          </div>
+        `;
+
+      }else{
+
+        card.innerHTML=`
 
         <div class="cover">
 
@@ -3384,7 +3894,9 @@ function renderGames(
 
         </div>
 
-      `;
+        `;
+
+      }
 
       grid.appendChild(card);
 
@@ -3590,48 +4102,17 @@ loadNews();
    THEME
 ========================================================= */
 
-const darkModeToggle=
-  document.getElementById(
-    "darkModeToggle"
-  );
+const darkModeToggle=document.getElementById("darkModeToggle");
 
-
-function setTheme(
-  isDark,
-  save=true
-){
-
-  document.body.classList.toggle(
-    "light-mode",
-    !isDark
-  );
-
-  darkModeToggle.checked=
-    isDark;
-
-
-  if(save){
-
-    localStorage.setItem(
-      "kalahariTheme",
-      isDark
-        ?"dark"
-        :"light"
-    );
-
-  }
-
+function setTheme(isDark, save=true){
+  const dark=Boolean(isDark);
+  document.body.classList.toggle("light-mode", !dark);
+  if(darkModeToggle) darkModeToggle.checked=dark;
+  if(save) localStorage.setItem("kalahariTheme", dark ? "dark" : "light");
 }
 
-
-setTheme(
-  (
-    localStorage.getItem(
-      "kalahariTheme"
-    ) || "dark"
-  )==="dark",
-  false
-);
+const savedTheme=localStorage.getItem("kalahariTheme");
+setTheme(savedTheme ? savedTheme === "dark" : true, false);
 
 
 /* =========================================================
@@ -3646,6 +4127,11 @@ function setDesign(
   document.body.classList.toggle(
     "modern",
     design==="modern"
+  );
+
+  document.body.classList.toggle(
+    "simple",
+    design==="simple"
   );
 
 
@@ -3676,6 +4162,15 @@ function setDesign(
     .classList.toggle(
       "active",
       design==="modern"
+    );
+
+  document
+    .getElementById(
+      "simpleDesignBtn"
+    )
+    .classList.toggle(
+      "active",
+      design==="simple"
     );
 
 
@@ -3766,6 +4261,9 @@ function defaultAvatar(user){
 function populateAccount(user){
 
   if(!user)return;
+  const isGuest=!!user.isAnonymous;
+  const accountTab=document.getElementById("accountTab");
+  if(accountTab){ const oldBadge=accountTab.querySelector(".guest-account-badge"); if(oldBadge) oldBadge.remove(); if(isGuest){ const b=document.createElement("div"); b.className="guest-account-badge settings-status"; b.textContent="GUEST ACCOUNT • Anonymous Firebase session"; accountTab.prepend(b); } }
 
 
   accountUsername.value=
@@ -3886,6 +4384,15 @@ document
   .addEventListener(
     "click",
     ()=>setDesign("modern")
+  );
+
+document
+  .getElementById(
+    "simpleDesignBtn"
+  )
+  .addEventListener(
+    "click",
+    ()=>setDesign("simple")
   );
 
 
@@ -4118,42 +4625,29 @@ document
    RESET PREFERENCES
 ========================================================= */
 
-document
-  .getElementById(
-    "resetPrefs"
-  )
-  .addEventListener(
-    "click",
-    ()=>{
+document.getElementById("resetPrefs").addEventListener("click",()=>{
+  ["kalahariTheme","kalahariGameFilter","kalahariDesign","kalahariLoginTheme","kalahariSettings","kalahariGameSort"].forEach(k=>localStorage.removeItem(k));
+  setTheme(true);
+  setDesign("old");
+  setLoginTheme("classic");
+  if(typeof gameFilter!=="undefined" && gameFilter) gameFilter.value="all";
+  if(search) search.value="";
+  updateGameList();
+  const status=document.getElementById("storageStatus");
+  if(status) status.textContent="Launcher preferences reset.";
+});
 
-      localStorage.removeItem(
-        "kalahariTheme"
-      );
-
-      localStorage.removeItem(
-        "kalahariGameFilter"
-      );
-
-      localStorage.removeItem(
-        "kalahariDesign"
-      );
-
-
-      setTheme(true);
-
-      setDesign("old");
-
-
-      gameFilter.value=
-        "all";
-
-      search.value=
-        "";
-
-      updateGameList();
-
-    }
-  );
+function reloadLauncher(){ location.reload(); }
+document.getElementById("reloadLauncher")?.addEventListener("click",reloadLauncher);
+document.getElementById("reloadLauncher2")?.addEventListener("click",reloadLauncher);
+document.getElementById("clearLocalData")?.addEventListener("click",()=>{ localStorage.clear(); location.reload(); });
+document.getElementById("signOutAll")?.addEventListener("click",()=>document.getElementById("logout").click());
+document.getElementById("openMessagesFromAbout")?.addEventListener("click",()=>{
+  closeSettings();
+  const messagesBtn=document.querySelector(".messages-btn");
+  if(messagesBtn) messagesBtn.click();
+  else window.location.href="message.html";
+});
 
 
 /* =========================================================
@@ -4561,6 +5055,39 @@ document
 
 
 /* =========================================================
+   LOGIN EXPERIENCE + GUEST ACCESS
+========================================================= */
+function setLoginTheme(theme, save=true){
+  document.body.classList.remove("login-simple-light","login-2050");
+  if(theme==="simple-light") document.body.classList.add("login-simple-light");
+  if(theme==="2050") document.body.classList.add("login-2050");
+  document.querySelectorAll(".login-theme-btn").forEach(btn=>btn.classList.toggle("active",btn.dataset.loginTheme===theme));
+  if(save) localStorage.setItem("kalahariLoginTheme",theme);
+}
+setLoginTheme(localStorage.getItem("kalahariLoginTheme")||"classic",false);
+document.querySelectorAll(".login-theme-btn").forEach(btn=>btn.addEventListener("click",()=>setLoginTheme(btn.dataset.loginTheme)));
+
+const guestBtn=document.getElementById("guestBtn");
+if(guestBtn) guestBtn.addEventListener("click",async()=>{
+  errorBox.textContent=""; errorBox.style.color="#ff7272"; authStatus.textContent="";
+  if(!auth){errorBox.textContent="Firebase authentication is unavailable.";return;}
+  if(LAUNCHER_STATUS!=="ON") return;
+  authStatus.textContent="Creating guest session...";
+  guestBtn.disabled=true;
+  try{
+    const credential=await auth.signInAnonymously();
+    errorBox.style.color="#52d47b";
+    errorBox.textContent="Guest session ready.";
+    authStatus.textContent="";
+    showLauncher(credential.user);
+  }catch(err){
+    console.error("GUEST LOGIN ERROR:",err);
+    errorBox.textContent=firebaseErrorMessage(err);
+    authStatus.textContent="";
+  }finally{guestBtn.disabled=false;}
+});
+
+/* =========================================================
    SIGN IN
 ========================================================= */
 
@@ -4827,6 +5354,14 @@ document
   );
 
 
+/* =========================================================
+   SETTINGS PREFERENCES
+========================================================= */
+const settingsDefaults={rememberFilter:true,confirmLaunch:false,newTab:false,notifyUpdates:true,notifyImportant:true,notifyGames:true,notifyMaintenance:true,reduceMotion:false,reduceTransparency:false,highContrast:false};
+const storedSettings=JSON.parse(localStorage.getItem("kalahariSettings")||"{}");
+function setting(id,key){const el=document.getElementById(id); if(!el)return; el.checked=storedSettings[key]??settingsDefaults[key]; el.addEventListener("change",()=>{storedSettings[key]=el.checked;localStorage.setItem("kalahariSettings",JSON.stringify(storedSettings)); if(key==="reduceMotion") document.body.classList.toggle("reduced-motion",el.checked); if(key==="reduceTransparency") document.body.classList.toggle("reduced-transparency",el.checked); if(key==="highContrast") document.body.classList.toggle("high-contrast",el.checked);});}
+[["rememberFilterToggle","rememberFilter"],["confirmLaunchToggle","confirmLaunch"],["newTabToggle","newTab"],["notifyUpdates","notifyUpdates"],["notifyImportant","notifyImportant"],["notifyGames","notifyGames"],["notifyMaintenance","notifyMaintenance"],["reduceMotionToggle","reduceMotion"],["accessibilityMotion","reduceMotion"],["reduceTransparencyToggle","reduceTransparency"],["highContrastToggle","highContrast"]].forEach(x=>setting(...x));
+const sortEl=document.getElementById("gameSort"); if(sortEl){sortEl.value=localStorage.getItem("kalahariGameSort")||"default";sortEl.addEventListener("change",()=>localStorage.setItem("kalahariGameSort",sortEl.value));}
 /* =========================================================
    KEYBOARD SHORTCUTS
 ========================================================= */

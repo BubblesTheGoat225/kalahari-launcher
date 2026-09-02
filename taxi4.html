@@ -98,15 +98,29 @@ body{background:#000;overflow:hidden;user-select:none;}
 #minimapContainer{
   position:fixed;bottom:20px;right:20px;width:180px;height:180px;
 }
+#minimapContainer::before{
+  content:'';position:absolute;inset:-10px;pointer-events:none;
+  border:1px solid rgba(255,180,0,0.28);border-radius:50%;
+}
+#minimapContainer::after{
+  /* Corner brackets give the frame an instrument-panel edge instead of
+     a plain circle floating in the corner. */
+  content:'';position:absolute;inset:-16px;pointer-events:none;
+  background:
+    linear-gradient(rgba(255,180,0,.55),rgba(255,180,0,.55)) top left / 14px 2px no-repeat,
+    linear-gradient(rgba(255,180,0,.55),rgba(255,180,0,.55)) top left / 2px 14px no-repeat,
+    linear-gradient(rgba(255,180,0,.55),rgba(255,180,0,.55)) top right / 14px 2px no-repeat,
+    linear-gradient(rgba(255,180,0,.55),rgba(255,180,0,.55)) top right / 2px 14px no-repeat;
+}
 #minimapCanvas{
   width:180px;height:180px;border-radius:50%;
-  border:2px solid rgba(255,255,255,0.2);
-  box-shadow:0 0 20px rgba(0,0,0,0.8),inset 0 0 10px rgba(0,0,0,0.5);
+  border:2px solid rgba(255,180,0,0.4);
+  box-shadow:0 0 20px rgba(0,0,0,0.8),inset 0 0 14px rgba(0,0,0,0.55);
   transition:border-color 0.3s, box-shadow 0.3s;
 }
 #minimapCanvas.online-active{
-  border:2px solid #4ade80;
-  box-shadow:0 0 24px rgba(74,222,128,0.55),inset 0 0 10px rgba(0,0,0,0.5);
+  border:2px solid #22d3ee;
+  box-shadow:0 0 20px rgba(34,211,238,0.5), 0 0 34px rgba(232,121,249,0.25), inset 0 0 14px rgba(0,0,0,0.55);
 }
 #minimapOnlineBadge{
   display:none;
@@ -116,19 +130,20 @@ body{background:#000;overflow:hidden;user-select:none;}
   top:-10px;
   left:50%;
   transform:translateX(-50%);
-  background:rgba(6,16,10,0.85);
-  border:1px solid #4ade80;
-  color:#4ade80;
+  background:rgba(8,14,22,0.85);
+  border:1px solid #22d3ee;
+  color:#67e8f9;
   font-family:'Share Tech Mono',monospace;
   font-size:9px;
   letter-spacing:2px;
   padding:3px 9px;
   border-radius:20px;
   white-space:nowrap;
+  box-shadow:0 0 10px rgba(232,121,249,0.35);
 }
 #minimapOnlineBadge .dot{
-  width:5px;height:5px;border-radius:50%;background:#4ade80;
-  box-shadow:0 0 6px #4ade80;
+  width:5px;height:5px;border-radius:50%;background:#22d3ee;
+  box-shadow:0 0 6px #22d3ee;
   animation:mmPulse 1.6s infinite;
 }
 @keyframes mmPulse{
@@ -138,12 +153,14 @@ body{background:#000;overflow:hidden;user-select:none;}
 #onlinePlayerCount{
   position:absolute;bottom:-42px;left:50%;transform:translateX(-50%);
   font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:1px;
-  color:rgba(74,222,128,0.85);white-space:nowrap;
+  color:rgba(103,232,249,0.9);white-space:nowrap;
 }
 #minimapDistrictLabel{
-  position:absolute;bottom:-24px;left:50%;transform:translateX(-50%);
+  position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);
   font-family:'Rajdhani',sans-serif;font-size:11px;letter-spacing:2px;
-  color:rgba(255,255,255,0.6);white-space:nowrap;
+  color:rgba(255,210,120,0.85);white-space:nowrap;
+  background:rgba(8,14,22,0.72);border:1px solid rgba(255,180,0,0.3);
+  padding:2px 10px;border-radius:20px;
 }
 
 /* Interaction hint */
@@ -189,45 +206,65 @@ body{background:#000;overflow:hidden;user-select:none;}
   z-index:100;pointer-events:all;
 }
 
-/* Start Screen */
+/* Start Screen — dispatch-console layout. Single centered column instead
+   of the old two-column hero+card split: title stack on top, one bordered
+   console panel below holding every action, grouped by weight (primary /
+   secondary / online) rather than a flat button list. */
 #startScreen{
-  background:linear-gradient(135deg,#0a0a0a 0%,#1a1208 50%,#0a0a0a 100%);
+  background:radial-gradient(circle at 50% 15%,rgba(24,120,255,.22),transparent 38%),
+             linear-gradient(180deg,#020817,#061a35 55%,#03101f);
+  overflow:hidden;
 }
 #startScreen::before{
   content:'';position:absolute;top:0;left:0;right:0;bottom:0;
-  background:radial-gradient(ellipse at 50% 30%,rgba(255,180,0,0.08) 0%,transparent 70%);
+  background:repeating-linear-gradient(90deg,rgba(80,170,255,.035) 0 1px,transparent 1px 55px),
+             repeating-linear-gradient(0deg,rgba(80,170,255,.035) 0 1px,transparent 1px 55px);
+  pointer-events:none;
 }
-.start-content{text-align:center;position:relative;z-index:1;}
+#startScreen::after{
+  content:'';position:absolute;left:50%;top:14%;width:900px;height:900px;
+  margin-left:-450px;margin-top:-450px;border-radius:50%;
+  background:conic-gradient(from 0deg,rgba(255,210,40,.05),transparent 20%,transparent 80%,rgba(85,183,255,.06));
+  animation:menuSweep 22s linear infinite;pointer-events:none;
+}
+@keyframes menuSweep{to{transform:rotate(360deg);}}
+.start-wrap{position:relative;z-index:2;width:min(440px,90vw);display:flex;flex-direction:column;align-items:center;text-align:center;}
+.brand-block{margin-bottom:34px;}
 .game-title{
-  font-family:'Bebas Neue',sans-serif;font-size:96px;letter-spacing:12px;
-  color:#fff;line-height:0.9;text-shadow:0 0 60px rgba(255,180,0,0.4);
+  font-family:'Bebas Neue',sans-serif;font-size:88px;letter-spacing:10px;line-height:0.9;
+  color:#fff;text-shadow:0 0 45px rgba(0,132,255,.65);
 }
 .game-subtitle{
-  font-family:'Rajdhani',sans-serif;font-size:16px;letter-spacing:10px;
-  color:#ffb400;text-transform:uppercase;margin-top:8px;opacity:0.8;
+  font-family:'Rajdhani',sans-serif;font-size:11px;letter-spacing:2px;
+  color:rgba(255,255,255,.35);text-transform:none;margin-top:14px;
 }
-.city-line{
-  width:200px;height:1px;background:linear-gradient(90deg,transparent,#ffb400,transparent);
-  margin:20px auto;
+.menu-deck{
+  width:100%;background:rgba(2,12,28,.78);border:1px solid rgba(70,170,255,.35);
+  border-left:4px solid #ffd21f;padding:26px;box-shadow:0 0 40px rgba(0,90,220,.18);
+  backdrop-filter:blur(12px);
 }
+.save-status{font:11px 'Share Tech Mono',monospace;color:#55d6ff;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;}
 .start-btn{
-  display:inline-block;font-family:'Rajdhani',sans-serif;font-size:18px;
-  font-weight:700;letter-spacing:4px;color:#000;background:#ffb400;
-  border:none;padding:14px 48px;cursor:pointer;text-transform:uppercase;
-  margin-top:20px;transition:all 0.2s;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+  display:block;width:100%;font-family:'Rajdhani',sans-serif;font-size:17px;
+  font-weight:700;letter-spacing:3px;color:#06101f;
+  background:linear-gradient(90deg,#ffd21f,#ffeb72);
+  border:none;padding:15px 20px;cursor:pointer;text-transform:uppercase;
+  margin-bottom:10px;transition:transform .15s,box-shadow .15s;
 }
-.start-btn:hover{background:#ffd700;transform:scale(1.02);}
-.controls-hint{
-  font-family:'Rajdhani',sans-serif;font-size:13px;letter-spacing:2px;
-  color:rgba(255,255,255,0.3);margin-top:30px;line-height:1.8;
+.start-btn:hover{transform:scale(1.015);box-shadow:0 0 22px rgba(255,210,40,.35);}
+.menu-btn{
+  display:block;width:100%;font-family:'Rajdhani',sans-serif;font-size:15px;
+  font-weight:600;letter-spacing:2px;color:#fff;
+  background:rgba(20,80,150,.12);border:1px solid rgba(70,170,255,.25);
+  padding:12px;cursor:pointer;text-transform:uppercase;margin-bottom:10px;transition:all .15s;
 }
-.controls-hint strong{color:rgba(255,255,255,0.6);}
-
-/* Futuristic main menu */
-#startScreen{background:radial-gradient(circle at 70% 25%,rgba(24,120,255,.24),transparent 32%),linear-gradient(135deg,#020817,#061a35 55%,#03101f);overflow:hidden;}
-#startScreen::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 0 35%,rgba(255,210,40,.07) 50%,transparent 65%),repeating-linear-gradient(90deg,rgba(80,170,255,.035) 0 1px,transparent 1px 55px);pointer-events:none;}
-.start-layout{position:relative;z-index:2;width:min(1100px,92vw);display:grid;grid-template-columns:1.15fr .85fr;gap:70px;align-items:center;}
-.start-brand{text-align:left}.game-title{font-size:108px;letter-spacing:10px;color:#fff;text-shadow:0 0 45px rgba(0,132,255,.65);}.game-title::first-line{color:#fff}.game-subtitle{color:#55b7ff;letter-spacing:8px}.city-line{margin:22px 0;width:260px;background:linear-gradient(90deg,#1677ff,#ffd21f,transparent);}.menu-panel{background:rgba(2,12,28,.78);border:1px solid rgba(70,170,255,.35);border-left:4px solid #ffd21f;padding:28px;box-shadow:0 0 40px rgba(0,90,220,.18);backdrop-filter:blur(12px);}.menu-panel .start-btn,.menu-panel .menu-btn{margin-top:0;margin-bottom:10px;width:100%;text-align:left;padding:14px 20px;clip-path:none}.menu-panel .start-btn{background:linear-gradient(90deg,#ffd21f,#ffeb72);color:#06101f}.menu-panel .menu-btn{border-color:rgba(70,170,255,.25);background:rgba(20,80,150,.12)}.menu-panel .menu-btn:hover{background:rgba(0,130,255,.18);border-color:#55b7ff;color:#fff}.menu-meta{font:12px Rajdhani,sans-serif;letter-spacing:2px;color:rgba(255,255,255,.42);margin-top:14px}.save-status{font:11px Share Tech Mono,monospace;color:#55d6ff;margin-bottom:12px;text-transform:uppercase;}
+.menu-btn:hover{background:rgba(0,130,255,.18);border-color:#55b7ff;color:#fff;}
+.menu-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.menu-row .menu-btn{font-size:13px;padding:11px 6px;margin-bottom:0;}
+.online-block{
+  margin-top:14px;padding-top:16px;border-top:1px solid rgba(70,170,255,.2);
+}
+.menu-meta{font:11px 'Rajdhani',sans-serif;letter-spacing:2px;color:rgba(255,255,255,.35);margin-top:14px;}
 /* Pause Menu */
 #pauseMenu{
   background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);display:none;
@@ -641,11 +678,20 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
   font-family:'Rajdhani',sans-serif;font-size:13px;letter-spacing:2px;color:#fff;
 }
 
-/* Map Screen */
+/* Map Screen — same console-panel language as the main menu and minimap
+   frame, so all three read as one piece of equipment. */
 #mapScreen{
   background:rgba(0,0,0,0.92);backdrop-filter:blur(8px);display:none;
 }
-#mapCanvas{border:1px solid rgba(255,180,0,0.3);cursor:default;}
+.map-panel{
+  background:rgba(2,12,28,.82);border:1px solid rgba(70,170,255,.3);
+  border-left:4px solid #ffd21f;padding:24px 28px;
+  box-shadow:0 0 50px rgba(0,90,220,.15);backdrop-filter:blur(10px);
+}
+#mapCanvas{
+  border:1px solid rgba(70,170,255,0.35);cursor:default;
+  box-shadow:inset 0 0 24px rgba(0,0,0,0.6);
+}
 #mapCanvasWrap{
   position:relative;
   display:inline-block;
@@ -669,17 +715,23 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
   box-shadow:0 4px 14px rgba(0,0,0,0.5);
 }
 .map-title{
-  font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:4px;
-  color:#ffb400;text-align:center;margin-bottom:16px;
+  font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:5px;
+  color:#fff;text-align:left;margin-bottom:2px;
+}
+.map-subtitle{
+  font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;
+  color:rgba(85,183,255,.7);text-align:left;text-transform:uppercase;margin-bottom:16px;
 }
 .map-legend{
-  display:flex;gap:16px;margin-top:12px;flex-wrap:wrap;justify-content:center;
+  display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;justify-content:flex-start;
 }
 .legend-item{
   display:flex;align-items:center;gap:6px;
-  font-family:'Rajdhani',sans-serif;font-size:12px;color:rgba(255,255,255,0.6);
+  font-family:'Rajdhani',sans-serif;font-size:11px;color:rgba(255,255,255,0.6);
+  background:rgba(20,80,150,.12);border:1px solid rgba(70,170,255,.2);
+  padding:4px 10px;border-radius:20px;
 }
-.legend-dot{width:10px;height:10px;border-radius:50%;}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 
 /* Loading overlay */
 #loadingScreen{
@@ -731,30 +783,26 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
 }
 
 
-/* FUTURISTIC BLUE / WHITE / YELLOW TITLE + LOADING THEME */
+/* FUTURISTIC BLUE / WHITE / YELLOW LOADING THEME — startScreen now has its
+   own self-contained design above, so this stays scoped to #loadingScreen. */
 #loadingScreen{
   background:
     radial-gradient(circle at 50% 42%,rgba(30,144,255,.20),transparent 35%),
     linear-gradient(135deg,#020817 0%,#061a33 48%,#020817 100%) !important;
   overflow:hidden;
 }
-#loadingScreen::before,#startScreen::after{
+#loadingScreen::before{
   content:'';position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(115deg,transparent 0 44%,rgba(255,212,59,.08) 45%,transparent 46% 70%,rgba(0,174,255,.08) 71%,transparent 72%);
 }
-.loading-title,.game-title{
+.loading-title{
   color:#fff !important;
   text-shadow:0 0 12px rgba(0,174,255,.8),0 0 42px rgba(30,144,255,.35),4px 4px 0 rgba(255,212,59,.18) !important;
+  letter-spacing:12px !important;
 }
-.loading-title{letter-spacing:12px !important;}
 .loading-bar-bg{background:rgba(255,255,255,.10) !important;border:1px solid rgba(0,174,255,.35);box-shadow:0 0 20px rgba(0,174,255,.12);}
 .loading-bar{background:linear-gradient(90deg,#087cff,#18c8ff,#ffd43b) !important;box-shadow:0 0 16px rgba(24,200,255,.65);}
-.loading-text,.game-subtitle{color:#8edcff !important;text-shadow:0 0 10px rgba(0,174,255,.4);}
-#startScreen{background:linear-gradient(135deg,#020817 0%,#06234a 50%,#030b19 100%) !important;}
-#startScreen::before{background:radial-gradient(ellipse at 50% 30%,rgba(0,174,255,.16) 0%,transparent 65%) !important;}
-.city-line{background:linear-gradient(90deg,transparent,#18c8ff,#ffd43b,transparent) !important;}
-.start-btn{color:#06101d !important;background:linear-gradient(90deg,#18c8ff,#ffd43b) !important;box-shadow:0 0 24px rgba(24,200,255,.25);}
-.start-btn:hover{background:linear-gradient(90deg,#64ddff,#ffe36d) !important;}
+.loading-text{color:#8edcff !important;text-shadow:0 0 10px rgba(0,174,255,.4);}
 
 #eventBanner{position:fixed;top:145px;left:50%;transform:translateX(-50%) translateY(-10px);opacity:0;transition:.35s;z-index:40;text-align:center;background:rgba(5,15,30,.88);border:1px solid rgba(255,180,0,.55);border-left:4px solid #ffb400;padding:10px 22px;min-width:300px;box-shadow:0 0 28px rgba(0,150,255,.18);pointer-events:none}
 #eventBanner.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -865,21 +913,23 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
 
 <!-- Start Screen -->
 <div class="screen" id="startScreen" style="display:none">
-  <div class="start-layout">
-    <div class="start-brand">
+  <div class="start-wrap">
+    <div class="brand-block">
       <div class="game-title">Whitewall</div>
-      <div class="city-line"></div>
-      <div class="game-subtitle">(C)2026 Kalahari Studios, Kalahari International, Kalahari Industries & Kalahari Games</div>
-      <div class="controls-hint"><strong>WASD</strong> Move · <strong>Mouse</strong> Look · <strong>E</strong> Interact / Enter Car<br><strong>Shift</strong> Sprint · <strong>Space</strong> Jump / Handbrake · <strong>M</strong> Map</div>
+      <div class="game-subtitle">(C)2026 Kalahari Studios, Kalahari International, Kalahari Industries &amp; Kalahari Games</div>
     </div>
-    <div class="menu-panel">
+    <div class="menu-deck">
       <div class="save-status" id="saveStatus">NO SAVE DATA DETECTED</div>
       <button class="start-btn" id="continueBtn" onclick="continueGame()">CONTINUE GAME</button>
       <button class="menu-btn" onclick="startNewGame()">NEW GAME</button>
-      <button class="menu-btn" onclick="showHowToPlay()">HOW TO PLAY</button>
-      <button class="menu-btn" onclick="showPatchNotes()">UPDATE / PATCH NOTES</button>
-      <button class="menu-btn online-toggle-btn" onclick="openOnlineProfileScreen()">🌐 PLAY ONLINE</button>
-      <div class="online-status-line" id="startOnlineStatus">Checking session...</div>
+      <div class="menu-row">
+        <button class="menu-btn" onclick="showHowToPlay()">HOW TO PLAY</button>
+        <button class="menu-btn" onclick="showPatchNotes()">PATCH NOTES</button>
+      </div>
+      <div class="online-block">
+        <button class="menu-btn online-toggle-btn" onclick="openOnlineProfileScreen()">🌐 PLAY ONLINE</button>
+        <div class="online-status-line" id="startOnlineStatus">Checking session...</div>
+      </div>
       <div class="menu-meta">VERSION 4.6 · KALAHARI STUDIOS</div>
     </div>
   </div>
@@ -1000,8 +1050,9 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
 
 <!-- Map Screen -->
 <div class="screen" id="mapScreen">
-  <div style="text-align:center">
-    <div class="map-title">City of Kingston Map</div>
+  <div class="map-panel">
+    <div class="map-title">City of Kingston</div>
+    <div class="map-subtitle">Dispatch Map Overlay</div>
     <div id="mapCanvasWrap">
       <canvas id="mapCanvas" width="700" height="500"></canvas>
       <div id="mapTooltip"></div>
@@ -1016,7 +1067,8 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
       <div class="legend-item"><div class="legend-dot" style="background:#4ade80"></div>Online Player</div>
       <div class="legend-item"><div class="legend-dot" style="background:#60a5fa"></div>Cop</div>
       <div class="legend-item"><div class="legend-dot" style="background:#e879f9"></div>Robber</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#567d4d"></div>Future Countryside</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#567d4d"></div>Countryside</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#3f7a44"></div>Park</div>
     </div>
     <br><button class="btn-cancel" style="width:200px" onclick="closeMap()">CLOSE MAP</button>
   </div>
@@ -1157,34 +1209,63 @@ if(mpAuth){
 
 // ---- WORLD DATA ----
 // The city of Kingston — three boroughs linked by wide modern bridges.
+// Islands sized up from the original 700x800 / 500x740 / 500x700: width
+// growth on Kingston Central and Bayshore is added entirely to their outer
+// (away-from-each-other) side, so both bridges — anchored to the inner
+// edges — need no changes at all. Ashford keeps its original width (it's
+// bridge-anchored on both sides) and only grows in depth. All three grow
+// depth symmetrically about z=0, which is already every island's centre,
+// so existing districts/special buildings/safehouses stay exactly where
+// they were — the growth only adds new, previously-nonexistent space at
+// the fringes for more buildings to fill.
 const ISLANDS = [
-  { name:'Kingston Central', x:-750, z:-400, w:700, d:800, color:0x4a5568,
-    shape:[[-310,-400],[250,-400],[350,-320],[350,310],[270,400],[-245,400],[-350,290],[-350,-300]] },
-  { name:'Ashford', x:30, z:-370, w:500, d:740, color:0x374151,
-    shape:[[-220,-370],[190,-370],[250,-285],[250,290],[165,370],[-185,370],[-250,270],[-250,-280]] },
-  { name:'Bayshore', x:600, z:-350, w:500, d:700, color:0x2d3748,
-    shape:[[-215,-350],[190,-350],[250,-270],[250,275],[170,350],[-180,350],[-250,245],[-250,-265]] },
-  // Large empty future countryside, now closer to the city but still separated
-  // by a meaningful expansion gap and the future access bridge.
-  { name:'Under Construction', x:1230, z:-650, w:2200, d:1900, color:0x466b45,
-    shape:[[-850,-900],[900,-900],[1100,-700],[1100,700],[900,900],[-850,900],[-1050,650],[-940,400],[-900,120],[-900,-120],[-940,-400],[-1050,-650]] },
+  { name:'Kingston Central', x:-925, z:-520, w:875, d:1040, color:0x4a5568,
+    shape:[[-387.5,-520],[312.5,-520],[437.5,-416],[437.5,403],[337.5,520],[-306.25,520],[-437.5,377],[-437.5,-390]] },
+  { name:'Ashford', x:30, z:-481, w:500, d:962, color:0x374151,
+    shape:[[-220,-481],[190,-481],[250,-370.5],[250,377],[165,481],[-185,481],[-250,351],[-250,-364]] },
+  { name:'Bayshore', x:600, z:-455, w:625, d:910, color:0x2d3748,
+    shape:[[-268.75,-455],[237.5,-455],[312.5,-351],[312.5,357.5],[212.5,455],[-225,455],[-312.5,318.5],[-312.5,-344.5]] },
+  // The countryside — a wide rural expanse running the width of the map,
+  // north of all three city boroughs, with mountains along its far edge
+  // and two small towns linked by the highway that crosses up from Ashford.
+  { name:'Kingston Countryside', x:-1350, z:-1974, w:2800, d:1400, color:0x5c7a4a,
+    shape:[[-1400,420],[-1330,630],[-980,672],[-560,644],[-140,672],[280,644],[700,672],[1120,616],[1372,420],
+           [1400,70],[1330,-280],[1190,-532],[980,-644],[700,-588],[490,-672],[210,-602],[-70,-658],[-350,-588],
+           [-630,-644],[-910,-560],[-1120,-448],[-1330,-210],[-1400,70]] },
 ];
 // Bridges are measured between the actual island edges and share a horizontal
 // road centreline so they form a continuation of the generated road network.
 const BRIDGES = [
-  // All three crossings use the dedicated central arterial at z=0.
+  // Both crossings use the dedicated central arterial at z=0.
   // x/w are calculated from the actual island boundaries above.
   { name:'Kingston Central → Ashford', x:-50,  z:0, w:80,  d:14 },
   { name:'Ashford → Bayshore',          x:530,  z:0, w:70,  d:14 },
-  { name:'Bayshore → Under Construction',x:1100, z:0, w:130, d:14 },
 ];
+// The countryside highway is a NORTH-SOUTH crossing (unlike the two
+// horizontal arterial bridges above), so it's built and collision-checked
+// separately rather than forced into the horizontal-only BRIDGES system.
+// z is set so cb.z + cb.d lands exactly on Ashford's north edge
+// (ISLANDS[1].z) — that edge moved from -370 to -481 when Ashford's depth
+// grew, so this shifted from -590 to -701 to stay attached. Everything
+// north of the bridge (the highway, both towns, the forest, the
+// mountains) is defined in fixed absolute coordinates independent of this
+// value, so nothing else needed to move.
+const COUNTRYSIDE_BRIDGE = { name:'Ashford → Countryside Highway', x:230, w:20, z:-701, d:220 };
 // Shared road width used by both road rendering and block/lot layout.
 const ROAD_WIDTH = 14;
+// Central Park (Ashford, the middle island) — a reserved block zone kept
+// clear of procedural buildings and special buildings alike, landscaped
+// separately by buildCentralPark(). Positioned entirely east of the
+// countryside highway (which sits at x=240, spanning ~233-247) with a
+// margin, so that arterial never touches it — only the z=0 boulevard is
+// allowed to run through, and buildRoads() below gaps every other grid
+// road that would otherwise cross these bounds.
+const ASHFORD_PARK = { x1:260, x2:470, z1:-130, z2:130 };
 const STREET_NAMES = {
   0:['Harbour Street','Kingston Boulevard','Exchange Avenue','Central Street','Southgate Road','Crown Avenue','Market Street','Riverside Drive'],
   1:['Meridian Avenue','Fairview Road','Ashford Boulevard','Ironworks Street','Station Road','Heights Drive','Garden Street'],
   2:['Bayshore Boulevard','Marina Drive','Port Road','Silverlake Avenue','Docklands Street','Harbour View Road'],
-  3:['Future Highway','Construction Access Road']
+  3:['Countryside Highway','Millbrook Road','Ashwood Lane']
 };
 let currentStreetName = '';
 let streetBannerTimer = null;
@@ -1208,7 +1289,9 @@ const DISTRICTS = [
   { name:'Bayshore Marina',  island:'Bayshore', minX:360,  maxX: 500, minZ:-210, maxZ: -50, color:'#2980b9' },
   { name:'Crestview Hills',  island:'Bayshore', minX:360,  maxX: 500, minZ: -50, maxZ: 210, color:'#2ecc71' },
   { name:'Silverlake',       island:'Bayshore', minX:500,  maxX: 640, minZ:-210, maxZ: 210, color:'#1abc9c' },
-  { name:'Under Construction', island:'Future Countryside', minX:990, maxX:2900, minZ:-1550, maxZ:350, color:'#789c58' },
+  { name:'Millbrook',       island:'Kingston Countryside', minX:-350, maxX:-50,  minZ:-890, maxZ:-690, color:'#8a9a5b' },
+  { name:'Ashwood Falls',   island:'Kingston Countryside', minX: 350, maxX: 700, minZ:-1290, maxZ:-1090, color:'#6b8f71' },
+  { name:'The Countryside', island:'Kingston Countryside', minX:-1350, maxX:1450, minZ:-1946, maxZ:-602, color:'#5c7a4a' },
 ];
 
 const SAFEHOUSES = [
@@ -1220,17 +1303,21 @@ const SAFEHOUSES = [
   { id:'sh6', name:'Fairview Apartment', type:'TWO-BEDROOM APARTMENT', island:1, x:230, z:130, price:12000, style:'fairview', desc:'A bright modern two-bedroom apartment in quiet Fairview, with clean lines and park-facing windows.' },
   { id:'sh7', name:'Meridian Penthouse', type:'PENTHOUSE SUITE', island:1, x:240, z:-130, price:55000, style:'penthouse', desc:'A high-end Meridian penthouse with a private elevator, panoramic windows and a sleek rooftop lounge.' },
   { id:'sh8', name:'Suburban Bungalow', type:'DETACHED HOUSE', island:1, x:80, z:-150, price:18000, style:'suburban', desc:'A quiet suburban bungalow with a family kitchen, garden, two-car garage and comfortable living room.' },
+  { id:'sh9', name:'Millbrook Farmhouse', type:'COUNTRY FARMHOUSE', island:3, x:700, z:-700, price:22000, style:'farmhouse', desc:'A real working farmhouse between Millbrook and Ashwood Falls, with a red barn, grain silo and its own fenced field.' },
+  { id:'sh10', name:'Highland Homestead', type:'COUNTRY FARMHOUSE', island:3, x:-500, z:-1200, price:16000, style:'farmhouse', desc:'A weathered homestead in the shadow of the mountains — quiet, isolated, and cheap for the space you get.' },
 ];
 
 // Positions below are seeds only — buildWorld() runs every one of these
 // through snapToBlock(), which snaps to the nearest free road-grid block on
-// its island. They're spread across each island's FULL block range now
-// (previously most were bunched into one corner, so snapToBlock kept
-// resolving them to the same handful of nearby blocks). Each island's
-// buildable block range is roughly:
-//   Kingston Central (0): x -700..-100, z -380..380
-//   Ashford          (1): x   60.. 500, z -350..350
-//   Bayshore         (2): x  680..1080, z -330..330  (port occupies ~600-670)
+// its island. Each island's buildable block range (updated for the larger
+// island footprints above) is roughly:
+//   Kingston Central (0): x -900..-100, z -500..500
+//   Ashford          (1): x   60.. 500, z -460..460
+//   Bayshore         (2): x  620..1200, z -430..430  (port occupies ~600-670)
+// Existing seeds below still sit in each island's original (smaller) sub-
+// range — snapToBlock will happily resolve them to a nearby block, it just
+// means the newly-added outer margin is filled by procedural filler
+// buildings rather than named special buildings, which is fine.
 const SPECIAL_BUILDINGS = [
   // --- Jobs ---
   { id:'taxi',       name:'Kingston Cab Co.', type:'job',     jobType:'taxi',        island:1, x: 80,  z: 260, w:30, d:25, h:12, color:0xf59e0b, desc:'Start a shift as a taxi driver' },
@@ -1279,6 +1366,16 @@ const SPECIAL_BUILDINGS = [
   // --- Apartments (online mode exclusive — shared ownership, shared garage) ---
   { id:'aptriver',   name:'Riverside Apartments', type:'apartment_complex',           island:0, x:-580, z: 150, w:34, d:30, h:26, color:0x3b82f6, desc:'Shared apartments for online players', units:6, unitPrice:3500 },
   { id:'aptbay',     name:'Bayshore Towers',      type:'apartment_complex',           island:2, x: 900, z: 150, w:36, d:32, h:30, color:0x60a5fa, desc:'Luxury apartments for online players', units:6, unitPrice:5200 },
+
+  // --- Countryside towns ---
+  { id:'millbrookdiner', name:"Millbrook Diner",   type:'food',                        island:3, x: 200, z: -780, w:16, d:12, h: 6, color:0xdc2626, desc:"Restore health — $15. The only diner for miles." },
+  { id:'ashwoodgas',     name:'Ashwood Fuel Stop', type:'gas',                          island:3, x: 520, z:-1180, w:22, d:18, h: 7, color:0x6b7280 },
+  { id:'millbrookgas',   name:'Crossroads Fuel',   type:'gas',                          island:3, x: 350, z: -820, w:22, d:18, h: 7, color:0x6b7280 },
+  { id:'ruralgas',       name:'Highway Rest Stop', type:'gas',                          island:3, x: 100, z:-1050, w:22, d:18, h: 7, color:0x6b7280 },
+  { id:'millbrookstore', name:'Millbrook General Store', type:'country_store',         island:3, x: 170, z: -775, w:15, d:12, h: 6, color:0xc9a45c },
+  { id:'millbrookhall',  name:'Millbrook Town Hall',     type:'country_hall',          island:3, x: 240, z: -775, w:18, d:15, h: 8, color:0xe8dcc8 },
+  { id:'ashwoodchapel',  name:'Ashwood Falls Chapel',    type:'country_chapel',        island:3, x: 490, z:-1215, w:14, d:20, h:10, color:0xf5f0e6 },
+  { id:'ashwoodtrading', name:'Ashwood Trading Post',    type:'country_store',         island:3, x: 550, z:-1215, w:15, d:12, h: 6, color:0x8b6f47 },
 ];
 
 // Cars spread throughout the world
@@ -1484,6 +1581,16 @@ function buildWorld(){
   // Reserve road-grid blocks for special buildings and safehouses BEFORE
   // any procedural filler buildings are generated, so nothing ends up
   // spawned on a road or stacked on top of another building.
+  // Reserve Ashford's park blocks first so nothing else can claim them.
+  {
+    if(!usedBlocks[1]) usedBlocks[1] = new Set();
+    getBlocks(ISLANDS[1], 1).forEach(blk => {
+      const cx = blk.x + blk.w/2, cz = blk.z + blk.d/2;
+      if(cx > ASHFORD_PARK.x1 && cx < ASHFORD_PARK.x2 && cz > ASHFORD_PARK.z1 && cz < ASHFORD_PARK.z2){
+        usedBlocks[1].add(blk.x.toFixed(1) + ',' + blk.z.toFixed(1));
+      }
+    });
+  }
   SPECIAL_BUILDINGS.forEach(b => {
     const snapped = snapToBlock(b.island, b.x, b.z, b.w, b.d);
     b.x = snapped.x; b.z = snapped.z;
@@ -1536,12 +1643,38 @@ function buildWorld(){
     grass.receiveShadow = true;
     grp.add(grass);
 
+    // Countryside terrain — a heightfield-displaced plane laid on top of
+    // the flat grass, inset from the coastline so it never pokes past the
+    // polygon edge. Sits just under the flat grass (0.08 vs 0.1) so the
+    // two are invisibly coincident wherever getTerrainHeight() is 0 (every
+    // road, town, farm and the forest — see the flatten zones there) and
+    // only rises above it — reading as rolling hills — in the open fields
+    // between them.
+    if(idx === 3){
+      const hfW = isl.w - 100, hfD = isl.d - 100;
+      const hfGeo = new THREE.PlaneGeometry(hfW, hfD, 56, 32);
+      hfGeo.rotateX(-Math.PI/2);
+      const pos = hfGeo.attributes.position;
+      const baseX = isl.x + isl.w/2, baseZ = isl.z + isl.d/2;
+      for(let vi=0; vi<pos.count; vi++){
+        const wx = baseX + pos.getX(vi), wz = baseZ + pos.getZ(vi);
+        pos.setY(vi, 0.08 + getTerrainHeight(wx, wz));
+      }
+      hfGeo.computeVertexNormals();
+      const hfMesh = new THREE.Mesh(hfGeo, grassM);
+      hfMesh.position.set(baseX, 0, baseZ);
+      hfMesh.receiveShadow = true;
+      grp.add(hfMesh);
+    }
+
     // Roads (simple grid)
     buildRoads(isl, idx, grp);
     // Buildings
     buildBuildings(isl, idx, grp);
     // Sidewalks / pavement
     buildSidewalks(isl, idx, grp);
+    // Central Park sits inside Ashford's reserved block zone.
+    if(idx === 1) buildCentralPark(grp);
   });
 
   // Bridges: each deck continues the z=0 arterial exactly.  The island
@@ -1565,13 +1698,49 @@ function buildWorld(){
     const right=new THREE.Mesh(new THREE.BoxGeometry(rightLen,.25,ROAD_WIDTH),mat); right.position.set(br.x+br.w+rightLen/2,.15,0); scene.add(right);
   });
 
+  // The countryside highway — a NORTH-SOUTH crossing, so every dimension
+  // here is the horizontal-bridge code above with X and Z swapped, running
+  // along COUNTRYSIDE_BRIDGE's z-span at a fixed x centreline instead of
+  // the other way around.
+  {
+    const cb = COUNTRYSIDE_BRIDGE;
+    const cx = cb.x + cb.w/2;
+    const supportH = 1.4;
+    const support = new THREE.Mesh(new THREE.BoxGeometry(cb.w, supportH, cb.d), new THREE.MeshLambertMaterial({color:0x78909c}));
+    support.position.set(cx, BRIDGE_DECK_TOP - supportH/2, cb.z + cb.d/2); scene.add(support);
+    const deck = new THREE.Mesh(new THREE.BoxGeometry(cb.w, 0.25, cb.d), new THREE.MeshLambertMaterial({color:0x2d3436}));
+    deck.position.set(cx, 0.15, cb.z + cb.d/2); deck.receiveShadow = true; scene.add(deck);
+    const line = new THREE.Mesh(new THREE.BoxGeometry(.35, 0.02, Math.max(10, cb.d-10)), new THREE.MeshLambertMaterial({color:0xffd700}));
+    line.position.set(cx, BRIDGE_DECK_TOP+.01, cb.z + cb.d/2); scene.add(line);
+    [-1,1].forEach(side => {
+      const rail = new THREE.Mesh(new THREE.BoxGeometry(.7, 1.2, cb.d), new THREE.MeshLambertMaterial({color:0x90a4ae}));
+      rail.position.set(cx + side*(cb.w/2-.35), BRIDGE_DECK_TOP+.6, cb.z + cb.d/2); scene.add(rail);
+    });
+    const apronLen = 20, apronMat = new THREE.MeshLambertMaterial({color:0x2d3436});
+    const near = new THREE.Mesh(new THREE.BoxGeometry(cb.w, .25, apronLen), apronMat); near.position.set(cx, .15, cb.z - apronLen/2); scene.add(near);
+    const far  = new THREE.Mesh(new THREE.BoxGeometry(cb.w, .25, apronLen), apronMat); far.position.set(cx, .15, cb.z + cb.d + apronLen/2); scene.add(far);
+
+    // Welcome sign at the countryside end of the bridge, replacing the old
+    // "under construction" signage now that this is a real destination.
+    const signMat = new THREE.MeshLambertMaterial({map:makeSignTexture('WELCOME TO','THE COUNTRYSIDE')});
+    [-1,1].forEach(side => {
+      const postX = cx + side*(cb.w/2 - 5);
+      const postZ = cb.z - apronLen - 3;
+      const post = new THREE.Mesh(new THREE.CylinderGeometry(.12,.12,3,6), new THREE.MeshLambertMaterial({color:0x444444}));
+      post.position.set(postX, 1.5, postZ); scene.add(post);
+      const sign = new THREE.Mesh(new THREE.BoxGeometry(6,2.2,.18), signMat);
+      sign.position.set(postX, 2.8, postZ); sign.rotation.y = Math.PI/2; scene.add(sign);
+    });
+  }
+
+  buildCountryside();
+
   // Place special buildings — positions already snapped to a free block above.
   SPECIAL_BUILDINGS.forEach(b => {
     buildSpecialBuilding(b);
   });
 
   buildBayshorePort();
-  buildConstructionSigns();
 
   // Skybox / clouds
   buildClouds();
@@ -1580,7 +1749,6 @@ function buildWorld(){
 }
 
 function makeSignTexture(title,subtitle){const c=document.createElement('canvas');c.width=512;c.height=256;const x=c.getContext('2d');x.fillStyle='#f6c744';x.fillRect(0,0,c.width,c.height);x.strokeStyle='#111';x.lineWidth=18;x.strokeRect(9,9,c.width-18,c.height-18);x.fillStyle='#111';x.textAlign='center';x.font='bold 54px Arial';x.fillText(title,256,105);x.font='bold 30px Arial';x.fillText(subtitle,256,155);return new THREE.CanvasTexture(c);}
-function buildConstructionSigns(){const br=BRIDGES[2],mat=new THREE.MeshLambertMaterial({map:makeSignTexture('CONSTRUCTION','UNDER CONSTRUCTION')});[-1,1].forEach(side=>{const x=br.x+35+(side>0?br.w-70:0);const z=side*5.5;const post=new THREE.Mesh(new THREE.CylinderGeometry(.12,.12,3,6),new THREE.MeshLambertMaterial({color:0x444444}));post.position.set(x,1.5,z);scene.add(post);const sign=new THREE.Mesh(new THREE.BoxGeometry(6,2.2,.18),mat);sign.position.set(x,2.8,z);scene.add(sign);});}
 function buildBayshorePort(){
   const grp=islandGroups[2]||scene;
   const steel=new THREE.MeshLambertMaterial({color:0x3f4b52}), concrete=new THREE.MeshLambertMaterial({color:0x777777}), roadMat=new THREE.MeshLambertMaterial({color:0x2d3436}), lineMat=new THREE.MeshLambertMaterial({color:0xffd700});
@@ -1596,13 +1764,397 @@ function buildBayshorePort(){
   [520,575,630].forEach(x=>{const legG=new THREE.BoxGeometry(1.4,18,1.4);[-1,1].forEach(side=>{const leg=new THREE.Mesh(legG,steel);leg.position.set(x,9,side*82);grp.add(leg);});const beam=new THREE.Mesh(new THREE.BoxGeometry(2,1.5,166),steel);beam.position.set(x,18,0);grp.add(beam);});
 }
 
+// Draws a whole group of trees as ONE trunk InstancedMesh + ONE leaf
+// InstancedMesh instead of a Mesh pair per tree — the countryside alone
+// went from roughly 900 individual tree meshes to 6 draw calls total
+// across all three tree profiles below. `trees` is a flat [{x,z,scale}]
+// list (scale defaults to 1); `profile` describes the shared geometry
+// every instance in the group is built from.
+function buildTreeInstances(target, trees, profile){
+  if(!trees.length) return;
+  const n = trees.length;
+  const trunkGeo = new THREE.CylinderGeometry(profile.trunkRT, profile.trunkRB, profile.trunkH, 6);
+  const leafGeo = profile.leafType === 'sphere'
+    ? new THREE.SphereGeometry(profile.leafR, 8, 6)
+    : new THREE.ConeGeometry(profile.leafR, profile.leafH, 7);
+  const trunkMesh = new THREE.InstancedMesh(trunkGeo, new THREE.MeshLambertMaterial({color:profile.trunkColor}), n);
+  const leafMesh = new THREE.InstancedMesh(leafGeo, new THREE.MeshLambertMaterial({color:profile.leafColor}), n);
+  trunkMesh.castShadow = true; leafMesh.castShadow = true;
+  const dummy = new THREE.Object3D();
+  trees.forEach((t, i) => {
+    const s = t.scale || 1;
+    dummy.position.set(t.x, profile.trunkY*s, t.z);
+    dummy.scale.set(s,s,s);
+    dummy.updateMatrix();
+    trunkMesh.setMatrixAt(i, dummy.matrix);
+    dummy.position.set(t.x, profile.leafY*s, t.z);
+    dummy.updateMatrix();
+    leafMesh.setMatrixAt(i, dummy.matrix);
+  });
+  trunkMesh.instanceMatrix.needsUpdate = true;
+  leafMesh.instanceMatrix.needsUpdate = true;
+  target.add(trunkMesh);
+  target.add(leafMesh);
+}
+
+function buildCountryside(){
+  const grp = islandGroups[3] || scene;
+  const roadMat = new THREE.MeshLambertMaterial({color:0x2d3436});
+  const lineMat = new THREE.MeshLambertMaterial({color:0xffd700});
+
+  function road(x, z, w, d, withLine){
+    const seg = new THREE.Mesh(new THREE.BoxGeometry(w, 0.25, d), roadMat);
+    seg.position.set(x, 0.15, z);
+    grp.add(seg);
+    if(withLine){
+      const isLong = w >= d;
+      const lineGeo = isLong
+        ? new THREE.BoxGeometry(Math.max(4,w-8), 0.02, 0.35)
+        : new THREE.BoxGeometry(0.35, 0.02, Math.max(4,d-8));
+      const line = new THREE.Mesh(lineGeo, lineMat);
+      line.position.set(x, 0.28, z);
+      grp.add(line);
+    }
+    return { x, z, w, d };
+  }
+
+  // Main highway — runs north from the Ashford bridge landing toward the
+  // mountains, wider than a city street to read as a proper highway.
+  const hwX = COUNTRYSIDE_BRIDGE.x + COUNTRYSIDE_BRIDGE.w/2; // 240, matches bridge centreline
+  const hwStartZ = COUNTRYSIDE_BRIDGE.z - 20; // just past the bridge apron, on the countryside side
+  const hwEndZ = -1470;
+  const hwLen = hwEndZ - hwStartZ; // negative — travelling north
+  const hwCenterZ = hwStartZ + hwLen/2;
+  const hwWidth = 22;
+  road(hwX, hwCenterZ, hwWidth, Math.abs(hwLen), true);
+
+  // Spur road east to Ashwood Falls.
+  const spurZ = -1090;
+  const spurStartX = hwX + hwWidth/2;
+  const spurEndX = 520;
+  const spurLen = spurEndX - spurStartX;
+  road(spurStartX + spurLen/2, spurZ, spurLen, hwWidth*0.7, true);
+
+  // --- Mountains: a jagged ridge along the far northern edge ---
+  const peakColors = [0x6b7280, 0x78716c, 0x5b6470, 0x71717a];
+  for(let i=0; i<16; i++){
+    const px = -900 + i*120 + (i%3)*25;
+    const pz = -1500 - (i%3)*45;
+    const baseR = 60 + (i%4)*18;
+    const h = 140 + (i%5)*40;
+    const rock = new THREE.Mesh(new THREE.ConeGeometry(baseR, h, 7), new THREE.MeshLambertMaterial({color:peakColors[i%peakColors.length]}));
+    rock.position.set(px, h/2 - 4, pz);
+    grp.add(rock);
+    // Snow cap on the taller peaks.
+    if(h > 160){
+      const cap = new THREE.Mesh(new THREE.ConeGeometry(baseR*0.35, h*0.3, 7), new THREE.MeshLambertMaterial({color:0xf1f5f9}));
+      cap.position.set(px, h - 4 - h*0.15 + h*0.5, pz);
+      grp.add(cap);
+    }
+  }
+
+  // --- Millbrook: small town right off the highway, with a proper small
+  // street grid (two parallel streets each way) rather than one crossing.
+  const millbrook = { cx:200, cz:-790 };
+  const millbrookRoads = [
+    road(millbrook.cx, millbrook.cz, 130, 12, false),            // main east-west street
+    road(millbrook.cx, millbrook.cz - 40, 100, 10, false),       // second, shorter parallel street
+    road(millbrook.cx, millbrook.cz, 12, 90, false),             // main north-south cross street
+    road(millbrook.cx + 45, millbrook.cz, 10, 70, false),        // second, shorter parallel cross street
+  ];
+  buildRuralTown(grp, { cx:millbrook.cx, cz:millbrook.cz, spreadX:220, spreadZ:170, houseCount:20, roofColor:0x8b4a3a, avoid:[{x:200,z:-780,r:20},{x:170,z:-775,r:18},{x:240,z:-775,r:20}], roadRects:millbrookRoads });
+
+  // --- Ashwood Falls: second town further along the spur, same treatment ---
+  const ashwood = { cx:520, cz:-1190 };
+  const ashwoodRoads = [
+    road(ashwood.cx, ashwood.cz, 120, 12, false),
+    road(ashwood.cx, ashwood.cz - 35, 90, 10, false),
+    road(ashwood.cx, ashwood.cz, 12, 80, false),
+    road(ashwood.cx + 40, ashwood.cz, 10, 60, false),
+  ];
+  buildRuralTown(grp, { cx:ashwood.cx, cz:ashwood.cz, spreadX:210, spreadZ:160, houseCount:18, roofColor:0x3a5f8b, avoid:[{x:520,z:-1180,r:24},{x:490,z:-1215,r:18},{x:550,z:-1215,r:18}], roadRects:ashwoodRoads });
+
+  // --- Farms: positioned along the highway (clear of both towns), each
+  // with a short dirt driveway actually connecting it to the road —
+  // the previous version scattered farms in open fields with no road
+  // access at all.
+  const driveMat = new THREE.MeshLambertMaterial({color:0x8a7355});
+  const farmSpots = [
+    {x:100, z:-650},  {x:380, z:-660},   // south of Millbrook
+    {x:90,  z:-950},  {x:390, z:-960},   // between the two towns
+    {x:100, z:-1310}, {x:380, z:-1320},  // north of Ashwood Falls
+    {x:90,  z:-1430}, {x:380, z:-1440},  // far north, near the mountains
+    {x:900, z:-660, roadZ:-700},         // just off the extended east county road
+    {x:950, z:-1210, roadZ:-1250},       // just off the new north-east county road
+  ];
+  farmSpots.forEach((f,i) => {
+    buildFarmhouse(grp, f.x, f.z, i);
+    if(f.roadZ !== undefined){
+      // These sit just off an east-west county road — the driveway is
+      // the short gap between the farmhouse and that road's line.
+      const midZ = (f.z + f.roadZ) / 2, len = Math.abs(f.z - f.roadZ) + 5;
+      const drive = new THREE.Mesh(new THREE.BoxGeometry(5, 0.2, len), driveMat);
+      drive.position.set(f.x, 0.1, midZ);
+      grp.add(drive);
+    } else {
+      // Dirt driveway straight across to the highway.
+      const driveLen = Math.abs(hwX - f.x);
+      const driveX = (hwX + f.x) / 2;
+      const drive = new THREE.Mesh(new THREE.BoxGeometry(driveLen, 0.2, 5), driveMat);
+      drive.position.set(driveX, 0.1, f.z);
+      grp.add(drive);
+    }
+  });
+
+  // Paved driveways for the two gas stations that sit off the highway
+  // (Ashwood Fuel Stop is already inside Ashwood Falls' own street grid).
+  [{x:350, z:-820}, {x:100, z:-1050}].forEach(g => {
+    const driveLen = Math.abs(hwX - g.x);
+    const driveX = (hwX + g.x) / 2;
+    road(driveX, g.z, driveLen, 8, false);
+  });
+
+  // County roads branching off the highway — the west/east arterials plus
+  // an extension out to the newly-added far-east farms, so nothing east
+  // of the original county road is left with a floating, road-less
+  // driveway.
+  road((hwX + 700) / 2, -700, 700 - hwX, 10, true);     // east, to Millbrook Farmhouse
+  road((hwX - 500) / 2, -1200, hwX - (-500), 10, true); // west, to Highland Homestead
+  road(875, -700, 350, 10, false);                      // east county road extension, out to the new farm at x:900 (contiguous with the segment above, which ends at x:700)
+  road((hwX + 950) / 2, -1250, 950 - hwX, 10, true);     // new north-east county road, to the far-east farm
+
+  // Scattered trees / hedgerows across the open countryside for texture.
+  const scatteredTrees = [];
+  for(let i=0; i<70; i++){
+    const tx = -880 + pseudoRand(i*7.3) * 1800;
+    const tz = -1440 + pseudoRand(i*3.1 + 50) * 830;
+    // Keep clear of the highway, spur, both towns, and every farm.
+    if(Math.abs(tx - hwX) < 40 && tz < hwStartZ && tz > hwEndZ) continue;
+    if(distanceTo(tx,tz,millbrook.cx,millbrook.cz) < 180) continue;
+    if(distanceTo(tx,tz,ashwood.cx,ashwood.cz) < 170) continue;
+    if(farmSpots.some(f => distanceTo(tx,tz,f.x,f.z) < 60)) continue;
+    if(distanceTo(tx,tz,350,-820) < 40 || distanceTo(tx,tz,100,-1050) < 40) continue;
+    scatteredTrees.push({x:tx, z:tz});
+  }
+  buildTreeInstances(grp, scatteredTrees, {
+    trunkRT:0.5, trunkRB:0.6, trunkH:3, trunkY:1.5, trunkColor:0x5c4033,
+    leafType:'cone', leafR:2.6, leafH:5, leafY:5, leafColor:0x3f6b3f,
+  });
+
+  buildForestAndCreek(grp);
+}
+
+// A dense forest in the newly-opened western reach of the countryside,
+// with a meandering creek running through the middle of it — purely
+// visual (doesn't block driving), but reads clearly as a stream cutting
+// through the treeline.
+function buildForestAndCreek(grp){
+  // Half-extents grown from 260x320 to 330x440 — checked against the
+  // countryside's actual bounding box (x -1350..1450, z -1974..-574) with
+  // margin, so the forest stays fully on the landmass rather than
+  // spilling off the west edge. Still comfortably clear of Highland
+  // Homestead and the west county road (both sit at x>=-500, well east of
+  // the forest's -670 edge).
+  const forestCX = -1000, forestCZ = -1100;
+  const forestHalfX = 330, forestHalfZ = 440;
+
+  // Dense tree cover — noticeably denser than the ambient scattered trees
+  // elsewhere in the countryside. Count roughly tripled (90→260) to read
+  // as an actual massive forest rather than a sparse copse.
+  const forestTrees = [];
+  for(let i=0; i<260; i++){
+    const tx = forestCX + (pseudoRand(i*4.7 + 300) - 0.5) * forestHalfX * 2;
+    const tz = forestCZ + (pseudoRand(i*8.3 + 300) - 0.5) * forestHalfZ * 2;
+    // Keep a gap either side of the creek so trees don't grow in the water.
+    const creekXAt = forestCX + Math.sin((tz - (forestCZ - forestHalfZ)) * 0.012) * 60;
+    if(Math.abs(tx - creekXAt) < 14) continue;
+    const scale = 0.8 + pseudoRand(i*2.9 + 300) * 0.6;
+    forestTrees.push({x:tx, z:tz, scale});
+  }
+
+  // A second, denser band of trees hugging both creek banks specifically —
+  // "a massive forest near the creek" reads better with the treeline
+  // visibly thickening right along the water than with density spread
+  // evenly across the whole forest. Same profile as the main forest trees
+  // above, so they're instanced together as one group below.
+  for(let i=0; i<70; i++){
+    const t = pseudoRand(i*5.5 + 700);
+    const tz = forestCZ - forestHalfZ + t * forestHalfZ * 2;
+    const creekXAt = forestCX + Math.sin((tz - (forestCZ - forestHalfZ)) * 0.012) * 60;
+    const side = pseudoRand(i*3.3 + 700) > 0.5 ? 1 : -1;
+    const bankDist = 16 + pseudoRand(i*6.1 + 700) * 24; // 16-40 units from the creek line
+    const tx = creekXAt + side * bankDist;
+    const scale = 0.85 + pseudoRand(i*2.1 + 700) * 0.5;
+    forestTrees.push({x:tx, z:tz, scale});
+  }
+  buildTreeInstances(grp, forestTrees, {
+    trunkRT:0.5, trunkRB:0.6, trunkH:3, trunkY:1.5, trunkColor:0x4a3528,
+    leafType:'cone', leafR:2.6, leafH:5, leafY:5, leafColor:0x2f5233,
+  });
+
+  // The creek — a gently meandering strip of segments running the length
+  // of the forest, north to south, with a sandy bank edge on either side.
+  const creekMat = new THREE.MeshStandardMaterial({color:0x2f6690, transparent:true, opacity:0.82, metalness:0.35, roughness:0.15});
+  const bankMat = new THREE.MeshLambertMaterial({color:0xc2a878});
+  const segments = 24;
+  for(let i=0; i<segments; i++){
+    const t0 = i / segments, t1 = (i+1) / segments;
+    const z0 = forestCZ - forestHalfZ + t0 * forestHalfZ * 2;
+    const z1 = forestCZ - forestHalfZ + t1 * forestHalfZ * 2;
+    const x0 = forestCX + Math.sin(t0 * forestHalfZ * 2 * 0.012) * 60;
+    const x1 = forestCX + Math.sin(t1 * forestHalfZ * 2 * 0.012) * 60;
+    const midX = (x0+x1)/2, midZ = (z0+z1)/2;
+    const len = Math.hypot(x1-x0, z1-z0);
+    const angle = Math.atan2(x1-x0, z1-z0);
+
+    const bank = new THREE.Mesh(new THREE.BoxGeometry(9, 0.12, len+2), bankMat);
+    bank.position.set(midX, 0.06, midZ);
+    bank.rotation.y = angle;
+    grp.add(bank);
+
+    const water = new THREE.Mesh(new THREE.BoxGeometry(5, 0.15, len+2), creekMat);
+    water.position.set(midX, 0.1, midZ);
+    water.rotation.y = angle;
+    grp.add(water);
+  }
+}
+
+// A farmhouse — main house, red barn, grain silo, and a small fenced field.
+// Distinct from town houses so the open countryside reads as farmland,
+// not just empty grass with trees.
+function buildFarmhouse(grp, x, z, seed){
+  const rot = pseudoRand(seed*9.1) * Math.PI * 2;
+
+  // Main house — bigger and paler than the town houses.
+  const house = new THREE.Mesh(new THREE.BoxGeometry(11, 6, 9), new THREE.MeshLambertMaterial({color:0xf5f0e6}));
+  house.position.set(x, 3, z);
+  house.rotation.y = rot;
+  grp.add(house);
+  const houseRoof = new THREE.Mesh(new THREE.ConeGeometry(8, 3.5, 4), new THREE.MeshLambertMaterial({color:0x6b4226}));
+  houseRoof.position.set(x, 7.7, z);
+  houseRoof.rotation.y = rot + Math.PI/4;
+  grp.add(houseRoof);
+  const porch = new THREE.Mesh(new THREE.BoxGeometry(4,0.3,2.5), new THREE.MeshLambertMaterial({color:0xd9c9a8}));
+  porch.position.set(x + Math.sin(rot)*6, 0.3, z + Math.cos(rot)*6);
+  grp.add(porch);
+
+  // Barn, offset from the house.
+  const barnX = x + Math.sin(rot+1.4)*18, barnZ = z + Math.cos(rot+1.4)*18;
+  const barn = new THREE.Mesh(new THREE.BoxGeometry(13, 8, 10), new THREE.MeshLambertMaterial({color:0xb03a2e}));
+  barn.position.set(barnX, 4, barnZ);
+  barn.rotation.y = rot;
+  grp.add(barn);
+  const barnRoof = new THREE.Mesh(new THREE.ConeGeometry(9, 4, 4), new THREE.MeshLambertMaterial({color:0x5c3a2e}));
+  barnRoof.position.set(barnX, 10, barnZ);
+  barnRoof.rotation.y = rot + Math.PI/4;
+  grp.add(barnRoof);
+
+  // Grain silo, near the barn.
+  const siloX = barnX + Math.sin(rot-1.2)*10, siloZ = barnZ + Math.cos(rot-1.2)*10;
+  const silo = new THREE.Mesh(new THREE.CylinderGeometry(2.2,2.2,10,10), new THREE.MeshLambertMaterial({color:0xb0b8bd}));
+  silo.position.set(siloX, 5, siloZ);
+  grp.add(silo);
+  const siloCap = new THREE.Mesh(new THREE.ConeGeometry(2.4,2.5,10), new THREE.MeshLambertMaterial({color:0x8a9299}));
+  siloCap.position.set(siloX, 11.2, siloZ);
+  grp.add(siloCap);
+
+  // Simple fenced field boundary — a ring of low posts around the plot.
+  const fenceR = 26;
+  for(let i=0; i<14; i++){
+    const a = (i/14) * Math.PI*2;
+    const px = x + Math.cos(a)*fenceR, pz = z + Math.sin(a)*fenceR;
+    const post = new THREE.Mesh(new THREE.BoxGeometry(0.4,1.1,0.4), new THREE.MeshLambertMaterial({color:0x6b4226}));
+    post.position.set(px, 0.55, pz);
+    grp.add(post);
+  }
+}
+
+// A small hand-placed rural town: a cluster of varied houses around a real
+// named building (added to SPECIAL_BUILDINGS separately), giving the
+// countryside actual destinations rather than pure scenery.
+function buildRuralTown(grp, opt){
+  const { cx, cz, spreadX, spreadZ, houseCount, roofColor, avoid, roadRects } = opt;
+  const avoidZones = avoid ? (Array.isArray(avoid) ? avoid : [avoid]) : [];
+  const roads = roadRects || [];
+  const wallColors = [0xe8dcc8, 0xd9c9a8, 0xc9b896, 0xe0d5c0, 0xf0e6d2, 0xdccbb0];
+
+  // A house footprint counts as clipping a road if its bounding box (plus
+  // a small margin so it doesn't sit flush against the curb) overlaps the
+  // road's axis-aligned rect. Previously only the named town-center
+  // buildings were avoided, so houses could and did land straight on top
+  // of the street grid — this is the actual "buildings on roads" fix for
+  // the countryside.
+  function clipsRoad(hx, hz, hw, hd){
+    const margin = 2.5;
+    return roads.some(r => {
+      const halfW = r.w/2 + hw/2 + margin, halfD = r.d/2 + hd/2 + margin;
+      return Math.abs(hx - r.x) < halfW && Math.abs(hz - r.z) < halfD;
+    });
+  }
+
+  for(let i=0; i<houseCount; i++){
+    const w = 7 + pseudoRand(i*2.1) * 5;
+    const d = 7 + pseudoRand(i*3.7) * 5;
+
+    // Try the seeded spot first, then a handful of jittered fallbacks
+    // before giving up on this slot — keeps the requested house count
+    // instead of silently thinning the town whenever a seed lands on a
+    // road.
+    let hx, hz, placed = false;
+    for(let attempt=0; attempt<6; attempt++){
+      const jx = attempt===0 ? 0 : (pseudoRand(i*19.3+attempt*5.1) - 0.5) * spreadX * 0.5;
+      const jz = attempt===0 ? 0 : (pseudoRand(i*7.9+attempt*3.7) - 0.5) * spreadZ * 0.5;
+      hx = cx + (pseudoRand(i*11.7 + attempt*41) - 0.5) * spreadX + jx;
+      hz = cz + (pseudoRand(i*5.3 + 20 + attempt*29) - 0.5) * spreadZ + jz;
+      if(avoidZones.some(a => distanceTo(hx, hz, a.x, a.z) < a.r)) continue;
+      if(clipsRoad(hx, hz, w, d)) continue;
+      placed = true;
+      break;
+    }
+    if(!placed) continue;
+
+    const style = i % 3; // 0 = plain, 1 = porch, 2 = chimney
+    const h = 5 + pseudoRand(i*1.3) * 2;
+    const rotY = Math.round(pseudoRand(i*6.6)*4) * (Math.PI/2); // face one of 4 directions
+    const wallColor = wallColors[i % wallColors.length];
+
+    const body = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), new THREE.MeshLambertMaterial({color:wallColor}));
+    body.position.set(hx, h/2, hz);
+    body.rotation.y = rotY;
+    grp.add(body);
+
+    const roof = new THREE.Mesh(new THREE.ConeGeometry(Math.max(w,d)*0.75, 3, 4), new THREE.MeshLambertMaterial({color:roofColor}));
+    roof.position.set(hx, h + 1.5, hz);
+    roof.rotation.y = rotY + Math.PI/4;
+    grp.add(roof);
+
+    if(style === 1){
+      // Porch — small flat platform on one side.
+      const porch = new THREE.Mesh(new THREE.BoxGeometry(w*0.5,0.25,2.5), new THREE.MeshLambertMaterial({color:0xffffff}));
+      porch.position.set(hx + Math.sin(rotY)*(d/2+1.2), 0.25, hz + Math.cos(rotY)*(d/2+1.2));
+      porch.rotation.y = rotY;
+      grp.add(porch);
+    }else if(style === 2){
+      // Chimney — thin box poking through the roof.
+      const chimney = new THREE.Mesh(new THREE.BoxGeometry(1,3,1), new THREE.MeshLambertMaterial({color:0x8a8a8a}));
+      chimney.position.set(hx + w*0.25, h + 2.5, hz - d*0.25);
+      grp.add(chimney);
+    }
+  }
+}
+
 function getRoadCounts(idx){
   // Expanded urban islands get additional roads; Greenfield is deliberately
   // left without a procedural city grid for the future countryside update.
+  // Counts scaled up again alongside the larger island footprints (see
+  // ISLANDS above) — without this, the same block pitch would just spread
+  // over more area instead of adding more buildings. Checked against each
+  // island's new w/d so blocks stay well above the bw>10/bd>10 floor in
+  // getBlocks() rather than degenerating into slivers.
   if(idx === 3) return { hRoads: 0, vRoads: 0 };
   return {
-    hRoads: idx === 0 ? 7 : (idx === 1 ? 6 : 5),
-    vRoads: idx === 0 ? 6 : (idx === 1 ? 5 : 5),
+    hRoads: idx === 0 ? 12 : (idx === 1 ? 10 : 9),
+    vRoads: idx === 0 ? 10 : (idx === 1 ? 7 : 8),
   };
 }
 
@@ -1613,30 +2165,72 @@ function buildRoads(isl, idx, grp){
   const lineMat = new THREE.MeshLambertMaterial({ color:0xffd700 });
   const whiteMat = new THREE.MeshLambertMaterial({ color:0xecf0f1 });
   const { hRoads, vRoads } = getRoadCounts(idx);
+  const park = idx === 1 ? ASHFORD_PARK : null;
 
-  function addHorizontal(zPos, width){
+  // Draws one paved rectangle plus its dashed centre markings, from xStart
+  // to xStart+width, at the given z. Pulled out of addHorizontal so a
+  // gapped road can call it twice (once per side of the park) without
+  // duplicating the dash-marking math.
+  function hSegment(zPos, xStart, width){
+    if(width <= 0) return;
     const rg = new THREE.BoxGeometry(width,0.25,ROAD_WIDTH);
     const road = new THREE.Mesh(rg,roadMat);
-    road.position.set(isl.x+isl.w/2,0.15,zPos); road.receiveShadow=true; target.add(road);
+    road.position.set(xStart+width/2,0.15,zPos); road.receiveShadow=true; target.add(road);
     for(let j=0;j<Math.floor(width/20);j++){
       const lg=new THREE.BoxGeometry(8,0.02,0.4);
-      [-1,1].forEach(off=>{const line=new THREE.Mesh(lg,lineMat);line.position.set(isl.x+10+j*20,0.27,zPos+off*.6);target.add(line);});
+      [-1,1].forEach(off=>{const line=new THREE.Mesh(lg,lineMat);line.position.set(xStart+10+j*20,0.27,zPos+off*.6);target.add(line);});
     }
   }
-  function addVertical(xPos, depth){
+  function vSegment(xPos, zStart, depth){
+    if(depth <= 0) return;
     const rg=new THREE.BoxGeometry(ROAD_WIDTH,0.25,depth);
-    const road=new THREE.Mesh(rg,roadMat); road.position.set(xPos,0.15,isl.z+isl.d/2); road.receiveShadow=true; target.add(road);
+    const road=new THREE.Mesh(rg,roadMat); road.position.set(xPos,0.15,zStart+depth/2); road.receiveShadow=true; target.add(road);
     for(let j=0;j<Math.floor(depth/20);j++){
       const lg=new THREE.BoxGeometry(.4,.02,8);
-      [-1,1].forEach(off=>{const line=new THREE.Mesh(lg,whiteMat);line.position.set(xPos+off*.6,0.27,isl.z+10+j*20);target.add(line);});
+      [-1,1].forEach(off=>{const line=new THREE.Mesh(lg,whiteMat);line.position.set(xPos+off*.6,0.27,zStart+10+j*20);target.add(line);});
     }
+  }
+  // width/depth here are centred spans (matching the original addHorizontal/
+  // addVertical signatures) — resolved to a start+width before drawing.
+  function addHorizontal(zPos, width){
+    const xStart = isl.x+isl.w/2 - width/2;
+    // Gap this road if its PAVEMENT (not just its centreline) would
+    // overlap the park — a road whose centre sits just outside the park's
+    // z-range can still clip into it once its own half-width is counted,
+    // which is exactly how a road ended up sitting flush against the
+    // park's border before this check included ROAD_WIDTH/2.
+    if(park && (zPos - ROAD_WIDTH/2) < park.z2 && (zPos + ROAD_WIDTH/2) > park.z1){
+      hSegment(zPos, xStart, park.x1 - xStart);
+      hSegment(zPos, park.x2, (xStart+width) - park.x2);
+      return;
+    }
+    hSegment(zPos, xStart, width);
+  }
+  function addVertical(xPos, depth){
+    const zStart = isl.z+isl.d/2 - depth/2;
+    if(park && (xPos - ROAD_WIDTH/2) < park.x2 && (xPos + ROAD_WIDTH/2) > park.x1){
+      vSegment(xPos, zStart, park.z1 - zStart);
+      vSegment(xPos, park.z2, (zStart+depth) - park.z2);
+      return;
+    }
+    vSegment(xPos, zStart, depth);
   }
   for(let i=0;i<hRoads;i++) addHorizontal(isl.z+(isl.d/(hRoads+1))*(i+1),isl.w-10);
   for(let i=0;i<vRoads;i++) addVertical(isl.x+(isl.w/(vRoads+1))*(i+1),isl.d-10);
 
-  // Dedicated cross-island arterial used by every bridge. It is deliberately
-  // part of the road grid so buildings reserve it instead of clipping into it.
-  addHorizontal(0,isl.w-6);
+  // Dedicated cross-island arterial used by every bridge — this is the
+  // "boulevard" and is drawn as one continuous segment even through
+  // Ashford's park, deliberately the one road allowed to cross it.
+  hSegment(0, isl.x+isl.w/2-(isl.w-6)/2, isl.w-6);
+
+  // Countryside highway arterial: runs the length of Ashford so the bridge
+  // continues an actual through-road instead of floating between grid
+  // lines — matches the same "reserved arterial" pattern as the z=0 road
+  // every horizontal bridge uses. Sits at x=240, safely outside the park's
+  // x-range (260-470), so it never needs gapping.
+  if(idx===1){
+    addVertical(COUNTRYSIDE_BRIDGE.x + COUNTRYSIDE_BRIDGE.w/2, isl.d-6);
+  }
 
   // Bayshore port access: a dedicated road outside the container yard.
   if(idx===2){
@@ -1660,6 +2254,119 @@ function buildSidewalks(isl, idx, grp){
   });
 }
 
+// Ashford Central Park — lawn, a cross of paths, a pond, benches and a
+// denser tree canopy than the street trees elsewhere, inside the block
+// zone reserved by ASHFORD_PARK above. Bounded by a low hedge instead of
+// a road, so it reads as a green break in the grid rather than just an
+// empty lot.
+function buildCentralPark(grp){
+  const z = ASHFORD_PARK;
+  const cx = (z.x1+z.x2)/2, cz = (z.z1+z.z2)/2;
+  const w = z.x2-z.x1, d = z.z2-z.z1;
+
+  const lawnMat = new THREE.MeshLambertMaterial({ color:0x4f8a52 });
+  const lawn = new THREE.Mesh(new THREE.BoxGeometry(w, 0.18, d), lawnMat);
+  lawn.position.set(cx, 0.14, cz);
+  lawn.receiveShadow = true;
+  grp.add(lawn);
+
+  // Cross paths, paved, wide enough to read clearly against the lawn.
+  const pathMat = new THREE.MeshLambertMaterial({ color:0xcbb994 });
+  const pathH = new THREE.Mesh(new THREE.BoxGeometry(w-10, 0.2, 6), pathMat);
+  pathH.position.set(cx, 0.18, cz); grp.add(pathH);
+  const pathV = new THREE.Mesh(new THREE.BoxGeometry(6, 0.2, d-10), pathMat);
+  pathV.position.set(cx, 0.18, cz); grp.add(pathV);
+  // Perimeter loop path, inset from the hedge.
+  const loopInset = 14;
+  const loopPts = [
+    [z.x1+loopInset, z.z1+loopInset], [z.x2-loopInset, z.z1+loopInset],
+    [z.x2-loopInset, z.z2-loopInset], [z.x1+loopInset, z.z2-loopInset],
+  ];
+  for(let i=0;i<4;i++){
+    const a = loopPts[i], b = loopPts[(i+1)%4];
+    const len = Math.hypot(b[0]-a[0], b[1]-a[1]);
+    const seg = new THREE.Mesh(new THREE.BoxGeometry(a[0]===b[0]?4:len+4, 0.19, a[0]===b[0]?len+4:4), pathMat);
+    seg.position.set((a[0]+b[0])/2, 0.17, (a[1]+b[1])/2);
+    grp.add(seg);
+  }
+
+  // Pond — off-center like a real park pond, not dead-middle where the
+  // cross paths already meet.
+  const pondCx = cx + w*0.22, pondCz = cz - d*0.2;
+  const pond = new THREE.Mesh(new THREE.CylinderGeometry(18, 18, 0.3, 20),
+    new THREE.MeshStandardMaterial({ color:0x2f6690, transparent:true, opacity:0.85, metalness:0.3, roughness:0.15 }));
+  pond.position.set(pondCx, 0.2, pondCz);
+  grp.add(pond);
+  const pondBank = new THREE.Mesh(new THREE.CylinderGeometry(20.5, 20.5, 0.15, 20),
+    new THREE.MeshLambertMaterial({ color:0xc2a878 }));
+  pondBank.position.set(pondCx, 0.15, pondCz);
+  grp.add(pondBank);
+
+  // Benches along the loop path, facing inward.
+  const benchMat = new THREE.MeshLambertMaterial({ color:0x6b4226 });
+  const benchLegMat = new THREE.MeshLambertMaterial({ color:0x2d2d2d });
+  const benchSpots = [
+    { x:z.x1+loopInset, zc:cz+30, rot:Math.PI/2 }, { x:z.x1+loopInset, zc:cz-30, rot:Math.PI/2 },
+    { x:z.x2-loopInset, zc:cz+30, rot:-Math.PI/2 }, { x:z.x2-loopInset, zc:cz-30, rot:-Math.PI/2 },
+    { x:cx-40, zc:z.z1+loopInset, rot:0 }, { x:cx+40, zc:z.z1+loopInset, rot:0 },
+  ];
+  benchSpots.forEach(s => {
+    const seat = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.2, 1), benchMat);
+    seat.position.set(s.x, 0.7, s.zc); seat.rotation.y = s.rot; grp.add(seat);
+    const back = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.9, 0.15), benchMat);
+    back.position.set(s.x - Math.sin(s.rot)*0.42, 1.1, s.zc - Math.cos(s.rot)*0.42);
+    back.rotation.y = s.rot; grp.add(back);
+    [-1.3,1.3].forEach(off => {
+      const leg = new THREE.Mesh(new THREE.BoxGeometry(0.15,0.7,0.9), benchLegMat);
+      leg.position.set(s.x + Math.cos(s.rot)*off, 0.35, s.zc - Math.sin(s.rot)*off);
+      leg.rotation.y = s.rot; grp.add(leg);
+    });
+  });
+
+  // Dense canopy trees scattered across the lawn, clear of paths and pond.
+  const parkTrees = [];
+  for(let i=0;i<38;i++){
+    const tx = z.x1+10 + pseudoRand(i*4.3+900) * (w-20);
+    const tz = z.z1+10 + pseudoRand(i*7.1+900) * (d-20);
+    if(Math.abs(tx-cx)<6 || Math.abs(tz-cz)<6) continue; // keep the cross path clear
+    if(Math.hypot(tx-pondCx, tz-pondCz) < 24) continue;  // keep the pond clear
+    const scale = 0.9 + pseudoRand(i*2.2+900)*0.5;
+    parkTrees.push({x:tx, z:tz, scale});
+  }
+  buildTreeInstances(grp, parkTrees, {
+    trunkRT:0.4, trunkRB:0.5, trunkH:2.6, trunkY:1.3, trunkColor:0x5c4033,
+    leafType:'sphere', leafR:2.4, leafY:3.6, leafColor:0x3f7a44,
+  });
+
+  // Low hedge boundary standing in for a fence — a ring of small green
+  // boxes tracing the reserved zone's edge. Instanced (2 draw calls total,
+  // one per orientation) instead of ~150 individual boxes.
+  const hedgeMat = new THREE.MeshLambertMaterial({ color:0x2f5233 });
+  const hedgeStep = 6;
+  const hPositions = [], vPositions = [];
+  for(let x=z.x1; x<=z.x2; x+=hedgeStep){
+    [z.z1, z.z2].forEach(zz => hPositions.push({x, z:zz}));
+  }
+  for(let zz=z.z1; zz<=z.z2; zz+=hedgeStep){
+    [z.x1, z.x2].forEach(x => vPositions.push({x, z:zz}));
+  }
+  const dummyH = new THREE.Object3D();
+  const hMesh = new THREE.InstancedMesh(new THREE.BoxGeometry(hedgeStep-1, 1, 1.4), hedgeMat, hPositions.length);
+  hPositions.forEach((p,i) => { dummyH.position.set(p.x, 0.5, p.z); dummyH.updateMatrix(); hMesh.setMatrixAt(i, dummyH.matrix); });
+  hMesh.instanceMatrix.needsUpdate = true;
+  grp.add(hMesh);
+  const vMesh = new THREE.InstancedMesh(new THREE.BoxGeometry(1.4, 1, hedgeStep-1), hedgeMat, vPositions.length);
+  vPositions.forEach((p,i) => { dummyH.position.set(p.x, 0.5, p.z); dummyH.updateMatrix(); vMesh.setMatrixAt(i, dummyH.matrix); });
+  vMesh.instanceMatrix.needsUpdate = true;
+  grp.add(vMesh);
+
+  // Park name sign at the south entrance.
+  const signMat = new THREE.MeshLambertMaterial({ map: makeSignTexture('ASHFORD PARK','EST. KINGSTON') });
+  const sign = new THREE.Mesh(new THREE.BoxGeometry(6,2.2,.18), signMat);
+  sign.position.set(cx, 2.8, z.z2 + 3);
+  grp.add(sign);
+}
+
 // Every individual window used to be its own Mesh — for a tall building
 // that's 50-100+ extra draw calls, and with ~300 buildings across the
 // city that added up to many thousands of meshes just for windows. They're
@@ -1671,7 +2378,9 @@ function buildBuildings(isl, idx, grp){
   const seed=idx*137;
   const reserved=usedBlocks[idx]||new Set();
   const keyOf=blk=>blk.x.toFixed(1)+','+blk.z.toFixed(1);
-  const blocks=getBlocks(isl,idx).filter(b=>!reserved.has(keyOf(b)) && !(idx===2 && b.x+b.w>500 && b.x<625 && b.z+b.d>-185 && b.z<185));
+  const blocks=getBlocks(isl,idx).filter(b=>!reserved.has(keyOf(b))
+    && !(idx===2 && b.x+b.w>500 && b.x<625 && b.z+b.d>-185 && b.z<185)
+    && !(idx===1 && b.x+b.w>ASHFORD_PARK.x1 && b.x<ASHFORD_PARK.x2 && b.z+b.d>ASHFORD_PARK.z1 && b.z<ASHFORD_PARK.z2));
   const windowSpots=[], rooftopJobs=[];
   blocks.forEach((block,bi)=>{
     const count=pseudoRand(seed+bi*17)>0.58?2:1;
@@ -1717,6 +2426,7 @@ function getBlocks(isl, idx){
   const vSet=[isl.x];
   for(let i=0;i<vRoads;i++) vSet.push(isl.x+(isl.w/(vRoads+1))*(i+1));
   if(idx===2) vSet.push(690); // reserve Bayshore port-access road
+  if(idx===1) vSet.push(COUNTRYSIDE_BRIDGE.x + COUNTRYSIDE_BRIDGE.w/2); // reserve the countryside highway's arterial
   vSet.push(isl.x+isl.w);
   const vPositions=[...new Set(vSet.map(v=>Number(v.toFixed(3))))].sort((a,b)=>a-b);
   for(let r=0;r<hPositions.length-1;r++) for(let c=0;c<vPositions.length-1;c++){
@@ -1982,6 +2692,38 @@ function addExteriorDetails(b, target){
       { const nameSign = new THREE.Mesh(new THREE.BoxGeometry(b.w*0.9,2.2,0.25), new THREE.MeshLambertMaterial({map:makeSignTexture(b.name.toUpperCase(),'ONLINE • SHARED APARTMENTS')}));
         nameSign.position.set(b.x, b.h+1.6, front+0.4); target.add(nameSign); }
       break;
+    case 'country_store':
+      { // Wooden awning over the entrance, plus a hanging sign.
+        const awning = new THREE.Mesh(new THREE.BoxGeometry(b.w*0.95, 0.3, 2.6), new THREE.MeshLambertMaterial({color:0x7a4a2f}));
+        awning.position.set(b.x, doorH+0.2, front+1.3); target.add(awning);
+        for(const side of [-1,1]){
+          const post = new THREE.Mesh(new THREE.CylinderGeometry(0.15,0.15,doorH,6), new THREE.MeshLambertMaterial({color:0x5c4033}));
+          post.position.set(b.x + side*b.w*0.4, doorH/2, front+2.5); target.add(post);
+        }
+      }
+      addSign(0xd4a24c, b.w*0.6, 1.4, b.h+0.8, .5);
+      break;
+    case 'country_hall':
+      { // A small clock/bell tower on the roof — reads as a civic building.
+        const tower = new THREE.Mesh(new THREE.BoxGeometry(3,4,3), new THREE.MeshLambertMaterial({color:0xf1f5f9}));
+        tower.position.set(b.x, b.h+2, b.z); target.add(tower);
+        const roof = new THREE.Mesh(new THREE.ConeGeometry(2.6,3,4), new THREE.MeshLambertMaterial({color:0x6b4226}));
+        roof.position.set(b.x, b.h+4.5, b.z); roof.rotation.y = Math.PI/4; target.add(roof);
+        const clockMat = new THREE.MeshLambertMaterial({map:makeSignTexture('12','6')});
+        const clock = new THREE.Mesh(new THREE.CircleGeometry(1,16), clockMat);
+        clock.position.set(b.x, b.h+2, front+1.6); target.add(clock);
+      }
+      break;
+    case 'country_chapel':
+      { // A steeple with a cross — tall and narrow, unmistakably a chapel.
+        const steeple = new THREE.Mesh(new THREE.ConeGeometry(3, 8, 4), new THREE.MeshLambertMaterial({color:0x9ca3af}));
+        steeple.position.set(b.x, b.h+4, b.z); steeple.rotation.y = Math.PI/4; target.add(steeple);
+        const cross = new THREE.Mesh(new THREE.BoxGeometry(0.3,2,0.3), new THREE.MeshLambertMaterial({color:0xd4af37}));
+        cross.position.set(b.x, b.h+9, b.z); target.add(cross);
+        const crossBar = new THREE.Mesh(new THREE.BoxGeometry(1.2,0.3,0.3), new THREE.MeshLambertMaterial({color:0xd4af37}));
+        crossBar.position.set(b.x, b.h+8.5, b.z); target.add(crossBar);
+      }
+      break;
     case 'cinema':
       addSign(0xfbbf24, b.w*0.75, 2.6, doorH+1.8, .8);
       break;
@@ -2014,17 +2756,60 @@ function buildSafehouseMarkers(){
   // Positions were already snapped to a free block in buildWorld().
   SAFEHOUSES.forEach(sh => {
     const target = islandGroups[sh.island] || scene;
+    const owned = gameState.ownedSafehouses.has(sh.id);
     const g = new THREE.CylinderGeometry(0.5, 0.5, 4, 8);
-    const col = gameState.ownedSafehouses.has(sh.id) ? 0x4ade80 : 0xffffff;
+    const col = owned ? 0x4ade80 : 0xffffff;
     const m = new THREE.MeshLambertMaterial({ color:col, emissive:col, emissiveIntensity:0.6 });
     const mesh = new THREE.Mesh(g, m);
     mesh.position.set(sh.x, 2, sh.z);
     mesh.userData = { type:'safehouse', id:sh.id };
     target.add(mesh);
 
+    if(sh.style === 'farmhouse'){
+      // A real farmhouse exterior — main house, barn, silo, fenced field —
+      // not just the generic box every other safehouse uses. Collision
+      // is still registered on a 12x12 footprint matching the other
+      // safehouses so the interaction/entry system needs no changes.
+      const houseColor = owned ? 0x1a472a : 0xf5f0e6;
+      const house = new THREE.Mesh(new THREE.BoxGeometry(11,7,9), new THREE.MeshLambertMaterial({color:houseColor}));
+      house.position.set(sh.x, 3.5, sh.z);
+      house.castShadow = true;
+      target.add(house);
+      buildingMeshes.push({ mesh:house, x:sh.x, z:sh.z, w:12, d:12, h:7, safehouse:true, data:sh });
+
+      const roof = new THREE.Mesh(new THREE.ConeGeometry(8,4,4), new THREE.MeshLambertMaterial({color:0x6b4226}));
+      roof.position.set(sh.x, 9, sh.z);
+      roof.rotation.y = Math.PI/4;
+      target.add(roof);
+
+      const barnX = sh.x + 20, barnZ = sh.z + 8;
+      const barn = new THREE.Mesh(new THREE.BoxGeometry(12,7,9), new THREE.MeshLambertMaterial({color:0xb03a2e}));
+      barn.position.set(barnX, 3.5, barnZ);
+      target.add(barn);
+      const barnRoof = new THREE.Mesh(new THREE.ConeGeometry(8,3.5,4), new THREE.MeshLambertMaterial({color:0x5c3a2e}));
+      barnRoof.position.set(barnX, 9, barnZ);
+      barnRoof.rotation.y = Math.PI/4;
+      target.add(barnRoof);
+
+      const silo = new THREE.Mesh(new THREE.CylinderGeometry(2,2,9,10), new THREE.MeshLambertMaterial({color:0xb0b8bd}));
+      silo.position.set(barnX + 9, 4.5, barnZ - 6);
+      target.add(silo);
+      const siloCap = new THREE.Mesh(new THREE.ConeGeometry(2.2,2.2,10), new THREE.MeshLambertMaterial({color:0x8a9299}));
+      siloCap.position.set(barnX + 9, 10, barnZ - 6);
+      target.add(siloCap);
+
+      for(let i=0;i<14;i++){
+        const a = (i/14) * Math.PI*2;
+        const post = new THREE.Mesh(new THREE.BoxGeometry(0.4,1.1,0.4), new THREE.MeshLambertMaterial({color:0x6b4226}));
+        post.position.set(sh.x + Math.cos(a)*28, 0.55, sh.z + Math.sin(a)*28);
+        target.add(post);
+      }
+      return;
+    }
+
     // House mesh
     const houseG = new THREE.BoxGeometry(12, 8, 12);
-    const houseM = new THREE.MeshLambertMaterial({ color: gameState.ownedSafehouses.has(sh.id) ? 0x1a472a : 0x5d4037 });
+    const houseM = new THREE.MeshLambertMaterial({ color: owned ? 0x1a472a : 0x5d4037 });
     const house = new THREE.Mesh(houseG, houseM);
     house.position.set(sh.x, 4, sh.z);
     house.castShadow = true;
@@ -2210,9 +2995,12 @@ function createVehicleMesh(template, color, x, z, rotation, id){
   group.position.set(x, 0.5, z);
   group.rotation.y = rotation;
 
-  // Car body
+  // Car body — glossy PBR paint instead of flat Lambert shading. This only
+  // touches createVehicleMesh (dealership/owned/remote-player cars, a
+  // few dozen at most), not the separate createTrafficMesh used for
+  // background traffic, so it stays cheap overall.
   const bodyG = new THREE.BoxGeometry(template.w, template.h, template.d);
-  const bodyM = new THREE.MeshLambertMaterial({ color });
+  const bodyM = new THREE.MeshStandardMaterial({ color, metalness:0.55, roughness:0.28 });
   const body = new THREE.Mesh(bodyG, bodyM);
   body.position.y = template.h/2;
   body.castShadow = true;
@@ -2220,13 +3008,13 @@ function createVehicleMesh(template, color, x, z, rotation, id){
 
   // Roof
   const roofG = new THREE.BoxGeometry(template.roofW, template.roofH, template.roofD);
-  const roofM = new THREE.MeshLambertMaterial({ color });
+  const roofM = new THREE.MeshStandardMaterial({ color, metalness:0.55, roughness:0.28 });
   const roof = new THREE.Mesh(roofG, roofM);
   roof.position.set(0, template.h + template.roofH/2 - 0.1, -0.2);
   group.add(roof);
 
-  // Windows
-  const winMat = new THREE.MeshLambertMaterial({ color:0x90caf9, transparent:true, opacity:0.5 });
+  // Windows — glass-like reflectivity instead of flat tinted Lambert.
+  const winMat = new THREE.MeshStandardMaterial({ color:0x9fd3ff, transparent:true, opacity:0.55, metalness:0.9, roughness:0.08 });
   // Windshield
   const wfG = new THREE.BoxGeometry(template.roofW - 0.2, template.roofH * 0.7, 0.1);
   const wf = new THREE.Mesh(wfG, winMat);
@@ -2635,7 +3423,9 @@ function enableOnlineMode(){
     mpConnecting = false;
     onlineMode = true;
     pvpListenerStartTime = Date.now();
-    mpPlayersRef.on('value', handlePlayersSnapshot);
+    mpPlayersRef.on('child_added', handlePlayerAdded);
+    mpPlayersRef.on('child_changed', handlePlayerChanged);
+    mpPlayersRef.on('child_removed', handlePlayerRemoved);
     pvpEventsRef.on('child_added', handlePvpEvent);
     pvpStatsUnsub = pvpStatsRef.on('value', snap => {
       pvpStats = snap.val() || {};
@@ -2659,7 +3449,9 @@ function disableOnlineMode(){
   }
 
   if(mpPlayersRef){
-    mpPlayersRef.off('value', handlePlayersSnapshot);
+    mpPlayersRef.off('child_added', handlePlayerAdded);
+    mpPlayersRef.off('child_changed', handlePlayerChanged);
+    mpPlayersRef.off('child_removed', handlePlayerRemoved);
   }
 
   if(pvpEventsRef){
@@ -2722,46 +3514,53 @@ function broadcastPlayerState(){
   mpOwnRef.update(update);
 }
 
-function handlePlayersSnapshot(snapshot){
-  const data = snapshot.val() || {};
-  const seen = new Set();
+function handlePlayerAdded(snapshot){
+  const uid = snapshot.key;
+  if(mpUser && uid === mpUser.uid) return;
+  const entry = snapshot.val();
+  if(!entry) return;
+  if(remotePlayers[uid]) return; // already tracked, defensive guard
 
-  Object.entries(data).forEach(([uid, entry]) => {
-    if(mpUser && uid === mpUser.uid) return;
-    seen.add(uid);
+  const rp = remotePlayers[uid] = {
+    data: entry,
+    mesh: null,
+    nameSprite: null,
+    kind: null,
+    _lastRole: entry.pvpRole,
+    targetPos: new THREE.Vector3(entry.x, entry.y, entry.z),
+    targetRotY: entry.rotY || 0
+  };
+  spawnRemotePlayerMesh(uid, rp, entry);
+  updateOnlineCount();
+  refreshPvpPanel();
+}
 
-    let rp = remotePlayers[uid];
-    if(!rp){
-      rp = remotePlayers[uid] = {
-        data: entry,
-        mesh: null,
-        nameSprite: null,
-        kind: null,
-        _lastRole: entry.pvpRole,
-        targetPos: new THREE.Vector3(entry.x, entry.y, entry.z),
-        targetRotY: entry.rotY || 0
-      };
-      spawnRemotePlayerMesh(uid, rp, entry);
-    }
+function handlePlayerChanged(snapshot){
+  const uid = snapshot.key;
+  if(mpUser && uid === mpUser.uid) return;
+  const entry = snapshot.val();
+  const rp = remotePlayers[uid];
+  if(!entry || !rp) return;
 
-    rp.data = entry;
-    rp.targetPos.set(entry.x, entry.y, entry.z);
-    rp.targetRotY = entry.rotY || 0;
+  rp.data = entry;
+  rp.targetPos.set(entry.x, entry.y, entry.z);
+  rp.targetRotY = entry.rotY || 0;
 
-    const prevRole = rp._lastRole;
-    const wantKind = entry.inVehicle ? 'vehicle' : 'pedestrian';
-    if(rp.kind !== wantKind){
-      spawnRemotePlayerMesh(uid, rp, entry);
-    }else if(prevRole !== entry.pvpRole){
-      refreshRemoteNameSprite(rp, entry);
-    }
-    rp._lastRole = entry.pvpRole;
-  });
+  const prevRole = rp._lastRole;
+  const wantKind = entry.inVehicle ? 'vehicle' : 'pedestrian';
+  if(rp.kind !== wantKind){
+    spawnRemotePlayerMesh(uid, rp, entry);
+  }else if(prevRole !== entry.pvpRole){
+    refreshRemoteNameSprite(rp, entry);
+  }
+  rp._lastRole = entry.pvpRole;
 
-  Object.keys(remotePlayers).forEach(uid => {
-    if(!seen.has(uid)) removeRemotePlayerMesh(uid);
-  });
+  refreshPvpPanel(); // cheap no-op unless the PVP screen is actually open
+}
 
+function handlePlayerRemoved(snapshot){
+  const uid = snapshot.key;
+  removeRemotePlayerMesh(uid);
   updateOnlineCount();
   refreshPvpPanel();
 }
@@ -3304,6 +4103,18 @@ function isOnIsland(x, z){
     // other half extended past the real railings (fall-through gap).
     if(x >= br.x && x <= br.x+br.w && z >= br.z - br.d/2 && z <= br.z + br.d/2) return true;
   }
+  // The countryside highway runs the other way — its centreline is an X
+  // coordinate (br.x + w/2) and it spans a Z range (br.z to br.z+d), the
+  // exact transpose of the horizontal bridges checked above. The buffer
+  // is generous (not just matching the visual deck) because the
+  // countryside's hand-drawn polygon edge sits at slightly different Z
+  // depending on X — a tight buffer left a real gap here (measured at
+  // z≈-630 vs a -610 buffer), which read as an invisible wall right at
+  // the entrance to the countryside.
+  {
+    const cb = COUNTRYSIDE_BRIDGE;
+    if(z >= cb.z - 80 && z <= cb.z + cb.d + 60 && x >= cb.x - 20 && x <= cb.x + cb.w + 20) return true;
+  }
   return false;
 }
 
@@ -3316,6 +4127,62 @@ function getDistrictAt(x, z){
 
 function distanceTo(ax, az, bx, bz){
   return Math.sqrt((ax-bx)**2 + (az-bz)**2);
+}
+
+// Countryside terrain — gentle rolling hills in the open fields, flattened
+// back to 0 near anything built (roads, towns, farms, gas stations, the
+// forest/creek) so nothing already placed there ends up floating above or
+// sunk into a hillside. Returns exactly 0 everywhere outside the
+// countryside's bounding box, so city islands, bridges, and player/vehicle
+// physics there are completely unaffected — this can be called
+// unconditionally from anywhere without an idx===3 check.
+const TERRAIN_HW_X = COUNTRYSIDE_BRIDGE.x + COUNTRYSIDE_BRIDGE.w/2; // 240
+const TERRAIN_FLAT_ZONES = [
+  // Highway corridor, north from the bridge to the far edge.
+  { type:'rect', x1:TERRAIN_HW_X-38, x2:TERRAIN_HW_X+38, z1:-1500, z2:-690 },
+  // Millbrook and Ashwood Falls.
+  { type:'circle', x:200, z:-790, r:210 },
+  { type:'circle', x:520, z:-1190, r:200 },
+  // Every farm (matches the farmSpots list in buildCountryside).
+  { type:'circle', x:100, z:-650, r:75 },  { type:'circle', x:380, z:-660, r:75 },
+  { type:'circle', x:90,  z:-950, r:75 },  { type:'circle', x:390, z:-960, r:75 },
+  { type:'circle', x:100, z:-1310, r:75 }, { type:'circle', x:380, z:-1320, r:75 },
+  { type:'circle', x:90,  z:-1430, r:75 }, { type:'circle', x:380, z:-1440, r:75 },
+  { type:'circle', x:900, z:-660, r:75 },  { type:'circle', x:950, z:-1210, r:75 },
+  // Gas stations.
+  { type:'circle', x:350, z:-820, r:55 }, { type:'circle', x:100, z:-1050, r:55 },
+  // County roads (east, west, north-east).
+  { type:'rect', x1:TERRAIN_HW_X-25, x2:1080, z1:-725, z2:-675 },
+  { type:'rect', x1:-525, x2:TERRAIN_HW_X+25, z1:-1225, z2:-1175 },
+  { type:'rect', x1:TERRAIN_HW_X-25, x2:975, z1:-1275, z2:-1225 },
+  // Forest + creek block — kept flat since its own trees don't sample
+  // terrain height (see buildForestAndCreek). Bounds match the enlarged
+  // forest (center -1000,-1100, half-extents 330x440) plus margin.
+  { type:'rect', x1:-1350, x2:-650, z1:-1560, z2:-640 },
+];
+function terrainFlattenFactor(x, z){
+  const falloff = 45; // distance beyond a flat zone's edge before full hill height returns
+  let clearness = 1;
+  for(const zone of TERRAIN_FLAT_ZONES){
+    let d;
+    if(zone.type === 'circle'){
+      d = distanceTo(x, z, zone.x, zone.z) - zone.r;
+    } else {
+      const dx = Math.max(zone.x1-x, 0, x-zone.x2);
+      const dz = Math.max(zone.z1-z, 0, z-zone.z2);
+      d = Math.sqrt(dx*dx+dz*dz);
+    }
+    const c = Math.max(0, Math.min(1, d/falloff));
+    if(c < clearness) clearness = c;
+  }
+  return clearness;
+}
+function getTerrainHeight(x, z){
+  if(x < -1420 || x > 1520 || z < -2040 || z > -520) return 0; // outside the countryside entirely
+  const raw = Math.sin(x*0.008)*Math.cos(z*0.007)*4
+            + Math.sin(x*0.015 + z*0.011)*2.2
+            + Math.sin(z*0.021 - x*0.006)*1.4;
+  return raw * terrainFlattenFactor(x, z);
 }
 
 function showNotification(msg, duration=3000){
@@ -3392,6 +4259,14 @@ function onKeyDown(e){
   if(gameState.supermarketActive && gameState.smgCurrentKey){
     if(e.code === 'Key' + gameState.smgCurrentKey || e.key.toUpperCase() === gameState.smgCurrentKey){
       handleSmgKeyPress();
+    }
+  }
+  // Simple job (mechanic/dockworker/courier) key press — same "press the
+  // shown key" panel as the supermarket job, kept as a separate state flag
+  // so the two don't interfere with each other.
+  if(gameState.simpleJobActive && gameState.simpleJobKey){
+    if(e.code === 'Key' + gameState.simpleJobKey || e.key.toUpperCase() === gameState.simpleJobKey){
+      handleSimpleJobKeyPress();
     }
   }
 }
@@ -3510,8 +4385,11 @@ function updatePlayer(dt){
   let ny = player.pos.y + player.vel.y * dt;
   let nz = player.pos.z + player.vel.z * dt;
 
-  // Ground check
-  const groundY = 1.8;
+  // Ground check — 1.8 was a flat assumption everywhere; getTerrainHeight
+  // adds the countryside's rolling hills on top of it and is exactly 0
+  // anywhere else (city islands, bridges, ocean), so this is a no-op
+  // outside the countryside.
+  const groundY = 1.8 + getTerrainHeight(nx, nz);
   if(ny <= groundY){
     ny = groundY;
     player.vel.y = 0;
@@ -3648,6 +4526,7 @@ function updateInteriorPlayer(dt){
   else if(near(window._interiorJob)) hint = `<span class="key">E</span> Start Shift`;
   else if(near(window._interiorAction)) hint = `<span class="key">E</span> Interact`;
   else if(near(window._interiorVending)) hint = `<span class="key">E</span> Use Vending Machine — $5`;
+  else if(near(window._interiorATM)) hint = gameState.wanted>0 ? `<span class="key">E</span> Use ATM — Pay Off a Star` : `<span class="key">E</span> Use ATM — Check Balance`;
   else if(near(window._interiorBoard)) hint = `<span class="key">E</span> Read Noticeboard`;
   else {
     const ownedHome=SAFEHOUSES.some(s=>s.id===gameState.currentBuilding&&gameState.ownedSafehouses.has(s.id));
@@ -3779,6 +4658,12 @@ function updateVehicleControl(dt){
     v.group.position.x += fwd.x * v.speed * 0.1;
     v.group.position.z += fwd.z * v.speed * 0.1;
   }
+
+  // Follow the countryside's terrain height (0 everywhere else, so this
+  // is a no-op in the city) — smoothed rather than snapped straight to
+  // the new height, so gentle hills don't read as the car bobbing.
+  const targetY = getTerrainHeight(v.group.position.x, v.group.position.z);
+  v.group.position.y += (targetY - v.group.position.y) * Math.min(1, dt*6);
 
   // Update player position to be in car
   player.pos.set(v.group.position.x, v.group.position.y + 1.5, v.group.position.z);
@@ -4080,6 +4965,7 @@ function handleInteract(){
     if(window._interiorJob && distanceTo(player.pos.x,player.pos.z,window._interiorJob.x,window._interiorJob.z)<3){ startInteriorJob(); return; }
     if(window._interiorAction && distanceTo(player.pos.x,player.pos.z,window._interiorAction.x,window._interiorAction.z)<3){ startInteriorAction(); return; }
     if(window._interiorVending && distanceTo(player.pos.x,player.pos.z,window._interiorVending.x,window._interiorVending.z)<3){ useVendingMachine(); return; }
+    if(window._interiorATM && distanceTo(player.pos.x,player.pos.z,window._interiorATM.x,window._interiorATM.z)<3){ useATM(); return; }
     if(window._interiorBoard && distanceTo(player.pos.x,player.pos.z,window._interiorBoard.x,window._interiorBoard.z)<3){ readNoticeboard(); return; }
     if(window._interiorApartmentUnits){
       const unit = window._interiorApartmentUnits.find(u => distanceTo(player.pos.x,player.pos.z,u.x,u.z) < 3);
@@ -4176,6 +5062,19 @@ function addInterior(o){ scene.add(o); activeInteriorMeshes.push(o); return o; }
 // Adds a piece of furniture/prop AND registers it as something the player
 // collides with, in one call.
 function addSolid(o,x,y,z,w,d){ o.position.set(x,y,z); addInterior(o); interiorColliders.push({x,z,w,d}); return o; }
+// A real, interactive ATM prop — placed selectively (banks, gas station
+// convenience stores, apartment lobbies) rather than in every interior,
+// since "some buildings" was the ask, not all of them.
+function placeATM(x,z,rot=0){
+  const body = new THREE.Mesh(new THREE.BoxGeometry(1.4,2.1,1), new THREE.MeshLambertMaterial({color:0x1e293b}));
+  body.rotation.y = rot;
+  addSolid(body, x, 1.05, z, 1.4, 1);
+  const screen = new THREE.Mesh(new THREE.BoxGeometry(0.9,0.6,0.08), new THREE.MeshLambertMaterial({color:0x0f172a, emissive:0x22c55e, emissiveIntensity:0.6}));
+  screen.position.set(x + Math.sin(rot)*0.52, 1.5, z + Math.cos(rot)*0.52);
+  screen.rotation.y = rot;
+  addInterior(screen);
+  window._interiorATM = {x,z};
+}
 
 function enterInterior(info){
   currentInteriorInfo = info;
@@ -4189,7 +5088,7 @@ function enterInterior(info){
   gameState.interiorReturnStack = [];
   window._interiorElevator=null; window._interiorJob=null; window._interiorAction=null;
   window._interiorUpgrade=null; window._interiorVending=null; window._interiorBoard=null;
-  window._interiorApartmentUnits=null; window._interiorGarage=null;
+  window._interiorApartmentUnits=null; window._interiorGarage=null; window._interiorATM=null;
   buildActiveInterior(info);
   // Spawn just inside the "front" wall, facing into the room, instead of
   // dropped in the dead centre facing a random direction.
@@ -4215,7 +5114,7 @@ function enterNestedInterior(info, afterBuildCallback){
   gameState.currentBuilding = info.id;
   window._interiorElevator=null; window._interiorJob=null; window._interiorAction=null;
   window._interiorUpgrade=null; window._interiorVending=null; window._interiorBoard=null;
-  window._interiorApartmentUnits=null; window._interiorGarage=null;
+  window._interiorApartmentUnits=null; window._interiorGarage=null; window._interiorATM=null;
   buildActiveInterior(info);
   const rz = 5000 + interiorBounds.hd - 3;
   player.pos.set(0,1.8,rz); playerGroup.position.set(0,0.3,rz);
@@ -4258,6 +5157,7 @@ const CATEGORY_INTERIOR_SIZES = {
   dockworker:{hw:22,hd:18}, courier:{hw:16,hd:14}, gas:{hw:12,hd:10}, clothing:{hw:14,hd:12},
   pawnshop:{hw:12,hd:10}, firestation:{hw:20,hd:17},
   apartment_complex:{hw:30,hd:24}, apartment_unit:{hw:11,hd:9}, apartment_garage:{hw:28,hd:22},
+  country_store:{hw:13,hd:11}, country_hall:{hw:17,hd:14}, country_chapel:{hw:12,hd:18},
 };
 
 // Dense, category-specific furniture so a hospital, a diner and a police
@@ -4289,6 +5189,7 @@ function furnishInterior(cat, HW, HD, CZ){
       for(let i=0;i<4;i++) solidR(0.08,0.08,1.4,-HW*0.3+i*3,0.7,CZ,0x92400e,0.08); // queue rope posts
       deco(new THREE.Mesh(new THREE.CylinderGeometry(2.4,2.4,3,16),new THREE.MeshLambertMaterial({color:0x94a3b8})),0,1.5,CZ+HD*0.55);
       deco(new THREE.Mesh(new THREE.TorusGeometry(1.6,0.25,10,20),new THREE.MeshLambertMaterial({color:0xd4af37,emissive:0xd4af37,emissiveIntensity:.3})),0,1.5,CZ+HD*0.55-1.4);
+      placeATM(HW*0.7, CZ+HD*0.6, Math.PI);
       break;
     case 'casino':
       for(let i=0;i<4;i++) solid(1.2,2.2,1,-HW*0.6,1.1,CZ-HD*0.5+i*3.2,0xb91c1c); // slot machines
@@ -4374,6 +5275,7 @@ function furnishInterior(cat, HW, HD, CZ){
 
       solid(HW*1.6,0.4,1,0,0.2,CZ-HD*0.4,0x1e293b); // reception desk
       deco(new THREE.Mesh(new THREE.BoxGeometry(2,1.4,0.2),new THREE.MeshLambertMaterial({color:0x0f172a,emissive:0x1e293b,emissiveIntensity:.4})),0,1.4,CZ-HD*0.4-0.7);
+      placeATM(HW*0.75, CZ-HD*0.4+3.5, 0);
 
       window._interiorApartmentUnits = [];
       const perSide = Math.ceil(unitCount/2);
@@ -4428,6 +5330,33 @@ function furnishInterior(cat, HW, HD, CZ){
         solid(0.15,0.05,HD*1.6,i*(HW*1.7/5),0.03,CZ,0xfacc15); // parking lane markers
       }
       break;
+    case 'country_store': case 'country_hall': case 'country_chapel': {
+      // A shared rustic interior style — wood, hay, barrels and crates —
+      // distinct from every city building's default gray/office look.
+      // Each type still gets its own furniture layout below.
+      solid(HW*1.7, 0.15, HD*1.7, 0, 0.05, CZ, 0x8a6d4a); // wood plank floor overlay
+
+      if(cat === 'country_store'){
+        solid(HW*1.2, 1.0, 0.6, 0, 0.5, CZ-HD*0.5, 0x6b4226); // counter
+        for(let i=-1;i<=1;i++) solid(0.6,1.8,3, i*(HW*0.55), 0.9, CZ+HD*0.3, 0x5c4033); // shelving units
+        solidR(1,1,1.3,-HW*0.6,0.65,CZ-HD*0.2,0x8b6f47,0.4); // barrel
+        solidR(1,1,1.3, HW*0.6,0.65,CZ-HD*0.2,0x8b6f47,0.4); // barrel
+        solid(1.6,1.2,1.6, HW*0.5, 0.6, CZ+HD*0.6, 0xb08968); // crate stack
+      } else if(cat === 'country_hall'){
+        solid(3,1.1,1.2, 0, 0.55, CZ-HD*0.55, 0x6b4226); // podium/lectern area
+        for(let row=0; row<3; row++){
+          solid(HW*1.3, 0.5, 0.6, 0, 0.25, CZ-HD*0.1+row*3, 0x8b6f47); // bench rows
+        }
+        solid(0.15, 3, 1.6, -HW*0.75, 1.5, CZ-HD*0.55, 0xb91c1c); // hanging banner
+      } else { // country_chapel
+        for(let row=0; row<4; row++){
+          solid(HW*1.2, 0.5, 0.6, 0, 0.25, CZ-HD*0.35+row*3.2, 0x6b4226); // pew rows
+        }
+        solid(2, 1.6, 0.4, 0, 0.8, CZ+HD*0.65, 0xf1f5f9); // altar
+        solid(0.3, 2.2, 0.3, 0, 2.6, CZ+HD*0.65, 0xd4af37); // cross
+      }
+      break;
+    }
     case 'cityhall':
       for(let i=0;i<4;i++) solidR(0.5,0.6,HD>18?7:5,-HW*0.6+i*(HW*1.2/3),(HD>18?3.5:2.5),CZ-HD*0.4,0xf8fafc,0.6); // interior columns
       solid(4,1.2,1.4,0,0.6,CZ+HD*0.5,0xf1f5f9); // reception desk
@@ -4440,10 +5369,37 @@ function furnishInterior(cat, HW, HD, CZ){
       }
       deco(new THREE.Mesh(new THREE.BoxGeometry(2.6,1.4,0.2),new THREE.MeshLambertMaterial({color:0xfbbf24,emissive:0xf97316,emissiveIntensity:.3})),0,1,CZ-HD+0.3); // kitchen pass window
       break;
+    case 'gas': {
+      // Convenience-store shelving — a couple of aisles of boxed snacks
+      // instead of the generic desk grid, plus a register counter, a
+      // glass-fronted drink fridge, and an ATM by the door.
+      const shelfCols = [0xdc2626,0xfbbf24,0x22c55e,0x3b82f6,0xf97316];
+      [-HW*0.5, HW*0.15].forEach((sx,si) => {
+        solid(1, 1.6, HD*1.1, sx, 0.8, CZ, 0xd6d3d1); // shelving unit frame
+        for(let i=0;i<3;i++) solid(0.8, 0.35, 0.8, sx, 0.5+i*0.55, CZ-HD*0.5+0.6+i*1.1, shelfCols[(si*3+i)%shelfCols.length]); // boxed goods
+      });
+      solid(2.4, 1.1, 1, HW*0.65, 0.55, CZ+HD*0.55, 0xf1f5f9); // register counter
+      const fridge = solid(1.6, 2, 1, HW*0.7, 1, CZ-HD*0.5, 0x0ea5e9);
+      deco(new THREE.Mesh(new THREE.BoxGeometry(1.3,1.6,0.05),new THREE.MeshLambertMaterial({color:0x7dd3fc,transparent:true,opacity:0.35,emissive:0x0ea5e9,emissiveIntensity:.2})),HW*0.7,1,CZ-HD*0.5+0.53); // fridge glass door
+      placeATM(-HW*0.7, CZ+HD*0.55, 0);
+      break;
+    }
+    case 'dealership': {
+      // Showroom floor — a few display vehicles on raised plinths (reusing
+      // the same low-poly car model driveable cars use, so they actually
+      // look like the cars you're there to buy) plus a sales desk.
+      const showColors = [0xe74c3c,0x3498db,0xf39c12];
+      [-HW*0.55, 0, HW*0.55].forEach((sx,i) => {
+        solid(3.2, 0.3, 5, sx, 0.15, CZ-HD*0.15, 0x475569); // plinth
+        addSolid(buildMiniCar(showColors[i]), sx, 0.3, CZ-HD*0.15, 2.2, 4.4);
+      });
+      solid(4.5, 1.2, 1.4, 0, 0.6, CZ+HD*0.6, 0x6366f1); // sales desk
+      break;
+    }
     default:
       // Generic office/workplace floor — a small grid of desks so the room
-      // doesn't read as empty. Used for both gas-station shops and any
-      // plain procedurally-generated building without a dedicated layout.
+      // doesn't read as empty. Used for any plain procedurally-generated
+      // building without a dedicated layout.
       { const cols=Math.max(2,Math.floor((HW*2-8)/6)), rows=Math.max(1,Math.floor((HD*2-10)/6));
         for(let r=0;r<rows;r++) for(let c2=0;c2<cols;c2++) solid(3,0.8,1.5,-HW+8+c2*6,0.4,CZ-HD+8+r*6,0x6b7280); }
       break;
@@ -4452,7 +5408,7 @@ function furnishInterior(cat, HW, HD, CZ){
 
 function buildActiveInterior(info){
   clearActiveInterior();
-  const styles={exchange:[0x1e3a5f,0xeaf6ff],pearl:[0x765548,0xd8c5b5],oldquarter:[0x4a2f25,0xb99a7d],dockside:[0x334155,0x94a3b8],southgate:[0x262626,0x737373],fairview:[0x557c63,0xe5efe8],penthouse:[0x172554,0xf8fafc],suburban:[0x6b7a45,0xf1ead8]};
+  const styles={exchange:[0x1e3a5f,0xeaf6ff],pearl:[0x765548,0xd8c5b5],oldquarter:[0x4a2f25,0xb99a7d],dockside:[0x334155,0x94a3b8],southgate:[0x262626,0x737373],fairview:[0x557c63,0xe5efe8],penthouse:[0x172554,0xf8fafc],suburban:[0x6b7a45,0xf1ead8],farmhouse:[0x8a6d4a,0xf5f0e6]};
   const style = info.source?.style;
   const cat = buildingCategory(info.source);
   const sc=styles[style]||[0x8b9299,0xcfd3d6]; const floorM=new THREE.MeshLambertMaterial({color:sc[0]}), wallM=new THREE.MeshLambertMaterial({color:sc[1]});
@@ -4581,6 +5537,13 @@ function useVendingMachine(){
   if(gameState.health>=100){ showNotification('Already full — save your snacks.'); return; }
   gameState.money-=5; gameState.health=Math.min(100,gameState.health+10);
   updateHUD(); showNotification('🥤 Grabbed a snack — +10 health');
+}
+function useATM(){
+  // Doubles as a quick way to clear a wanted star without hunting down a
+  // police station — reuses the same payOffFine() logic banks/precincts
+  // already use — and just reports your balance when you're clean.
+  if(gameState.wanted>0){ payOffFine(); return; }
+  showNotification(`🏧 Balance: $${gameState.money.toLocaleString()}`);
 }
 const NOTICEBOARD_MESSAGES=[
   'Lost cat, last seen near the harbour. Answers to "Biscuit".',
@@ -4726,6 +5689,21 @@ function devSpawnVehicle(){
 function exitBuilding(){
   if(!gameState.inBuilding) return;
 
+  // Leaving mid-shift used to just leave the job running in the
+  // background — the supermarket countdown timer (and, before this
+  // update, the old mechanic/dockworker/courier auto-pay timer) kept
+  // ticking and paying out even after the building interior was gone,
+  // since nothing ever stopped it. Ending it here means leaving early
+  // costs you the rest of that shift, same as it would in any other job.
+  if(gameState.supermarketActive) endSupermarketJob();
+  if(gameState.simpleJobActive){
+    gameState.simpleJobActive = false; gameState.simpleJobType = null;
+    gameState.simpleJobKey = null; gameState._simpleJobState = null;
+    gameState.jobActive = false; gameState.currentJob = null;
+    document.getElementById('jobHud').style.display='none';
+    document.getElementById('supermarketGame').style.display='none';
+  }
+
   // Nested interior (a personal apartment unit or the shared garage,
   // entered from within the apartment complex's lobby) — go back to the
   // lobby instead of straight outside.
@@ -4734,7 +5712,7 @@ function exitBuilding(){
     clearActiveInterior();
     window._interiorElevator=null; window._interiorJob=null; window._interiorAction=null;
     window._interiorUpgrade=null; window._interiorVending=null; window._interiorBoard=null;
-    window._interiorApartmentUnits=null; window._interiorGarage=null;
+    window._interiorApartmentUnits=null; window._interiorGarage=null; window._interiorATM=null;
     gameState.currentBuilding = prev.info.id;
     currentInteriorInfo = prev.info;
     buildActiveInterior(prev.info);
@@ -4841,8 +5819,8 @@ function openJobScreen(b){
   } else {
     const names={mechanic:'MECHANIC',dockworker:'DOCK WORKER',courier:'COURIER'};
     document.getElementById('jobScreenSub').textContent=names[b.jobType]||'WORKER';
-    document.getElementById('jobScreenDesc').textContent='Complete a short workplace shift inside the building.';
-    document.getElementById('jobScreenPay').textContent='$20 per task';
+    document.getElementById('jobScreenDesc').textContent='Work a short shift inside — press the key shown on screen to complete each task.';
+    document.getElementById('jobScreenPay').textContent='$18–$35 per task';
   }
   document.getElementById('jobScreen').style.display = 'flex';
   if(document.pointerLockElement) document.exitPointerLock();
@@ -4864,23 +5842,70 @@ function startJob(type){
 }
 
 function startSimpleJob(type){
+  // Previously this just auto-completed on a timer with zero input — not
+  // really a "minigame" so much as a progress bar watching itself. Now it
+  // reuses the same "press the shown key" pattern as the supermarket job
+  // (own state flags, so the two don't interfere), and the progress bar
+  // math bug from before — it divided by `left+1` each tick instead of
+  // the original task total, so it visibly jumped in uneven steps instead
+  // of filling smoothly — is fixed by capturing `total` up front.
   const labels={mechanic:'Repair cars',dockworker:'Load containers',courier:'Sort parcels'};
   const taskNames={mechanic:['repair a sedan','inspect a delivery van','replace a damaged part'],dockworker:['load containers','check a shipment','move freight'],courier:['sort parcels','deliver a package','scan a shipment']};
-  let left=3+Math.floor(Math.random()*4);
+  const total = 3+Math.floor(Math.random()*4);
+  let left = total;
   const pay=18+Math.floor(Math.random()*18);
+  gameState.simpleJobActive = true;
+  gameState.simpleJobType = type;
+  gameState.simpleJobPay = pay;
   let currentTask=taskNames[type]?.[Math.floor(Math.random()*taskNames[type].length)]||'complete a work order';
   document.getElementById('jobHud').style.display='block';
   document.getElementById('jobTitle').textContent=(labels[type]||'WORK SHIFT').toUpperCase();
   document.getElementById('jobInfo').textContent=`Task: ${currentTask} · ${left} remaining`;
   document.getElementById('jobProgressBar').style.width='0%';
-  const timer=setInterval(()=>{
-    left--; addMoney(pay); addReputation(1);
-    if(left>0) currentTask=taskNames[type]?.[Math.floor(Math.random()*taskNames[type].length)]||currentTask;
-    document.getElementById('jobInfo').textContent=left>0?`Task: ${currentTask} · ${left} remaining`:'Finishing work order...';
-    document.getElementById('jobProgressBar').style.width=((1-(left/(left+1)))*100)+'%';
-    if(left<=0){clearInterval(timer);gameState.jobActive=false;gameState.currentJob=null;document.getElementById('jobHud').style.display='none';finishJobProgress(8);showNotification(`Shift complete! $${pay} per task + reputation.`);}
-  },1800);
-  gameState.simpleJobTimer=timer;
+  document.getElementById('supermarketGame').style.display='block';
+  document.querySelector('#supermarketGame .smg-title').textContent = 'Press the key!';
+  document.querySelector('#supermarketGame .smg-instruction').textContent = currentTask.charAt(0).toUpperCase()+currentTask.slice(1);
+  nextSimpleJobKey();
+
+  gameState._simpleJobState = { type, total, left, pay, taskNames, labels,
+    tick(){
+      this.left--; addMoney(this.pay); addReputation(1);
+      document.getElementById('jobProgressBar').style.width = (((this.total-this.left)/this.total)*100)+'%';
+      if(this.left>0){
+        const t = this.taskNames[this.type]?.[Math.floor(Math.random()*this.taskNames[this.type].length)]||'complete a work order';
+        document.getElementById('jobInfo').textContent=`Task: ${t} · ${this.left} remaining`;
+        document.querySelector('#supermarketGame .smg-instruction').textContent = t.charAt(0).toUpperCase()+t.slice(1);
+        nextSimpleJobKey();
+      } else {
+        endSimpleJob();
+      }
+    }
+  };
+}
+function nextSimpleJobKey(){
+  const key = SMG_KEYS[Math.floor(Math.random()*SMG_KEYS.length)];
+  gameState.simpleJobKey = key;
+  const el = document.getElementById('smgKey');
+  el.textContent = key;
+  el.style.animation = 'none';
+  setTimeout(() => el.style.animation = 'keyPop 0.2s ease-out', 10);
+}
+function handleSimpleJobKeyPress(){
+  if(!gameState.simpleJobActive || !gameState._simpleJobState) return;
+  gameState._simpleJobState.tick();
+}
+function endSimpleJob(){
+  const pay = gameState._simpleJobState?.pay || 0;
+  gameState.simpleJobActive = false;
+  gameState.simpleJobType = null;
+  gameState.simpleJobKey = null;
+  gameState._simpleJobState = null;
+  gameState.jobActive = false;
+  gameState.currentJob = null;
+  document.getElementById('jobHud').style.display='none';
+  document.getElementById('supermarketGame').style.display='none';
+  finishJobProgress(8);
+  showNotification(`Shift complete! $${pay} per task + reputation.`);
 }
 
 // ---- TAXI JOB ----
@@ -4997,6 +6022,8 @@ function startSupermarketJob(){
   gameState.smgScore = 0;
   smgTimeLeft = 60;
   document.getElementById('supermarketGame').style.display = 'block';
+  document.querySelector('#supermarketGame .smg-title').textContent = 'Press the key!';
+  document.querySelector('#supermarketGame .smg-instruction').textContent = 'Serve the customer';
   document.getElementById('jobHud').style.display = 'block';
   document.getElementById('jobTitle').textContent = 'SUPERMARKET';
   nextSmgKey();
@@ -5090,7 +6117,7 @@ function updateMinimap(){
 
     // Draw islands
     ISLANDS.forEach((isl, idx) => {
-      const colors = ['#4a5568','#374151','#2d3748','#466b45'];
+      const colors = ['#4a5568','#374151','#2d3748','#5c7a4a'];
       ctx.fillStyle = colors[idx];
       if(isl.shape){
         ctx.beginPath();
@@ -5108,19 +6135,70 @@ function updateMinimap(){
       }
     });
 
+    // Ashford Central Park
+    ctx.fillStyle = '#3f7a44';
+    ctx.fillRect(toMM(ASHFORD_PARK.x1,cx), toMM(ASHFORD_PARK.z1,cz),
+      (ASHFORD_PARK.x2-ASHFORD_PARK.x1)*MM_SCALE, (ASHFORD_PARK.z2-ASHFORD_PARK.z1)*MM_SCALE);
+
     // Bridges
     BRIDGES.forEach(br => {
       ctx.fillStyle = '#546e7a';
       ctx.fillRect(toMM(br.x, cx), toMM(br.z, cz), br.w*MM_SCALE, br.d*MM_SCALE);
     });
+    { const cb = COUNTRYSIDE_BRIDGE;
+      ctx.fillStyle = '#546e7a';
+      ctx.fillRect(toMM(cb.x, cx), toMM(cb.z, cz), cb.w*MM_SCALE, cb.d*MM_SCALE);
+    }
 
-    // Roads (simplified)
-    ctx.fillStyle = '#1a1a2e';
-    // Draw some road lines
+    // Countryside road network — was entirely missing here before, so the
+    // whole region showed as empty green with just a few dots on it.
+    ctx.strokeStyle = '#2d3436';
+    ctx.lineWidth = Math.max(1, 22*MM_SCALE);
+    ctx.beginPath();
+    ctx.moveTo(toMM(240,cx), toMM(-610,cz));
+    ctx.lineTo(toMM(240,cx), toMM(-1470,cz));
+    ctx.stroke();
+    ctx.lineWidth = Math.max(1, 15*MM_SCALE);
+    ctx.beginPath();
+    ctx.moveTo(toMM(251,cx), toMM(-1090,cz));
+    ctx.lineTo(toMM(520,cx), toMM(-1090,cz));
+    ctx.stroke();
+    ctx.lineWidth = Math.max(1, 12*MM_SCALE);
+    [{tx:200,tz:-790},{tx:520,tz:-1190}].forEach(t => {
+      ctx.beginPath(); ctx.moveTo(toMM(t.tx-65,cx), toMM(t.tz,cz)); ctx.lineTo(toMM(t.tx+65,cx), toMM(t.tz,cz)); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(toMM(t.tx,cx), toMM(t.tz-45,cz)); ctx.lineTo(toMM(t.tx,cx), toMM(t.tz+45,cz)); ctx.stroke();
+    });
+    ctx.lineWidth = Math.max(1, 10*MM_SCALE);
+    ctx.beginPath(); ctx.moveTo(toMM(240,cx), toMM(-700,cz)); ctx.lineTo(toMM(1050,cx), toMM(-700,cz)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(toMM(-500,cx), toMM(-1200,cz)); ctx.lineTo(toMM(240,cx), toMM(-1200,cz)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(toMM(240,cx), toMM(-1250,cz)); ctx.lineTo(toMM(950,cx), toMM(-1250,cz)); ctx.stroke();
 
-    // Special buildings
+    // Forest + creek (west of the towns)
+    ctx.fillStyle = 'rgba(47,82,51,0.55)';
+    ctx.fillRect(toMM(-1260,cx), toMM(-1420,cz), 520*MM_SCALE, 640*MM_SCALE);
+    ctx.strokeStyle = '#3a6ea5';
+    ctx.lineWidth = Math.max(1, 4*MM_SCALE);
+    ctx.beginPath();
+    for(let i=0;i<=8;i++){
+      const t = i/8;
+      const cz2 = -1420 + t*640;
+      const cx2 = -1000 + Math.sin(t*640*0.012)*60;
+      const mx = toMM(cx2,cx), mz = toMM(cz2,cz);
+      if(i===0) ctx.moveTo(mx,mz); else ctx.lineTo(mx,mz);
+    }
+    ctx.stroke();
+
+    // Special buildings — every building type gets its own dot color,
+    // not just the four most common ones falling back to generic purple.
     SPECIAL_BUILDINGS.forEach(b => {
-      const dotColors = { job:'#ffb400', hospital:'#ef4444', police:'#3b82f6', food:'#f97316' };
+      const dotColors = {
+        job:'#ffb400', hospital:'#ef4444', police:'#3b82f6', food:'#f97316',
+        bank:'#fbbf24', casino:'#fb7185', nightclub:'#c084fc', gym:'#34d399',
+        cinema:'#fbbf24', marina:'#38bdf8', supermarket:'#facc15', mechanic:'#94a3b8',
+        dockworker:'#0ea5e9', courier:'#fb923c', gas:'#9ca3af', clothing:'#f472b6',
+        pawnshop:'#a3a3a3', firestation:'#dc2626', apartment_complex:'#60a5fa',
+        country_store:'#d4a24c', country_hall:'#e0d5b8', country_chapel:'#f1f5f9',
+      };
       const col = dotColors[b.type] || '#a78bfa';
       ctx.fillStyle = col;
       const bx = toMM(b.x, cx), bz = toMM(b.z, cz);
@@ -5193,30 +6271,135 @@ function updateMinimap(){
   ctx.lineTo(MM_CENTER + Math.sin(pYaw)*10, MM_CENTER - Math.cos(pYaw)*10);
   ctx.stroke();
 
-  // Online mode: slow rotating radar sweep, purely cosmetic — signals
-  // "this map is live" the same way a scanning sonar reads as active.
+  // Online mode: a full "modern HUD" treatment — dual counter-rotating
+  // scan rings in a cyan/magenta duotone, faint range rings, and a
+  // compass tick ring, instead of a plain radar sweep. This is meant to
+  // read as a genuinely different piece of equipment, not just a
+  // recolored offline minimap.
   if(onlineMode){
-    const sweepAngle = (Date.now() * 0.0009) % (Math.PI*2);
-    const grad = ctx.createConicGradient
-      ? ctx.createConicGradient(sweepAngle, 90, 90)
-      : null;
-    if(grad){
-      grad.addColorStop(0, 'rgba(74,222,128,0.28)');
-      grad.addColorStop(0.06, 'rgba(74,222,128,0)');
-      grad.addColorStop(1, 'rgba(74,222,128,0)');
-      ctx.fillStyle = grad;
+    const now = Date.now();
+
+    // Faint concentric range rings for radar depth.
+    ctx.strokeStyle = 'rgba(34,211,238,0.14)';
+    ctx.lineWidth = 1;
+    [30,55,75].forEach(r => {
       ctx.beginPath();
-      ctx.arc(90,90,88,0,Math.PI*2);
-      ctx.fill();
+      ctx.arc(90,90,r,0,Math.PI*2);
+      ctx.stroke();
+    });
+
+    // Primary sweep — cyan, clockwise.
+    const sweepA = (now * 0.0011) % (Math.PI*2);
+    if(ctx.createConicGradient){
+      const grad = ctx.createConicGradient(sweepA, 90, 90);
+      grad.addColorStop(0, 'rgba(34,211,238,0.35)');
+      grad.addColorStop(0.08, 'rgba(34,211,238,0)');
+      grad.addColorStop(1, 'rgba(34,211,238,0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath(); ctx.arc(90,90,88,0,Math.PI*2); ctx.fill();
+
+      // Counter-sweep — magenta, slower, opposite direction, thinner ring.
+      const sweepB = (Math.PI*2) - ((now * 0.0006) % (Math.PI*2));
+      const grad2 = ctx.createConicGradient(sweepB, 90, 90);
+      grad2.addColorStop(0, 'rgba(232,121,249,0.22)');
+      grad2.addColorStop(0.05, 'rgba(232,121,249,0)');
+      grad2.addColorStop(1, 'rgba(232,121,249,0)');
+      ctx.fillStyle = grad2;
+      ctx.beginPath(); ctx.arc(90,90,72,0,Math.PI*2); ctx.fill();
+    }
+  } else {
+    // Offline mode: single amber sweep + range rings, in the same
+    // dispatch-console palette as the main menu — a proper instrument
+    // instead of a bare circle, just calmer than the online duotone rig.
+    ctx.strokeStyle = 'rgba(255,180,0,0.12)';
+    ctx.lineWidth = 1;
+    [30,55,75].forEach(r => {
+      ctx.beginPath();
+      ctx.arc(90,90,r,0,Math.PI*2);
+      ctx.stroke();
+    });
+    const sweepA = (Date.now() * 0.0006) % (Math.PI*2);
+    if(ctx.createConicGradient){
+      const grad = ctx.createConicGradient(sweepA, 90, 90);
+      grad.addColorStop(0, 'rgba(255,180,0,0.28)');
+      grad.addColorStop(0.1, 'rgba(255,180,0,0)');
+      grad.addColorStop(1, 'rgba(255,180,0,0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath(); ctx.arc(90,90,88,0,Math.PI*2); ctx.fill();
     }
   }
 
   ctx.restore();
 
-  // Minimap border — green + thicker when online, matching the CSS glow
-  // on the canvas element itself, so the ring and the border agree.
-  ctx.strokeStyle = onlineMode ? 'rgba(74,222,128,0.55)' : 'rgba(255,255,255,0.2)';
-  ctx.lineWidth = onlineMode ? 3 : 2;
+  if(onlineMode){
+    // Compass ticks around the rim — a small N marker plus quarter/eighth
+    // ticks, giving the whole thing a "real instrument" feel rather than
+    // a plain circle.
+    for(let i=0; i<16; i++){
+      const a = (i/16) * Math.PI*2;
+      const isCardinal = i % 4 === 0;
+      const r1 = isCardinal ? 80 : 84;
+      const r2 = 88;
+      ctx.strokeStyle = isCardinal ? 'rgba(34,211,238,0.8)' : 'rgba(34,211,238,0.35)';
+      ctx.lineWidth = isCardinal ? 1.6 : 1;
+      ctx.beginPath();
+      ctx.moveTo(90 + Math.sin(a)*r1, 90 - Math.cos(a)*r1);
+      ctx.lineTo(90 + Math.sin(a)*r2, 90 - Math.cos(a)*r2);
+      ctx.stroke();
+    }
+    ctx.fillStyle = 'rgba(34,211,238,0.9)';
+    ctx.font = 'bold 9px "Share Tech Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('N', 90, 14);
+
+    // Diagonal targeting brackets on the circle's rim — square-corner
+    // brackets would be invisible here since the minimap itself is
+    // CSS-clipped to a circle, so these hug the curve instead, at the
+    // four diagonal compass points.
+    const bracketLen = 0.22; // radians of arc each bracket spans
+    ctx.strokeStyle = 'rgba(232,121,249,0.85)';
+    ctx.lineWidth = 2;
+    [Math.PI/4, 3*Math.PI/4, 5*Math.PI/4, 7*Math.PI/4].forEach(a => {
+      ctx.beginPath();
+      ctx.arc(90, 90, 88, a - bracketLen/2, a + bracketLen/2);
+      ctx.stroke();
+    });
+  } else {
+    // Offline compass ring — quieter amber ticks, cardinal N only (no
+    // targeting brackets — those stay an online/PVP-only cue).
+    for(let i=0; i<16; i++){
+      const a = (i/16) * Math.PI*2;
+      const isCardinal = i % 4 === 0;
+      const r1 = isCardinal ? 81 : 85;
+      const r2 = 88;
+      ctx.strokeStyle = isCardinal ? 'rgba(255,180,0,0.55)' : 'rgba(255,180,0,0.22)';
+      ctx.lineWidth = isCardinal ? 1.4 : 1;
+      ctx.beginPath();
+      ctx.moveTo(90 + Math.sin(a)*r1, 90 - Math.cos(a)*r1);
+      ctx.lineTo(90 + Math.sin(a)*r2, 90 - Math.cos(a)*r2);
+      ctx.stroke();
+    }
+    ctx.fillStyle = 'rgba(255,180,0,0.65)';
+    ctx.font = 'bold 9px "Share Tech Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('N', 90, 14);
+  }
+
+  // Minimap border — cyan/magenta duotone HUD ring when online, amber
+  // gradient when offline, matching the CSS glow on the canvas element.
+  if(onlineMode){
+    const grad = ctx.createLinearGradient(0,0,180,180);
+    grad.addColorStop(0, 'rgba(34,211,238,0.8)');
+    grad.addColorStop(1, 'rgba(232,121,249,0.8)');
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 3;
+  }else{
+    const grad = ctx.createLinearGradient(0,0,180,180);
+    grad.addColorStop(0, 'rgba(255,210,60,0.7)');
+    grad.addColorStop(1, 'rgba(255,140,0,0.5)');
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 2;
+  }
   ctx.beginPath();
   ctx.arc(90,90,88,0,Math.PI*2);
   ctx.stroke();
@@ -5285,12 +6468,8 @@ function drawFullMap(){
   ctx.fillStyle = '#0d3b61';
   ctx.fillRect(0,0,W,H);
 
-  // Reserved future countryside region — visible on the map, but intentionally
-  // has no gameplay models, roads, buildings, NPCs, or collisions yet.
-  const futureMinX = 640, futureMaxX = 2900, futureMinZ = -1550, futureMaxZ = 350;
-
   // Scale/offset to fit world in map
-  const worldMinX = -900, worldMaxX = 3000, worldMinZ = -1650, worldMaxZ = 850;
+  const worldMinX = -1400, worldMaxX = 1500, worldMinZ = -2000, worldMaxZ = 450;
   const worldW = worldMaxX - worldMinX;
   const worldH2 = worldMaxZ - worldMinZ;
   const scaleX = (W-40) / worldW;
@@ -5302,31 +6481,10 @@ function drawFullMap(){
   const mapX = x => offX + x*sc;
   const mapZ = z => offZ + z*sc;
 
-  // Future countryside reservation. Green tint + dashed outline makes it
-  // obvious that this is planned expansion rather than finished city.
-  ctx.save();
-  ctx.fillStyle = 'rgba(86,125,77,0.22)';
-  ctx.fillRect(mapX(futureMinX), mapZ(futureMinZ),
-               (futureMaxX-futureMinX)*sc, (futureMaxZ-futureMinZ)*sc);
-  ctx.strokeStyle = 'rgba(145,190,120,0.65)';
-  ctx.setLineDash([7,5]);
-  ctx.lineWidth = 2;
-  ctx.strokeRect(mapX(futureMinX), mapZ(futureMinZ),
-                 (futureMaxX-futureMinX)*sc, (futureMaxZ-futureMinZ)*sc);
-  ctx.setLineDash([]);
-  ctx.fillStyle = 'rgba(210,235,190,0.75)';
-  ctx.font = 'bold 12px Rajdhani';
-  ctx.textAlign = 'center';
-  ctx.fillText('UNDER CONSTRUCTION', mapX((futureMinX+futureMaxX)/2), mapZ(-500));
-  ctx.font = '10px Rajdhani';
-  ctx.fillText('FUTURE COUNTRYSIDE', mapX((futureMinX+futureMaxX)/2), mapZ(-500)+15);
-  ctx.textAlign = 'start';
-  ctx.restore();
-
   // Islands
-  const islandColors = ['#4a5568','#374151','#2d3748','#466b45'];
+  const islandColors = ['#4a5568','#374151','#2d3748','#5c7a4a'];
   ISLANDS.forEach((isl, i) => {
-    ctx.fillStyle = islandColors[i] || '#466b45';
+    ctx.fillStyle = islandColors[i] || '#5c7a4a';
     ctx.strokeStyle = '#546e7a';
     ctx.lineWidth = 2;
     ctx.beginPath();
@@ -5351,11 +6509,70 @@ function drawFullMap(){
     ctx.textAlign = 'start';
   });
 
+  // Ashford Central Park
+  ctx.fillStyle = '#3f7a44';
+  ctx.fillRect(mapX(ASHFORD_PARK.x1), mapZ(ASHFORD_PARK.z1),
+    (ASHFORD_PARK.x2-ASHFORD_PARK.x1)*sc, (ASHFORD_PARK.z2-ASHFORD_PARK.z1)*sc);
+  mapHoverTargets.push({
+    x: mapX((ASHFORD_PARK.x1+ASHFORD_PARK.x2)/2), y: mapZ((ASHFORD_PARK.z1+ASHFORD_PARK.z2)/2),
+    r: 10, name: 'Ashford Park',
+  });
+
   // Bridges
   BRIDGES.forEach(br => {
     ctx.fillStyle = '#546e7a';
     ctx.fillRect(mapX(br.x), mapZ(br.z), br.w*sc, br.d*sc);
   });
+  { const cb = COUNTRYSIDE_BRIDGE;
+    ctx.fillStyle = '#546e7a';
+    ctx.fillRect(mapX(cb.x), mapZ(cb.z), cb.w*sc, cb.d*sc);
+  }
+
+  // Countryside road network — the highway, the spur to Ashwood Falls, and
+  // each town's local street cross. The city's own streets aren't drawn
+  // explicitly here (they read from building density instead), but the
+  // countryside's mostly-open land makes the total absence of any road
+  // lines look broken, so these are drawn in explicitly.
+  ctx.strokeStyle = '#2d3436';
+  ctx.lineWidth = Math.max(2, 22*sc);
+  ctx.beginPath();
+  ctx.moveTo(mapX(240), mapZ(-610));
+  ctx.lineTo(mapX(240), mapZ(-1470));
+  ctx.stroke();
+  ctx.lineWidth = Math.max(1.5, 15*sc);
+  ctx.beginPath();
+  ctx.moveTo(mapX(251), mapZ(-1090));
+  ctx.lineTo(mapX(520), mapZ(-1090));
+  ctx.stroke();
+  ctx.lineWidth = Math.max(1.5, 12*sc);
+  [{cx:200,cz:-790},{cx:520,cz:-1190}].forEach(t => {
+    ctx.beginPath(); ctx.moveTo(mapX(t.cx-65), mapZ(t.cz)); ctx.lineTo(mapX(t.cx+65), mapZ(t.cz)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(mapX(t.cx), mapZ(t.cz-45)); ctx.lineTo(mapX(t.cx), mapZ(t.cz+45)); ctx.stroke();
+  });
+  ctx.lineWidth = Math.max(1.5, 10*sc);
+  ctx.beginPath(); ctx.moveTo(mapX(240), mapZ(-700)); ctx.lineTo(mapX(1050), mapZ(-700)); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(mapX(-500), mapZ(-1200)); ctx.lineTo(mapX(240), mapZ(-1200)); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(mapX(240), mapZ(-1250)); ctx.lineTo(mapX(950), mapZ(-1250)); ctx.stroke();
+
+  // Forest + creek (west of the towns)
+  ctx.fillStyle = 'rgba(47,82,51,0.55)';
+  ctx.fillRect(mapX(-1260), mapZ(-1420), 520*sc, 640*sc);
+  ctx.strokeStyle = '#3a6ea5';
+  ctx.lineWidth = Math.max(1, 4*sc);
+  ctx.beginPath();
+  for(let i=0;i<=8;i++){
+    const t = i/8;
+    const cz2 = -1420 + t*640;
+    const cx2 = -1000 + Math.sin(t*640*0.012)*60;
+    const mx = mapX(cx2), mz = mapZ(cz2);
+    if(i===0) ctx.moveTo(mx,mz); else ctx.lineTo(mx,mz);
+  }
+  ctx.stroke();
+  ctx.fillStyle = 'rgba(200,230,210,0.6)';
+  ctx.font = '10px Rajdhani';
+  ctx.textAlign = 'center';
+  ctx.fillText('FOREST', mapX(-1000), mapZ(-1420)-4);
+  ctx.textAlign = 'start';
 
   // Districts (subtle overlay)
   DISTRICTS.forEach(d => {
@@ -5365,7 +6582,15 @@ function drawFullMap(){
   });
 
   // Special buildings
-  const dotMap = { job:'#ffb400', hospital:'#f87171', police:'#60a5fa', food:'#fb923c', bank:'#fbbf24', nightclub:'#a78bfa', dealership:'#818cf8' };
+  const dotMap = {
+    job:'#ffb400', hospital:'#f87171', police:'#60a5fa', food:'#fb923c',
+    bank:'#fbbf24', casino:'#fb7185', nightclub:'#c084fc', gym:'#34d399',
+    cinema:'#fbbf24', marina:'#38bdf8', supermarket:'#facc15', mechanic:'#94a3b8',
+    dockworker:'#0ea5e9', courier:'#fb923c', gas:'#9ca3af', clothing:'#f472b6',
+    pawnshop:'#a3a3a3', firestation:'#dc2626', apartment_complex:'#818cf8',
+    country_store:'#d4a24c', country_hall:'#e0d5b8', country_chapel:'#f1f5f9',
+    dealership:'#818cf8',
+  };
   SPECIAL_BUILDINGS.forEach(b => {
     const col = dotMap[b.type] || '#a78bfa';
     ctx.fillStyle = col;
@@ -5487,9 +6712,6 @@ function updateStreetName(){
 // STREET LAMPS
 // =====================================================================
 function buildStreetLamps(){
-  window.streetLampGlows=[];
-  const lampPoleM = new THREE.MeshLambertMaterial({ color:0x9e9e9e });
-  const lampGlowM = new THREE.MeshLambertMaterial({ color:0xfffde7, emissive:0xfff176, emissiveIntensity:1 });
   const lampPositions = [
     {x:-380,z:0},{x:-350,z:0},{x:-300,z:0},{x:-250,z:0},{x:-200,z:0},{x:-150,z:0},
     {x:-320,z:80},{x:-320,z:-80},{x:-260,z:140},{x:-260,z:-140},
@@ -5499,16 +6721,25 @@ function buildStreetLamps(){
     {x:370,z:0},{x:420,z:0},{x:470,z:0},{x:520,z:0},
     {x:400,z:80},{x:400,z:-80},{x:450,z:120},
   ];
+  // Instanced instead of one Mesh pair per lamp — 60 individual meshes
+  // down to 2 draw calls. The day/night cycle only ever needs to toggle
+  // every glow on or off together (see updateDayNight below), so a single
+  // shared InstancedMesh works even better than the old per-mesh array —
+  // one .visible flip instead of a loop.
+  const poleMesh = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.12,0.12,6,6), new THREE.MeshLambertMaterial({color:0x9e9e9e}), lampPositions.length);
+  const glowMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(0.4,6,4), new THREE.MeshLambertMaterial({color:0xfffde7, emissive:0xfff176, emissiveIntensity:1}), lampPositions.length);
+  const dummy = new THREE.Object3D();
   lampPositions.forEach((lp, i) => {
-    const poleG = new THREE.CylinderGeometry(0.12, 0.12, 6, 6);
-    const pole = new THREE.Mesh(poleG, lampPoleM);
-    pole.position.set(lp.x, 3, lp.z);
-    scene.add(pole);
-    const glowG = new THREE.SphereGeometry(0.4, 6, 4);
-    const glow = new THREE.Mesh(glowG, lampGlowM);
-    glow.position.set(lp.x, 6.2, lp.z);
-    scene.add(glow); window.streetLampGlows.push(glow);
+    dummy.position.set(lp.x, 3, lp.z); dummy.updateMatrix();
+    poleMesh.setMatrixAt(i, dummy.matrix);
+    dummy.position.set(lp.x, 6.2, lp.z); dummy.updateMatrix();
+    glowMesh.setMatrixAt(i, dummy.matrix);
   });
+  poleMesh.instanceMatrix.needsUpdate = true;
+  glowMesh.instanceMatrix.needsUpdate = true;
+  scene.add(poleMesh);
+  scene.add(glowMesh);
+  window.streetLampGlows = glowMesh;
 }
 
 
@@ -5540,7 +6771,7 @@ function updateDayNight(dt){
   if(scene?.fog) scene.fog.color.setHex(daylight>.18?0x87ceeb:0x081525);
   if(scene?.background) scene.background.setHex(daylight>.18?0x87ceeb:0x06111f);
   const lampsOn=daylight<.3;
-  window.streetLampGlows?.forEach(g=>g.visible=lampsOn);
+  if(window.streetLampGlows) window.streetLampGlows.visible = lampsOn;
 }
 // =====================================================================
 // NPC PEDESTRIANS
@@ -6018,7 +7249,7 @@ function gameLoop(){
   updateDayNight(dt);
   randomEventTick(dt);
   if(onlineMode) updateRemotePlayers(dt);
-  if(onlineMode && myPvpRole) refreshPvpHud();
+  if(onlineMode && myPvpRole && frameCount % 6 === 0) refreshPvpHud();
   if(frameCount % 3 === 0) updateSunFollow(); // shadow frustum is small now, doesn't need to track every frame
 
   // Update minimap every few frames

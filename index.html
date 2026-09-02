@@ -3498,7 +3498,23 @@ const games=[
       "Development information coming soon."
   },
 
+   
+  {
+    category:"other",
+    name:"Upcoming Game",
+    icon:"?",
+    genre:"TBA",
+    date:"TBA",
+    description:
+      "A new project is currently in development.",
+    status:"COMING SOON",
+    url:"#",
+    updateStatus:"OFF",
+    updateNotes:
+      "Development information coming soon."
+  },
 
+   
   {
     category:"other",
     name:"Upcoming Game",
@@ -3720,7 +3736,7 @@ function renderGames(
         (maintenance?" maintenance":"")
         +
         (
-          game.name==="Upcoming Open World Game"
+          game.name==="Taxi IV"
             ?" wide-card"
             :""
         );
@@ -3786,7 +3802,7 @@ function renderGames(
 
         `;
 
-      }else if(game.name==="Upcoming Open World Game"){
+      }else if(game.name==="Taxi IV"){
 
         card.classList.add("taxi4-special");
         card.innerHTML=`

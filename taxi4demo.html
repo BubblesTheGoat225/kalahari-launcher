@@ -5,10 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Taxi 4</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <link rel="icon" type="image/x-icon" href="taxi4logo.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="taxi4logo.jpg">
@@ -109,41 +105,9 @@ body{background:#000;overflow:hidden;user-select:none;}
   box-shadow:0 0 20px rgba(0,0,0,0.8),inset 0 0 10px rgba(0,0,0,0.5);
   transition:border-color 0.3s, box-shadow 0.3s;
 }
-#minimapCanvas.online-active{
-  border:2px solid #4ade80;
-  box-shadow:0 0 24px rgba(74,222,128,0.55),inset 0 0 10px rgba(0,0,0,0.5);
-}
-#minimapOnlineBadge{
-  display:none;
-  align-items:center;
-  gap:5px;
-  position:absolute;
-  top:-10px;
-  left:50%;
-  transform:translateX(-50%);
-  background:rgba(6,16,10,0.85);
-  border:1px solid #4ade80;
-  color:#4ade80;
-  font-family:'Share Tech Mono',monospace;
-  font-size:9px;
-  letter-spacing:2px;
-  padding:3px 9px;
-  border-radius:20px;
-  white-space:nowrap;
-}
-#minimapOnlineBadge .dot{
-  width:5px;height:5px;border-radius:50%;background:#4ade80;
-  box-shadow:0 0 6px #4ade80;
-  animation:mmPulse 1.6s infinite;
-}
 @keyframes mmPulse{
   0%,100%{opacity:0.4}
   50%{opacity:1}
-}
-#onlinePlayerCount{
-  position:absolute;bottom:-42px;left:50%;transform:translateX(-50%);
-  font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:1px;
-  color:rgba(74,222,128,0.85);white-space:nowrap;
 }
 #minimapDistrictLabel{
   position:absolute;bottom:-24px;left:50%;transform:translateX(-50%);
@@ -228,11 +192,36 @@ body{background:#000;overflow:hidden;user-select:none;}
 }
 .controls-hint strong{color:rgba(255,255,255,0.6);}
 
-/* Futuristic main menu */
-#startScreen{background:radial-gradient(circle at 70% 25%,rgba(24,120,255,.24),transparent 32%),linear-gradient(135deg,#020817,#061a35 55%,#03101f);overflow:hidden;}
-#startScreen::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 0 35%,rgba(255,210,40,.07) 50%,transparent 65%),repeating-linear-gradient(90deg,rgba(80,170,255,.035) 0 1px,transparent 1px 55px);pointer-events:none;}
-.start-layout{position:relative;z-index:2;width:min(1100px,92vw);display:grid;grid-template-columns:1.15fr .85fr;gap:70px;align-items:center;}
-.start-brand{text-align:left}.game-title{font-size:108px;letter-spacing:10px;color:#fff;text-shadow:0 0 45px rgba(0,132,255,.65);}.game-title::first-line{color:#fff}.game-subtitle{color:#55b7ff;letter-spacing:8px}.city-line{margin:22px 0;width:260px;background:linear-gradient(90deg,#1677ff,#ffd21f,transparent);}.menu-panel{background:rgba(2,12,28,.78);border:1px solid rgba(70,170,255,.35);border-left:4px solid #ffd21f;padding:28px;box-shadow:0 0 40px rgba(0,90,220,.18);backdrop-filter:blur(12px);}.menu-panel .start-btn,.menu-panel .menu-btn{margin-top:0;margin-bottom:10px;width:100%;text-align:left;padding:14px 20px;clip-path:none}.menu-panel .start-btn{background:linear-gradient(90deg,#ffd21f,#ffeb72);color:#06101f}.menu-panel .menu-btn{border-color:rgba(70,170,255,.25);background:rgba(20,80,150,.12)}.menu-panel .menu-btn:hover{background:rgba(0,130,255,.18);border-color:#55b7ff;color:#fff}.menu-meta{font:12px Rajdhani,sans-serif;letter-spacing:2px;color:rgba(255,255,255,.42);margin-top:14px}.save-status{font:11px Share Tech Mono,monospace;color:#55d6ff;margin-bottom:12px;text-transform:uppercase;}
+/* MODERN TAXI 4 DEMO MENU — GOLD / YELLOW */
+#startScreen{background:#050505;overflow:hidden;}
+#startScreen::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 18% 45%,rgba(255,184,0,.16),transparent 30%),radial-gradient(circle at 88% 12%,rgba(255,214,55,.08),transparent 25%),linear-gradient(135deg,#050505,#110d05 52%,#030303);pointer-events:none;}
+#startScreen::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 0 48%,rgba(255,196,0,.055) 49%,transparent 50%),repeating-linear-gradient(90deg,rgba(255,190,40,.035) 0 1px,transparent 1px 70px),repeating-linear-gradient(0deg,rgba(255,190,40,.025) 0 1px,transparent 1px 70px);pointer-events:none;}
+.start-layout{position:relative;z-index:2;width:min(1180px,92vw);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(360px,.9fr);gap:55px;align-items:center;}
+.start-brand{position:relative;text-align:left;padding:20px 0;}
+.start-brand::before{content:"Taxi 4, Demo Version";position:absolute;top:-18px;left:2px;font:700 12px 'Share Tech Mono',monospace;letter-spacing:5px;color:#ffca28;opacity:.8;}
+.game-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(76px,9vw,126px);letter-spacing:10px;color:#fff;line-height:.82;text-shadow:0 0 22px rgba(255,180,0,.75),0 0 70px rgba(255,180,0,.18);}
+.game-title::after{content:"";display:block;width:115px;height:5px;margin-top:22px;background:#ffb400;box-shadow:0 0 18px rgba(255,180,0,.7);}
+.game-subtitle{font:600 13px 'Rajdhani',sans-serif;letter-spacing:3px;line-height:1.7;color:rgba(255,255,255,.58);max-width:650px;margin-top:20px;text-transform:uppercase;}
+.city-line{width:310px;height:2px;margin:18px 0;background:linear-gradient(90deg,#ffb400,#ffd83d,transparent);box-shadow:0 0 12px rgba(255,180,0,.35);}
+.controls-hint{font:500 12px 'Rajdhani',sans-serif;letter-spacing:2px;line-height:2;color:rgba(255,255,255,.38);margin-top:24px;text-transform:uppercase;}
+.controls-hint strong{color:#fff;}
+.start-layout::before{content:"KINGSTON CITY  //  FREE ROAM DEMO VERSION";position:absolute;left:0;bottom:-70px;font:11px 'Share Tech Mono',monospace;letter-spacing:3px;color:rgba(255,180,0,.35);}
+.menu-panel{position:relative;background:linear-gradient(145deg,rgba(20,16,8,.92),rgba(5,5,5,.9));border:1px solid rgba(255,190,40,.28);border-top:3px solid #ffb400;padding:25px;box-shadow:0 18px 70px rgba(0,0,0,.65),0 0 35px rgba(255,180,0,.08);backdrop-filter:blur(18px);}
+.menu-panel::before{content:"MAIN MENU";display:block;font:700 12px 'Share Tech Mono',monospace;letter-spacing:4px;color:#ffca28;margin-bottom:18px;}
+.menu-panel::after{content:"OFFLINE DEMO";position:absolute;top:22px;right:24px;font:10px 'Share Tech Mono',monospace;letter-spacing:2px;color:rgba(255,255,255,.28);}
+.save-status{font:11px 'Share Tech Mono',monospace;letter-spacing:1px;color:#ffd43b;background:rgba(255,180,0,.055);border:1px solid rgba(255,180,0,.14);padding:10px 12px;margin-bottom:10px;}
+.demo-notice{font:700 10px 'Rajdhani',sans-serif;letter-spacing:2px;color:#ffca28;border-left:2px solid #ffb400;background:rgba(255,180,0,.045);padding:9px 11px;margin-bottom:15px;}
+.menu-panel .start-btn,.menu-panel .menu-btn{position:relative;width:100%;height:52px;margin:0 0 9px;padding:0 18px;text-align:left;clip-path:none;border-radius:2px;display:flex;align-items:center;justify-content:space-between;font:700 15px 'Rajdhani',sans-serif;letter-spacing:3px;cursor:pointer;transition:transform .18s,background .18s,border-color .18s,box-shadow .18s;}
+.menu-panel .start-btn{background:linear-gradient(90deg,#ffb400,#ffd83d);color:#080705;border:1px solid #ffca28;box-shadow:0 5px 22px rgba(255,180,0,.18);}
+.menu-panel .start-btn::after{content:"→";font-size:23px;}
+.menu-panel .menu-btn{background:rgba(255,255,255,.025);color:#eee;border:1px solid rgba(255,255,255,.12);}
+.menu-panel .menu-btn::after{content:"›";font-size:22px;color:#ffb400;opacity:.65;}
+.menu-panel .start-btn:hover,.menu-panel .menu-btn:hover{transform:translateX(4px);}
+.menu-panel .start-btn:hover{background:#ffe06a;box-shadow:0 8px 30px rgba(255,180,0,.3);}
+.menu-panel .menu-btn:hover{background:rgba(255,180,0,.09);border-color:rgba(255,190,40,.55);color:#fff;box-shadow:0 5px 20px rgba(255,180,0,.07);}
+.menu-meta{font:10px 'Share Tech Mono',monospace;letter-spacing:2px;color:rgba(255,255,255,.3);margin-top:17px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08);text-align:right;}
+@media(max-width:820px){.start-layout{grid-template-columns:1fr;gap:25px;width:min(650px,90vw);}.start-brand{text-align:center}.start-brand::before{left:50%;transform:translateX(-50%)}.game-title::after{margin-left:auto;margin-right:auto}.city-line{margin-left:auto;margin-right:auto}.game-subtitle{margin-left:auto;margin-right:auto}.start-layout::before{display:none}.menu-panel{padding:20px}.menu-panel::after{display:none}}
+
 /* Pause Menu */
 #pauseMenu{
   background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);display:none;
@@ -253,252 +242,10 @@ body{background:#000;overflow:hidden;user-select:none;}
 }
 .menu-btn:hover{background:rgba(255,180,0,0.15);border-color:#ffb400;color:#ffb400;}
 
-/* Online mode toggle */
-.online-toggle-btn{
-  border-color:rgba(90,220,255,0.35)!important;
-  color:#8fe3ff!important;
-}
-.online-toggle-btn:hover{
-  background:rgba(90,220,255,0.15)!important;
-  border-color:#5adcff!important;
-  color:#5adcff!important;
-}
-.online-toggle-btn.online-on{
-  background:rgba(74,222,128,0.15)!important;
-  border-color:#4ade80!important;
-  color:#4ade80!important;
-}
-.online-toggle-btn.online-on:hover{
-  background:rgba(74,222,128,0.25)!important;
-}
-.online-status-line{
-  font:11px 'Share Tech Mono',monospace;
-  color:rgba(255,255,255,0.45);
-  text-align:center;
-  margin:-2px 0 10px;
-  letter-spacing:0.5px;
-}
 
-/* Online Profile screen */
-.online-profile-body{
-  margin:14px 0;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-.online-profile-stat{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:9px 12px;
-  border-radius:8px;
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.08);
-  font:13px 'Rajdhani',sans-serif;
-}
-.online-profile-stat span{
-  color:rgba(255,255,255,0.5);
-}
-.online-profile-stat b{
-  color:#fff;
-  font-weight:700;
-}
-.online-profile-loading{
-  color:rgba(255,255,255,0.5);
-  font:13px 'Rajdhani',sans-serif;
-  text-align:center;
-  padding:14px 4px;
-  line-height:1.6;
-}
-.online-enter-btn{
-  border-color:rgba(74,222,128,0.4)!important;
-  color:#4ade80!important;
-  font-weight:900!important;
-}
-.online-enter-btn:hover{
-  background:rgba(74,222,128,0.15)!important;
-  border-color:#4ade80!important;
-}
-.online-enter-btn:disabled{
-  opacity:0.5;
-  cursor:not-allowed;
-}
-.danger-menu-btn{
-  border-color:rgba(239,68,68,0.35)!important;
-  color:#f87171!important;
-}
-.danger-menu-btn:hover{
-  background:rgba(239,68,68,0.15)!important;
-  border-color:#ef4444!important;
-}
 
-/* PVP menu button (pause menu) */
-.pvp-menu-btn{
-  border-color:rgba(232,121,249,0.35)!important;
-  color:#e879f9!important;
-}
-.pvp-menu-btn:hover{
-  background:rgba(232,121,249,0.15)!important;
-  border-color:#e879f9!important;
-}
 
-/* PVP screen */
-.pvp-role-row{
-  display:flex;
-  gap:8px;
-  margin:14px 0 10px;
-}
-.pvp-role-btn{
-  flex:1;
-  padding:12px 8px;
-  border-radius:8px;
-  border:1px solid rgba(255,255,255,0.15);
-  background:rgba(255,255,255,0.04);
-  color:rgba(255,255,255,0.65);
-  font:700 13px 'Rajdhani',sans-serif;
-  letter-spacing:1px;
-  cursor:pointer;
-  transition:all 0.15s;
-}
-.pvp-role-btn:hover{
-  border-color:rgba(255,255,255,0.35);
-}
-.pvp-role-btn.pvp-role-active.pvp-role-off{
-  background:rgba(255,255,255,0.12);
-  border-color:rgba(255,255,255,0.5);
-  color:#fff;
-}
-.pvp-role-btn.pvp-role-active.pvp-role-cop{
-  background:rgba(96,165,250,0.2);
-  border-color:#60a5fa;
-  color:#93c5fd;
-}
-.pvp-role-btn.pvp-role-active.pvp-role-robber{
-  background:rgba(232,121,249,0.2);
-  border-color:#e879f9;
-  color:#f0abfc;
-}
-.pvp-hint{
-  font:12px 'Rajdhani',sans-serif;
-  color:rgba(255,255,255,0.5);
-  line-height:1.6;
-  padding:10px 12px;
-  background:rgba(255,255,255,0.03);
-  border-radius:8px;
-  margin-bottom:14px;
-}
-.pvp-roster-header{
-  font:700 11px 'Share Tech Mono',monospace;
-  letter-spacing:2px;
-  color:rgba(255,255,255,0.4);
-  margin-bottom:8px;
-}
-.pvp-roster{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  margin-bottom:14px;
-}
-.pvp-roster-row{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:9px 12px;
-  border-radius:8px;
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.08);
-}
-.pvp-roster-name{
-  flex:1;
-  font:600 13px 'Rajdhani',sans-serif;
-  color:#fff;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.pvp-tag{
-  font:700 11px 'Share Tech Mono',monospace;
-  padding:3px 8px;
-  border-radius:12px;
-  white-space:nowrap;
-}
-.pvp-tag-cop{ background:rgba(96,165,250,0.18); color:#93c5fd; }
-.pvp-tag-robber{ background:rgba(232,121,249,0.18); color:#f0abfc; }
-.pvp-tag-off{ background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.4); }
-.pvp-roster-stats{
-  font:11px 'Share Tech Mono',monospace;
-  color:rgba(255,255,255,0.45);
-  white-space:nowrap;
-}
-.pvp-empty{
-  color:rgba(255,255,255,0.4);
-  font:13px 'Rajdhani',sans-serif;
-  padding:14px 4px;
-  text-align:center;
-}
 
-/* PVP in-game HUD */
-.pvp-hud{
-  position:fixed;
-  top:70px;
-  left:50%;
-  transform:translateX(-50%);
-  font:700 13px 'Rajdhani',sans-serif;
-  letter-spacing:1px;
-  padding:6px 16px;
-  border-radius:20px;
-  z-index:8;
-  display:none;
-  pointer-events:none;
-}
-.pvp-hud.pvp-cop{
-  background:rgba(96,165,250,0.18);
-  border:1px solid #60a5fa;
-  color:#93c5fd;
-}
-.pvp-hud.pvp-robber{
-  background:rgba(232,121,249,0.18);
-  border:1px solid #e879f9;
-  color:#f0abfc;
-}
-.pvp-hud.pvp-robber-immune{
-  background:rgba(255,255,255,0.12);
-  border:1px solid rgba(255,255,255,0.5);
-  color:#fff;
-}
-.pvp-warn{
-  position:fixed;
-  top:104px;
-  left:50%;
-  transform:translateX(-50%);
-  font:900 15px 'Bebas Neue',sans-serif;
-  letter-spacing:2px;
-  padding:7px 18px;
-  border-radius:8px;
-  z-index:8;
-  display:none;
-  pointer-events:none;
-}
-.pvp-warn-ready{
-  background:rgba(96,165,250,0.25);
-  border:2px solid #60a5fa;
-  color:#fff;
-  animation:pvpPulseReady 0.8s infinite;
-}
-.pvp-warn-danger{
-  background:rgba(239,68,68,0.3);
-  border:2px solid #ef4444;
-  color:#fff;
-  animation:pvpPulseDanger 0.6s infinite;
-}
-@keyframes pvpPulseReady{
-  0%,100%{ opacity:1; }
-  50%{ opacity:0.6; }
-}
-@keyframes pvpPulseDanger{
-  0%,100%{ background:rgba(239,68,68,0.3); }
-  50%{ background:rgba(239,68,68,0.55); }
-}
 
 /* Purchase Screen */
 #purchaseScreen{
@@ -736,31 +483,24 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
 }
 
 
-/* FUTURISTIC BLUE / WHITE / YELLOW TITLE + LOADING THEME */
-#loadingScreen{
-  background:
-    radial-gradient(circle at 50% 42%,rgba(30,144,255,.20),transparent 35%),
-    linear-gradient(135deg,#020817 0%,#061a33 48%,#020817 100%) !important;
-  overflow:hidden;
-}
-#loadingScreen::before,#startScreen::after{
-  content:'';position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(115deg,transparent 0 44%,rgba(255,212,59,.08) 45%,transparent 46% 70%,rgba(0,174,255,.08) 71%,transparent 72%);
-}
-.loading-title,.game-title{
-  color:#fff !important;
-  text-shadow:0 0 12px rgba(0,174,255,.8),0 0 42px rgba(30,144,255,.35),4px 4px 0 rgba(255,212,59,.18) !important;
-}
-.loading-title{letter-spacing:12px !important;}
-.loading-bar-bg{background:rgba(255,255,255,.10) !important;border:1px solid rgba(0,174,255,.35);box-shadow:0 0 20px rgba(0,174,255,.12);}
-.loading-bar{background:linear-gradient(90deg,#087cff,#18c8ff,#ffd43b) !important;box-shadow:0 0 16px rgba(24,200,255,.65);}
-.loading-text,.game-subtitle{color:#8edcff !important;text-shadow:0 0 10px rgba(0,174,255,.4);}
-#startScreen{background:linear-gradient(135deg,#020817 0%,#06234a 50%,#030b19 100%) !important;}
-#startScreen::before{background:radial-gradient(ellipse at 50% 30%,rgba(0,174,255,.16) 0%,transparent 65%) !important;}
-.city-line{background:linear-gradient(90deg,transparent,#18c8ff,#ffd43b,transparent) !important;}
-.start-btn{color:#06101d !important;background:linear-gradient(90deg,#18c8ff,#ffd43b) !important;box-shadow:0 0 24px rgba(24,200,255,.25);}
-.start-btn:hover{background:linear-gradient(90deg,#64ddff,#ffe36d) !important;}
-
+/* DEMO MENU — GOLD / YELLOW THEME */
+#loadingScreen{background:radial-gradient(circle at 50% 42%,rgba(255,180,0,.14),transparent 35%),linear-gradient(135deg,#050505 0%,#171108 48%,#050505 100%) !important;}
+#loadingScreen::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 0 44%,rgba(255,212,59,.08) 45%,transparent 46% 70%,rgba(255,180,0,.05) 71%,transparent 72%);}
+.loading-title,.game-title{color:#fff !important;text-shadow:0 0 12px rgba(255,180,0,.8),0 0 42px rgba(255,180,0,.28),4px 4px 0 rgba(255,212,59,.18) !important;}
+.loading-bar-bg{background:rgba(255,255,255,.10) !important;border:1px solid rgba(255,180,0,.35);box-shadow:0 0 20px rgba(255,180,0,.12);}
+.loading-bar{background:linear-gradient(90deg,#ffb400,#ffd700) !important;box-shadow:0 0 16px rgba(255,180,0,.55);}
+.loading-text,.game-subtitle{color:#ffd43b !important;text-shadow:0 0 10px rgba(255,180,0,.35);}
+#startScreen{background:radial-gradient(circle at 70% 25%,rgba(255,180,0,.16),transparent 32%),linear-gradient(135deg,#050505,#1a1208 55%,#050505) !important;}
+#startScreen::before{background:radial-gradient(ellipse at 50% 30%,rgba(255,180,0,.10) 0%,transparent 65%) !important;}
+#startScreen::after{background:linear-gradient(120deg,transparent 0 35%,rgba(255,210,40,.07) 50%,transparent 65%),repeating-linear-gradient(90deg,rgba(255,190,60,.035) 0 1px,transparent 1px 55px) !important;}
+.city-line{background:linear-gradient(90deg,transparent,#ffb400,#ffd700,transparent) !important;}
+.start-btn{color:#0b0b0b !important;background:linear-gradient(90deg,#ffb400,#ffd700) !important;box-shadow:0 0 24px rgba(255,180,0,.25);}
+.start-btn:hover{background:linear-gradient(90deg,#ffd04a,#ffe36d) !important;}
+.menu-panel{border-color:rgba(255,180,0,.30);box-shadow:0 0 40px rgba(255,180,0,.12);}
+.menu-panel .menu-btn{border-color:rgba(255,180,0,.22);background:rgba(255,180,0,.06);}
+.menu-panel .menu-btn:hover{background:rgba(255,180,0,.14);border-color:#ffb400;color:#ffd43b;}
+.save-status{color:#ffd43b;}
+.demo-notice{font:700 11px Share Tech Mono,monospace;letter-spacing:1.5px;color:#ffcf4a;background:rgba(255,180,0,.07);border:1px solid rgba(255,180,0,.22);padding:9px 10px;margin-bottom:12px;text-align:center;}
 #eventBanner{position:fixed;top:145px;left:50%;transform:translateX(-50%) translateY(-10px);opacity:0;transition:.35s;z-index:40;text-align:center;background:rgba(5,15,30,.88);border:1px solid rgba(255,180,0,.55);border-left:4px solid #ffb400;padding:10px 22px;min-width:300px;box-shadow:0 0 28px rgba(0,150,255,.18);pointer-events:none}
 #eventBanner.show{opacity:1;transform:translateX(-50%) translateY(0)}
 #eventTitle{font:700 19px Rajdhani,sans-serif;color:#ffb400;letter-spacing:3px}
@@ -780,9 +520,6 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
 
 <!-- HUD -->
 <div id="hud">
-  <!-- PVP HUD -->
-  <div id="pvpRoleHud" class="pvp-hud"></div>
-  <div id="pvpWarningHud" class="pvp-warn"></div>
 
   <!-- District Notification -->
   <div id="districtNotif">
@@ -822,10 +559,8 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
 
   <!-- Minimap -->
   <div id="minimapContainer">
-    <div id="minimapOnlineBadge"><span class="dot"></span>LIVE</div>
     <canvas id="minimapCanvas" width="180" height="180"></canvas>
     <div id="minimapDistrictLabel"></div>
-    <div id="onlinePlayerCount"></div>
   </div>
 
   <!-- Interact hint -->
@@ -879,25 +614,13 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
     </div>
     <div class="menu-panel">
       <div class="save-status" id="saveStatus">NO SAVE DATA DETECTED</div>
+      <div class="demo-notice">ONLINE MODE IS NOT AVAILABLE IN THE DEMO</div>
       <button class="start-btn" id="continueBtn" onclick="continueGame()">CONTINUE GAME</button>
       <button class="menu-btn" onclick="startNewGame()">NEW GAME</button>
       <button class="menu-btn" onclick="showHowToPlay()">HOW TO PLAY</button>
       <button class="menu-btn" onclick="showPatchNotes()">UPDATE / PATCH NOTES</button>
-      <button class="menu-btn online-toggle-btn" onclick="openOnlineProfileScreen()">🌐 TAXI ONLINE IS NOT AVAILABLE IN DEMO</button>
-      <div class="online-status-line" id="startOnlineStatus">Checking session...</div>
       <div class="menu-meta">VERSION 4.6 · KALAHARI STUDIOS</div>
     </div>
-  </div>
-</div>
-
-<!-- Online Profile -->
-<div class="screen" id="onlineProfileScreen" style="display:none">
-  <div class="pause-panel" style="width:min(480px,92vw)">
-    <div class="pause-title">🌐 ONLINE PROFILE - SNEAK PEAK</div>
-    <div id="onlineProfileBody" class="online-profile-body">
-      <div class="online-profile-loading">Loading...</div>
-    </div>
-    <button class="menu-btn" onclick="closeOnlineProfileScreen()">BACK</button>
   </div>
 </div>
 
@@ -989,9 +712,6 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
       <div class="legend-item"><div class="legend-dot" style="background:#f87171"></div>Hospital</div>
       <div class="legend-item"><div class="legend-dot" style="background:#60a5fa"></div>Police</div>
       <div class="legend-item"><div class="legend-dot" style="background:#a78bfa"></div>Point of Interest</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#4ade80"></div>Online Player</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#60a5fa"></div>Cop</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#e879f9"></div>Robber</div>
       <div class="legend-item"><div class="legend-dot" style="background:#567d4d"></div>Future Countryside</div>
     </div>
     <br><button class="btn-cancel" style="width:200px" onclick="closeMap()">CLOSE MAP</button>
@@ -1057,79 +777,6 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
 // =====================================================================
 // TAXI 4 — Main Game Script
 // =====================================================================
-
-// =====================================================================
-// MULTIPLAYER — FIREBASE SETUP
-// Shares the same Firebase project as the Kalahari Studios Launcher, so
-// a player already signed in there is automatically signed in here too
-// (same origin, same auth session). Realtime Database (not Firestore)
-// is used for live position sync — it's built for exactly this kind of
-// frequent, low-latency read/write, unlike Firestore's per-write cost.
-// =====================================================================
-const firebaseConfig = {
-  apiKey: "AIzaSyBUoUrDa7KVn9ab2NawytUIDZS-u6tSpWw",
-  authDomain: "kalahari-launcher.firebaseapp.com",
-  databaseURL: "https://kalahari-launcher-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "kalahari-launcher",
-  storageBucket: "kalahari-launcher.firebasestorage.app",
-  messagingSenderId: "190018843174",
-  appId: "1:190018843174:web:9be974026ea41ea9e92ce7"
-};
-
-let mpAuth = null;
-let mpDb = null;      // Realtime Database — presence, position, PVP (high-frequency, ephemeral)
-let mpFs = null;      // Firestore — online saves, apartment ownership, garage storage (durable, shared)
-let mpUser = null;
-
-try{
-  if(!firebase.apps.length){
-    firebase.initializeApp(firebaseConfig);
-  }
-  mpAuth = firebase.auth();
-  mpDb = firebase.database();
-  mpFs = firebase.firestore();
-}catch(err){
-  console.error('Multiplayer Firebase init failed:', err);
-}
-
-const MP_ROOM = 'global';
-let onlineMode = false;
-let mpConnecting = false;
-let mpPlayersRef = null;
-let mpOwnRef = null;
-let mpBroadcastTimer = null;
-let mpLastSent = { x:null, z:null, rotY:null, inVehicle:null };
-let remotePlayers = {}; // uid -> { data, mesh, nameSprite, targetPos, targetRotY, kind }
-
-// =====================================================================
-// PVP — COPS AND ROBBERS
-// Fully client-authoritative, same as the rest of the multiplayer
-// layer: there's no server logic, so a "bust" is really just one
-// client broadcasting an event and every other client (including the
-// robber's own) reacting to it honestly. Fine for a casual mode; not
-// meant to be cheat-proof.
-// =====================================================================
-const PVP_BUST_RADIUS = 4.5;
-const PVP_BUST_COOLDOWN = 1200;   // ms between bust attempts
-const PVP_BUSTED_GRACE = 5000;    // ms a busted robber is immune after respawn
-const PVP_NEARBY_WARN_DIST = 16;  // world units a cop is considered "nearby" for the robber warning
-
-let myPvpRole = null; // null | 'cop' | 'robber'
-let myBustedUntil = 0;
-let lastBustAttempt = 0;
-let pvpEventsRef = null;
-let pvpStatsRef = null;
-let pvpListenerStartTime = 0;
-let pvpStats = {}; // uid -> { name, busts, timesBusted }
-let pvpStatsUnsub = null;
-
-if(mpAuth){
-  mpAuth.onAuthStateChanged(user => {
-    mpUser = user;
-    refreshOnlineUI();
-  });
-}
-
 
 // ---- WORLD DATA ----
 // The city of Kingston — three boroughs linked by wide modern bridges.
@@ -1250,10 +897,6 @@ const SPECIAL_BUILDINGS = [
   { id:'gasstation1',name:'KingFuel',          type:'gas',                            island:0, x:-400, z: 320, w:25, d:20, h: 8, color:0x6b7280 },
   { id:'gasstation2',name:'QuikFuel',          type:'gas',                            island:1, x: 60,  z: 300, w:25, d:20, h: 8, color:0x6b7280 },
   { id:'gasstation3',name:'BayFuel',           type:'gas',                            island:2, x:780,  z:-300, w:25, d:20, h: 8, color:0x6b7280 },
-
-  // --- Apartments (online mode exclusive — shared ownership, shared garage) ---
-  { id:'aptriver',   name:'Riverside Apartments', type:'apartment_complex',           island:0, x:-580, z: 150, w:34, d:30, h:26, color:0x3b82f6, desc:'Shared apartments for online players', units:6, unitPrice:3500 },
-  { id:'aptbay',     name:'Bayshore Towers',      type:'apartment_complex',           island:2, x: 900, z: 150, w:36, d:32, h:30, color:0x60a5fa, desc:'Luxury apartments for online players', units:6, unitPrice:5200 },
 ];
 
 // Cars spread throughout the world
@@ -1306,8 +949,6 @@ let gameState = {
   trafficLightTimer: 0,
   achievements: {},
   dayTime: 10.5,
-  isOnlineWorld: false,       // true when gameState was loaded from the online (Firestore) save, not a local slot
-  ownedApartments: new Set(), // unit ids this player owns in online apartment complexes, e.g. "apt_riverside_3"
   interiorReturnStack: [],    // nested-interior breadcrumb — lets "exit" from a personal apartment unit go back to the building lobby, not straight outside
 };
 
@@ -1555,7 +1196,7 @@ function buildWorld(){
 }
 
 function makeSignTexture(title,subtitle){const c=document.createElement('canvas');c.width=512;c.height=256;const x=c.getContext('2d');x.fillStyle='#f6c744';x.fillRect(0,0,c.width,c.height);x.strokeStyle='#111';x.lineWidth=18;x.strokeRect(9,9,c.width-18,c.height-18);x.fillStyle='#111';x.textAlign='center';x.font='bold 54px Arial';x.fillText(title,256,105);x.font='bold 30px Arial';x.fillText(subtitle,256,155);return new THREE.CanvasTexture(c);}
-function buildConstructionSigns(){const br=BRIDGES[2],mat=new THREE.MeshLambertMaterial({map:makeSignTexture('CONSTRUCTION','UNDER CONSTRUCTION')});[-1,1].forEach(side=>{const x=br.x+35+(side>0?br.w-70:0);const z=side*5.5;const post=new THREE.Mesh(new THREE.CylinderGeometry(.12,.12,3,6),new THREE.MeshLambertMaterial({color:0x444444}));post.position.set(x,1.5,z);scene.add(post);const sign=new THREE.Mesh(new THREE.BoxGeometry(6,2.2,.18),mat);sign.position.set(x,2.8,z);scene.add(sign);});}
+function buildConstructionSigns(){const br=BRIDGES[1]; if(!br) return; const mat=new THREE.MeshLambertMaterial({map:makeSignTexture('CONSTRUCTION','UNDER CONSTRUCTION')});[-1,1].forEach(side=>{const x=br.x+35+(side>0?br.w-70:0);const z=side*5.5;const post=new THREE.Mesh(new THREE.CylinderGeometry(.12,.12,3,6),new THREE.MeshLambertMaterial({color:0x444444}));post.position.set(x,1.5,z);scene.add(post);const sign=new THREE.Mesh(new THREE.BoxGeometry(6,2.2,.18),mat);sign.position.set(x,2.8,z);scene.add(sign);});}
 function buildBayshorePort(){
   const grp=islandGroups[2]||scene;
   const steel=new THREE.MeshLambertMaterial({color:0x3f4b52}), concrete=new THREE.MeshLambertMaterial({color:0x777777}), roadMat=new THREE.MeshLambertMaterial({color:0x2d3436}), lineMat=new THREE.MeshLambertMaterial({color:0xffd700});
@@ -1938,23 +1579,6 @@ function addExteriorDetails(b, target){
         const post=new THREE.Mesh(new THREE.CylinderGeometry(0.2,0.2,b.h+2,6),new THREE.MeshLambertMaterial({color:0xcbd5e1})); post.position.set(b.x-b.w*0.5+i*b.w,b.h/2+1,b.z); target.add(post);
         const pump=new THREE.Mesh(new THREE.BoxGeometry(0.8,1.4,0.6),new THREE.MeshLambertMaterial({color:0x1f2937})); pump.position.set(b.x-b.w*0.5+i*b.w,0.7,b.z+b.d*0.6); target.add(pump);
       }
-      break;
-    case 'apartment_complex':
-      // Rows of balconies climbing the face of the building, plus a small
-      // glowing "ONLINE" sign — this is an online-mode-only building, so
-      // it should read as visually distinct even from the outside.
-      for(let row=1;row<Math.floor(b.h/4);row++){
-        for(let i=0;i<3;i++){
-          const bx = b.x - b.w*0.3 + i*(b.w*0.3);
-          const rail = new THREE.Mesh(new THREE.BoxGeometry(2.4,0.15,1),new THREE.MeshLambertMaterial({color:0x1e293b}));
-          rail.position.set(bx, row*3.6, front+0.6);
-          target.add(rail);
-          const post = new THREE.Mesh(new THREE.BoxGeometry(2.4,0.9,0.08),new THREE.MeshLambertMaterial({color:0x475569}));
-          post.position.set(bx, row*3.6+0.45, front+1.05);
-          target.add(post);
-        }
-      }
-      addSign(0x4ade80, b.w*0.6, 1.6, b.h+1.2, .8);
       break;
     case 'cinema':
       addSign(0xfbbf24, b.w*0.75, 2.6, doorH+1.8, .8);
@@ -2493,540 +2117,6 @@ function createPlayer(){
   playerMesh = playerGroup;
 }
 
-// =====================================================================
-// MULTIPLAYER — CORE
-// =====================================================================
-
-function hashColorForUid(uid){
-  let h = 0;
-  for(let i=0;i<uid.length;i++){
-    h = (h*31 + uid.charCodeAt(i)) >>> 0;
-  }
-  const hue = h % 360;
-  const c = new THREE.Color();
-  c.setHSL(hue/360, 0.62, 0.5);
-  return c.getHex();
-}
-
-function makeNameSprite(name, role){
-  const c = document.createElement('canvas');
-  c.width = 256; c.height = 64;
-  const ctx = c.getContext('2d');
-  const roleColor = role === 'cop' ? '96,165,250' : role === 'robber' ? '232,121,249' : '255,210,31';
-  ctx.fillStyle = 'rgba(6,16,31,0.72)';
-  ctx.fillRect(8, 16, 240, 34);
-  ctx.strokeStyle = 'rgba(' + roleColor + ',0.8)';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(8, 16, 240, 34);
-  ctx.font = 'bold 22px Rajdhani, Arial';
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#ffffff';
-  const prefix = role === 'cop' ? '🚔 ' : role === 'robber' ? '🏃 ' : '';
-  ctx.fillText((prefix + name).slice(0,20), 128, 40);
-  const tex = new THREE.CanvasTexture(c);
-  const mat = new THREE.SpriteMaterial({ map:tex, depthTest:false, transparent:true });
-  const sprite = new THREE.Sprite(mat);
-  sprite.scale.set(3, 0.75, 1);
-  sprite.renderOrder = 999;
-  return sprite;
-}
-
-function refreshOnlineUI(){
-  const signedIn = !!mpUser;
-
-  const pauseBtn = document.getElementById('pauseOnlineBtn');
-  if(pauseBtn){
-    if(gameState.isOnlineWorld){
-      pauseBtn.textContent = onlineMode ? '🚪 LEAVE ONLINE MODE' : '🌐 RECONNECTING...';
-      pauseBtn.classList.toggle('online-on', onlineMode);
-    }else{
-      pauseBtn.textContent = '🌐 PLAY ONLINE (MAIN MENU)';
-      pauseBtn.classList.remove('online-on');
-    }
-  }
-
-  document.querySelectorAll('.online-status-line').forEach(el => {
-    if(gameState.isOnlineWorld && onlineMode){
-      el.textContent = 'Online as ' + (mpUser.displayName || mpUser.email?.split('@')[0] || 'Player') + ' · autosaving';
-    }else if(signedIn){
-      el.textContent = 'Signed in as ' + (mpUser.displayName || mpUser.email?.split('@')[0] || 'Player');
-    }else{
-      el.textContent = 'Not signed in — sign in via the Kalahari Launcher first';
-    }
-  });
-
-  const mmBadge = document.getElementById('minimapOnlineBadge');
-  if(mmBadge) mmBadge.style.display = onlineMode ? 'flex' : 'none';
-  const mmCanvas = document.getElementById('minimapCanvas');
-  if(mmCanvas) mmCanvas.classList.toggle('online-active', onlineMode);
-  updateOnlineCount();
-}
-
-function updateOnlineCount(){
-  const el = document.getElementById('onlinePlayerCount');
-  if(!el) return;
-  if(!onlineMode){ el.textContent = ''; return; }
-  const n = Object.keys(remotePlayers).length;
-  el.textContent = n === 0 ? 'You\'re the only one online' : (n + (n===1?' other player':' other players') + ' online');
-}
-
-function handlePauseOnlineClick(){
-  if(gameState.isOnlineWorld){
-    if(confirm('Leave online mode? Your progress saves automatically first.')) leaveOnlineWorld();
-  }else{
-    showNotification('Quit to the main menu, then tap 🌐 PLAY ONLINE to switch modes.');
-  }
-}
-
-function enableOnlineMode(){
-  mpConnecting = true;
-  const uid = mpUser.uid;
-  mpPlayersRef = mpDb.ref('taxi4/rooms/' + MP_ROOM + '/players');
-  mpOwnRef = mpPlayersRef.child(uid);
-  pvpEventsRef = mpDb.ref('taxi4/rooms/' + MP_ROOM + '/pvpEvents');
-  pvpStatsRef = mpDb.ref('taxi4/rooms/' + MP_ROOM + '/pvpStats');
-
-  const name = mpUser.displayName || mpUser.email?.split('@')[0] || 'Player';
-
-  mpOwnRef.onDisconnect().remove();
-
-  myPvpRole = null;
-  myBustedUntil = 0;
-
-  return mpOwnRef.set({
-    name,
-    x: player.pos.x,
-    y: player.pos.y,
-    z: player.pos.z,
-    rotY: camYaw,
-    inVehicle: false,
-    vTemplate: null,
-    vColor: null,
-    pvpRole: null,
-    bustedUntil: 0,
-    updatedAt: Date.now()
-  }).then(() => {
-    mpConnecting = false;
-    onlineMode = true;
-    pvpListenerStartTime = Date.now();
-    mpPlayersRef.on('value', handlePlayersSnapshot);
-    pvpEventsRef.on('child_added', handlePvpEvent);
-    pvpStatsUnsub = pvpStatsRef.on('value', snap => {
-      pvpStats = snap.val() || {};
-      refreshPvpPanel();
-    });
-    mpBroadcastTimer = setInterval(broadcastPlayerState, 150);
-    refreshOnlineUI();
-  }).catch(err => {
-    mpConnecting = false;
-    console.error('Failed to go online:', err);
-    showNotification('Could not connect to online mode. Try again shortly.');
-  });
-}
-
-function disableOnlineMode(){
-  onlineMode = false;
-
-  if(mpBroadcastTimer){
-    clearInterval(mpBroadcastTimer);
-    mpBroadcastTimer = null;
-  }
-
-  if(mpPlayersRef){
-    mpPlayersRef.off('value', handlePlayersSnapshot);
-  }
-
-  if(pvpEventsRef){
-    pvpEventsRef.off('child_added', handlePvpEvent);
-  }
-
-  if(pvpStatsRef){
-    pvpStatsRef.off('value');
-  }
-
-  if(mpOwnRef){
-    mpOwnRef.onDisconnect().cancel();
-    mpOwnRef.remove();
-  }
-
-  Object.keys(remotePlayers).forEach(removeRemotePlayerMesh);
-  remotePlayers = {};
-  myPvpRole = null;
-  myBustedUntil = 0;
-  pvpStats = {};
-
-  refreshOnlineUI();
-  refreshPvpPanel();
-  showNotification('Went offline.');
-}
-
-function broadcastPlayerState(){
-  if(!onlineMode || !mpOwnRef || !gameState.started) return;
-
-  const inVehicle = gameState.inVehicle && !!gameState.currentVehicle;
-  const pos = inVehicle ? gameState.currentVehicle.group.position : player.pos;
-  const rotY = inVehicle ? gameState.currentVehicle.rotation : camYaw;
-
-  // Skip sends that wouldn't meaningfully change anything remote players see.
-  const moved = mpLastSent.x === null ||
-    Math.abs(pos.x - mpLastSent.x) > 0.05 ||
-    Math.abs(pos.z - mpLastSent.z) > 0.05 ||
-    Math.abs(rotY - mpLastSent.rotY) > 0.02 ||
-    inVehicle !== mpLastSent.inVehicle;
-
-  if(!moved) return;
-
-  const update = {
-    x: pos.x, y: pos.y, z: pos.z,
-    rotY,
-    inVehicle,
-    updatedAt: Date.now()
-  };
-
-  if(inVehicle){
-    update.vTemplate = CAR_TEMPLATES.indexOf(gameState.currentVehicle.template);
-    if(update.vTemplate < 0) update.vTemplate = 0;
-    update.vColor = gameState.currentVehicle.color;
-  }else{
-    update.vTemplate = null;
-    update.vColor = null;
-  }
-
-  mpLastSent = { x:pos.x, z:pos.z, rotY, inVehicle };
-  mpOwnRef.update(update);
-}
-
-function handlePlayersSnapshot(snapshot){
-  const data = snapshot.val() || {};
-  const seen = new Set();
-
-  Object.entries(data).forEach(([uid, entry]) => {
-    if(mpUser && uid === mpUser.uid) return;
-    seen.add(uid);
-
-    let rp = remotePlayers[uid];
-    if(!rp){
-      rp = remotePlayers[uid] = {
-        data: entry,
-        mesh: null,
-        nameSprite: null,
-        kind: null,
-        _lastRole: entry.pvpRole,
-        targetPos: new THREE.Vector3(entry.x, entry.y, entry.z),
-        targetRotY: entry.rotY || 0
-      };
-      spawnRemotePlayerMesh(uid, rp, entry);
-    }
-
-    rp.data = entry;
-    rp.targetPos.set(entry.x, entry.y, entry.z);
-    rp.targetRotY = entry.rotY || 0;
-
-    const prevRole = rp._lastRole;
-    const wantKind = entry.inVehicle ? 'vehicle' : 'pedestrian';
-    if(rp.kind !== wantKind){
-      spawnRemotePlayerMesh(uid, rp, entry);
-    }else if(prevRole !== entry.pvpRole){
-      refreshRemoteNameSprite(rp, entry);
-    }
-    rp._lastRole = entry.pvpRole;
-  });
-
-  Object.keys(remotePlayers).forEach(uid => {
-    if(!seen.has(uid)) removeRemotePlayerMesh(uid);
-  });
-
-  updateOnlineCount();
-  refreshPvpPanel();
-}
-
-function spawnRemotePlayerMesh(uid, rp, entry){
-  if(rp.mesh){
-    scene.remove(rp.mesh);
-    rp.mesh = null;
-  }
-
-  const color = hashColorForUid(uid);
-
-  if(entry.inVehicle){
-    const template = CAR_TEMPLATES[entry.vTemplate] || CAR_TEMPLATES[0];
-    const vColor = (typeof entry.vColor === 'number') ? entry.vColor : color;
-    const vObj = createVehicleMesh(template, vColor, entry.x, entry.z, entry.rotY || 0, 'remote_'+uid);
-    rp.mesh = vObj.group;
-    rp.kind = 'vehicle';
-  }else{
-    const group = new THREE.Group();
-    const bodyG = new THREE.BoxGeometry(0.5, 1.0, 0.3);
-    const bodyM = new THREE.MeshLambertMaterial({ color });
-    const body = new THREE.Mesh(bodyG, bodyM);
-    body.position.y = 0.5;
-    group.add(body);
-    const headG = new THREE.BoxGeometry(0.4, 0.4, 0.4);
-    const headM = new THREE.MeshLambertMaterial({ color:0xffcc80 });
-    const head = new THREE.Mesh(headG, headM);
-    head.position.y = 1.2;
-    group.add(head);
-    [[-0.13,0],[0.13,0]].forEach(off => {
-      const legG = new THREE.BoxGeometry(0.2, 0.6, 0.25);
-      const legM = new THREE.MeshLambertMaterial({ color:0x1a1a1a });
-      const leg = new THREE.Mesh(legG, legM);
-      leg.position.set(off[0], -0.3, 0);
-      group.add(leg);
-    });
-    group.position.set(entry.x, entry.y, entry.z);
-    scene.add(group);
-    rp.mesh = group;
-    rp.kind = 'pedestrian';
-  }
-
-  const nameSprite = makeNameSprite(entry.name || 'Player', entry.pvpRole);
-  nameSprite.position.y = entry.inVehicle ? 2.6 : 2.1;
-  rp.mesh.add(nameSprite);
-  rp.nameSprite = nameSprite;
-}
-
-function refreshRemoteNameSprite(rp, entry){
-  if(!rp.mesh) return;
-  if(rp.nameSprite) rp.mesh.remove(rp.nameSprite);
-  const nameSprite = makeNameSprite(entry.name || 'Player', entry.pvpRole);
-  nameSprite.position.y = entry.inVehicle ? 2.6 : 2.1;
-  rp.mesh.add(nameSprite);
-  rp.nameSprite = nameSprite;
-}
-
-function removeRemotePlayerMesh(uid){
-  const rp = remotePlayers[uid];
-  if(!rp) return;
-  if(rp.mesh) scene.remove(rp.mesh);
-  delete remotePlayers[uid];
-  updateOnlineCount();
-}
-
-function updateRemotePlayers(dt){
-  const lerpFactor = Math.min(1, dt * 8);
-  Object.values(remotePlayers).forEach(rp => {
-    if(!rp.mesh) return;
-    rp.mesh.position.lerp(rp.targetPos, lerpFactor);
-    let dr = rp.targetRotY - rp.mesh.rotation.y;
-    while(dr > Math.PI) dr -= Math.PI*2;
-    while(dr < -Math.PI) dr += Math.PI*2;
-    rp.mesh.rotation.y += dr * lerpFactor;
-  });
-}
-
-// =====================================================================
-// PVP — COPS AND ROBBERS CORE
-// =====================================================================
-
-function setPvpRole(role){
-  if(!onlineMode || !mpOwnRef){
-    showNotification('Go online first to play Cops & Robbers.');
-    return;
-  }
-  myPvpRole = (myPvpRole === role) ? null : role;
-  myBustedUntil = 0;
-  mpOwnRef.update({ pvpRole: myPvpRole, bustedUntil: 0 });
-  refreshPvpPanel();
-  refreshPvpHud();
-  if(myPvpRole === 'cop'){
-    showNotification('🚔 You are a COP — press B near a robber to bust them.');
-  }else if(myPvpRole === 'robber'){
-    showNotification('🏃 You are a ROBBER — stay away from cops!');
-  }else{
-    showNotification('PVP role cleared.');
-  }
-}
-
-function attemptBust(){
-  const now = Date.now();
-  if(now - lastBustAttempt < PVP_BUST_COOLDOWN) return;
-  lastBustAttempt = now;
-
-  const myPos = (gameState.inVehicle && gameState.currentVehicle)
-    ? gameState.currentVehicle.group.position
-    : player.pos;
-
-  let target = null;
-  let bestDist = PVP_BUST_RADIUS;
-
-  Object.entries(remotePlayers).forEach(([uid, rp]) => {
-    if(!rp.data || rp.data.pvpRole !== 'robber') return;
-    if(rp.data.bustedUntil && rp.data.bustedUntil > now) return; // grace period
-    const d = myPos.distanceTo(rp.targetPos);
-    if(d < bestDist){ bestDist = d; target = { uid, rp }; }
-  });
-
-  if(!target){
-    showNotification('No robber in range.');
-    return;
-  }
-
-  const eventRef = pvpEventsRef.push();
-  eventRef.set({
-    type: 'bust',
-    copUid: mpUser.uid,
-    copName: mpUser.displayName || mpUser.email?.split('@')[0] || 'Cop',
-    robberUid: target.uid,
-    robberName: target.rp.data.name || 'Robber',
-    at: now
-  });
-
-  pvpStatsRef.child(mpUser.uid).update({
-    name: mpUser.displayName || mpUser.email?.split('@')[0] || 'Cop',
-    busts: firebase.database.ServerValue.increment(1)
-  });
-
-  showNotification('🚔 Busted ' + (target.rp.data.name || 'Robber') + '!');
-}
-
-function handlePvpEvent(snapshot){
-  const event = snapshot.val();
-  if(!event || event.at < pvpListenerStartTime) return;
-  if(event.type !== 'bust') return;
-  if(!mpUser) return;
-
-  if(event.robberUid === mpUser.uid){
-    // I got busted.
-    const until = Date.now() + PVP_BUSTED_GRACE;
-    myBustedUntil = until;
-    if(mpOwnRef) mpOwnRef.update({ bustedUntil: until });
-
-    // Respawn at the game's default starting point.
-    player.pos.set(-280, 1.8, 0);
-    player.vel.set(0,0,0);
-    if(gameState.inVehicle) exitVehicle();
-
-    if(pvpStatsRef){
-      pvpStatsRef.child(mpUser.uid).update({
-        name: mpUser.displayName || mpUser.email?.split('@')[0] || 'Robber',
-        timesBusted: firebase.database.ServerValue.increment(1)
-      });
-    }
-
-    showNotification('🚔 BUSTED by ' + (event.copName || 'a cop') + '! (5s immunity)');
-  }
-
-  refreshPvpPanel();
-}
-
-function refreshPvpHud(){
-  const hud = document.getElementById('pvpRoleHud');
-  const warn = document.getElementById('pvpWarningHud');
-  if(!hud || !warn) return;
-
-  if(!onlineMode || !myPvpRole){
-    hud.style.display = 'none';
-    warn.style.display = 'none';
-    return;
-  }
-
-  hud.style.display = 'block';
-
-  if(myPvpRole === 'cop'){
-    const robberCount = Object.values(remotePlayers).filter(rp => rp.data?.pvpRole === 'robber').length;
-    hud.textContent = '🚔 COP MODE — ' + robberCount + (robberCount===1?' robber':' robbers') + ' online';
-    hud.className = 'pvp-hud pvp-cop';
-
-    const myPos = (gameState.inVehicle && gameState.currentVehicle) ? gameState.currentVehicle.group.position : player.pos;
-    const inRange = Object.values(remotePlayers).some(rp =>
-      rp.data?.pvpRole === 'robber' &&
-      !(rp.data.bustedUntil && rp.data.bustedUntil > Date.now()) &&
-      myPos.distanceTo(rp.targetPos) < PVP_BUST_RADIUS
-    );
-    if(inRange){
-      warn.textContent = '[B] BUST';
-      warn.className = 'pvp-warn pvp-warn-ready';
-      warn.style.display = 'block';
-    }else{
-      warn.style.display = 'none';
-    }
-  }else if(myPvpRole === 'robber'){
-    const busted = myBustedUntil > Date.now();
-    if(busted){
-      hud.textContent = '🏃 ROBBER MODE — IMMUNE';
-      hud.className = 'pvp-hud pvp-robber-immune';
-    }else{
-      hud.textContent = '🏃 ROBBER MODE — EVADE!';
-      hud.className = 'pvp-hud pvp-robber';
-    }
-
-    const myPos = (gameState.inVehicle && gameState.currentVehicle) ? gameState.currentVehicle.group.position : player.pos;
-    const copNearby = Object.values(remotePlayers).some(rp =>
-      rp.data?.pvpRole === 'cop' &&
-      myPos.distanceTo(rp.targetPos) < PVP_NEARBY_WARN_DIST
-    );
-    if(copNearby && !busted){
-      warn.textContent = '⚠ COP NEARBY';
-      warn.className = 'pvp-warn pvp-warn-danger';
-      warn.style.display = 'block';
-    }else{
-      warn.style.display = 'none';
-    }
-  }
-}
-
-function refreshPvpPanel(){
-  const panel = document.getElementById('pvpScreen');
-  if(!panel || panel.style.display === 'none' || !panel.style.display) return;
-
-  document.querySelectorAll('.pvp-role-btn').forEach(btn => {
-    btn.classList.toggle('pvp-role-active', btn.dataset.role === myPvpRole || (btn.dataset.role === 'off' && !myPvpRole));
-  });
-
-  const rosterEl = document.getElementById('pvpRoster');
-  if(!rosterEl) return;
-
-  if(!onlineMode){
-    rosterEl.innerHTML = '<div class="pvp-empty">Go online to see who\'s playing.</div>';
-    return;
-  }
-
-  const rows = [];
-
-  const meStats = pvpStats[mpUser?.uid] || { busts:0, timesBusted:0 };
-  rows.push({
-    name: (mpUser?.displayName || 'You') + ' (You)',
-    role: myPvpRole,
-    busts: meStats.busts || 0,
-    timesBusted: meStats.timesBusted || 0
-  });
-
-  Object.entries(remotePlayers).forEach(([uid, rp]) => {
-    const stats = pvpStats[uid] || {};
-    rows.push({
-      name: rp.data?.name || 'Player',
-      role: rp.data?.pvpRole || null,
-      busts: stats.busts || 0,
-      timesBusted: stats.timesBusted || 0
-    });
-  });
-
-  if(rows.length === 0){
-    rosterEl.innerHTML = '<div class="pvp-empty">No one else is online right now.</div>';
-    return;
-  }
-
-  rosterEl.innerHTML = rows.map(r => {
-    const roleLabel = r.role === 'cop' ? '🚔 Cop' : r.role === 'robber' ? '🏃 Robber' : '— Off';
-    const roleClass = r.role === 'cop' ? 'pvp-tag-cop' : r.role === 'robber' ? 'pvp-tag-robber' : 'pvp-tag-off';
-    return `
-      <div class="pvp-roster-row">
-        <div class="pvp-roster-name">${r.name}</div>
-        <div class="pvp-tag ${roleClass}">${roleLabel}</div>
-        <div class="pvp-roster-stats">🚔${r.busts} · 🏃${r.timesBusted}</div>
-      </div>
-    `;
-  }).join('');
-}
-
-function showPvpScreen(){
-  document.getElementById('pvpScreen').style.display = 'flex';
-  refreshPvpPanel();
-}
-
-function closePvpScreen(){
-  document.getElementById('pvpScreen').style.display = 'none';
-}
 
 // =====================================================================
 // HELPERS
@@ -3143,9 +2233,6 @@ function onKeyDown(e){
     // the room, so there's no reason to lock it to outdoors-only anymore.
     cameraMode = (cameraMode + 1) % CAMERA_VIEWS.length;
     showNotification('📷 Camera: ' + CAMERA_VIEWS[cameraMode]);
-  }
-  if(e.code === 'KeyB' && gameState.started && !gameState.paused && onlineMode && myPvpRole === 'cop'){
-    attemptBust();
   }
 
   // Supermarket game key press
@@ -3925,7 +3012,6 @@ const CATEGORY_INTERIOR_SIZES = {
   food:{hw:14,hd:12}, taxi:{hw:16,hd:14}, supermarket:{hw:22,hd:18}, mechanic:{hw:20,hd:17},
   dockworker:{hw:22,hd:18}, courier:{hw:16,hd:14}, gas:{hw:12,hd:10}, clothing:{hw:14,hd:12},
   pawnshop:{hw:12,hd:10}, firestation:{hw:20,hd:17},
-  apartment_complex:{hw:30,hd:24}, apartment_unit:{hw:11,hd:9}, apartment_garage:{hw:28,hd:22},
 };
 
 // Dense, category-specific furniture so a hospital, a diner and a police
@@ -4031,71 +3117,7 @@ function furnishInterior(cat, HW, HD, CZ){
       for(let i=0;i<Math.floor(HW*1.3/1.6);i++) solid(1.5,0.15,HD*1.5,-HW*0.6+i*1.6,0.08,CZ,0x92400e); // dock planking
       { const boat=new THREE.Mesh(new THREE.BoxGeometry(2,0.8,4),m(0xf1f5f9)); deco(boat, HW*0.4, 0.4, CZ); }
       break;
-    case 'apartment_complex': {
-      // Online-exclusive lobby: a row of numbered unit doors (ownership is
-      // shared/global, fetched async from Firestore right after the room
-      // is built) plus a marked entrance down to the shared garage.
-      const buildingSrc = currentInteriorInfo?.source || {};
-      const buildingId = buildingSrc.id || 'apt';
-      const unitCount = buildingSrc.units || 6;
-      const unitPrice = buildingSrc.unitPrice || 3500;
 
-      solid(HW*1.6,0.4,1,0,0.2,CZ-HD*0.4,0x1e293b); // reception desk
-      deco(new THREE.Mesh(new THREE.BoxGeometry(2,1.4,0.2),new THREE.MeshLambertMaterial({color:0x0f172a,emissive:0x1e293b,emissiveIntensity:.4})),0,1.4,CZ-HD*0.4-0.7);
-
-      window._interiorApartmentUnits = [];
-      const perSide = Math.ceil(unitCount/2);
-      for(let i=0;i<unitCount;i++){
-        const side = i < perSide ? -1 : 1;
-        const idxOnSide = i < perSide ? i : i - perSide;
-        const spacing = (HD*1.6) / perSide;
-        const dx = side * (HW - 2);
-        const dz = CZ - HD*0.7 + idxOnSide * spacing + spacing*0.5;
-        const unitNum = i+1;
-        const unitId = buildingId + '_' + unitNum;
-
-        const doorMat = new THREE.MeshLambertMaterial({ color:0x64748b, emissive:0x334155, emissiveIntensity:.3 });
-        const door = new THREE.Mesh(new THREE.BoxGeometry(1, 2.4, 1.6), doorMat);
-        door.position.set(dx, 1.2, dz);
-        addInterior(door);
-        interiorColliders.push({x:dx, z:dz, w:1, d:1.6});
-
-        const label = makeNameSprite('UNIT ' + unitNum, null);
-        label.position.set(dx, 3.0, dz);
-        label.scale.set(2.2, 0.55, 1);
-        addInterior(label);
-
-        window._interiorApartmentUnits.push({ x:dx, z:dz, unitId, unitNum, buildingId, unitPrice, doorMesh:door, labelSprite:label });
-      }
-
-      const gx = 0, gz = CZ + HD - 3;
-      const gDoor = new THREE.Mesh(new THREE.BoxGeometry(3,2.6,0.6), new THREE.MeshLambertMaterial({color:0x374151,emissive:0x1f2937,emissiveIntensity:.4}));
-      gDoor.position.set(gx, 1.3, gz);
-      addInterior(gDoor);
-      const gLabel = makeNameSprite('🚗 GARAGE', null);
-      gLabel.position.set(gx, 3.0, gz);
-      addInterior(gLabel);
-      window._interiorGarage = { x:gx, z:gz, buildingId };
-
-      refreshApartmentUnitOwnership(buildingId);
-      break;
-    }
-    case 'apartment_unit':
-      solid(3,1,4.5,-HW+5,0.5,CZ-1,0xf1f5f9); // bed
-      solid(3,0.3,0.6,-HW+5,1.4,CZ-3,0x60a5fa); // pillow strip
-      solid(2.2,1.6,0.3,HW-4,0.8,CZ-HD+2.5,0x111827); // tv
-      solid(2,0.9,1.4,HW-4,0.45,CZ-2,0x6d28d9); // small sofa
-      solidR(0.5,0.5,1,-HW+4,0.5,CZ+HD-3,0x374151,0.5); // stool
-      solid(2,1,1,-HW+4,0.5,CZ+HD-4,0x1f2937); // kitchen counter
-      break;
-    case 'apartment_garage':
-      // Static room shell only — parked-vehicle meshes are added
-      // dynamically by populateGarageRoom() right after this builds,
-      // since ownership/vehicle data comes from an async Firestore query.
-      for(let i=-2;i<=2;i++){
-        solid(0.15,0.05,HD*1.6,i*(HW*1.7/5),0.03,CZ,0xfacc15); // parking lane markers
-      }
-      break;
     case 'cityhall':
       for(let i=0;i<4;i++) solidR(0.5,0.6,HD>18?7:5,-HW*0.6+i*(HW*1.2/3),(HD>18?3.5:2.5),CZ-HD*0.4,0xf8fafc,0.6); // interior columns
       solid(4,1.2,1.4,0,0.6,CZ+HD*0.5,0xf1f5f9); // reception desk
@@ -4801,29 +3823,6 @@ function updateMinimap(){
       ctx.arc(toMM(taxiDestPos.x, cx), toMM(taxiDestPos.z, cz), 5, 0, Math.PI*2);
       ctx.fill();
     }
-
-    // Online mode: other players as pulsing blips. Green = no PVP role,
-    // blue = cop, red = robber — distinct from every other marker color
-    // used on this minimap.
-    if(onlineMode){
-      const t = Date.now() * 0.004;
-      const pulse = 3 + Math.sin(t) * 1;
-      Object.values(remotePlayers).forEach(rp => {
-        const rx = toMM(rp.targetPos.x, cx), rz = toMM(rp.targetPos.z, cz);
-        if(rx < -10 || rx > 190 || rz < -10 || rz > 190) return;
-        const role = rp.data?.pvpRole;
-        const col = role === 'cop' ? '96,165,250' : role === 'robber' ? '232,121,249' : '74,222,128';
-        const solid = role === 'cop' ? '#60a5fa' : role === 'robber' ? '#e879f9' : '#4ade80';
-        ctx.fillStyle = 'rgba(' + col + ',0.25)';
-        ctx.beginPath();
-        ctx.arc(rx, rz, pulse + 4, 0, Math.PI*2);
-        ctx.fill();
-        ctx.fillStyle = solid;
-        ctx.beginPath();
-        ctx.arc(rx, rz, 3.5, 0, Math.PI*2);
-        ctx.fill();
-      });
-    }
   }
 
   // Player dot
@@ -4843,30 +3842,11 @@ function updateMinimap(){
   ctx.lineTo(MM_CENTER + Math.sin(pYaw)*10, MM_CENTER - Math.cos(pYaw)*10);
   ctx.stroke();
 
-  // Online mode: slow rotating radar sweep, purely cosmetic — signals
-  // "this map is live" the same way a scanning sonar reads as active.
-  if(onlineMode){
-    const sweepAngle = (Date.now() * 0.0009) % (Math.PI*2);
-    const grad = ctx.createConicGradient
-      ? ctx.createConicGradient(sweepAngle, 90, 90)
-      : null;
-    if(grad){
-      grad.addColorStop(0, 'rgba(74,222,128,0.28)');
-      grad.addColorStop(0.06, 'rgba(74,222,128,0)');
-      grad.addColorStop(1, 'rgba(74,222,128,0)');
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(90,90,88,0,Math.PI*2);
-      ctx.fill();
-    }
-  }
-
   ctx.restore();
 
-  // Minimap border — green + thicker when online, matching the CSS glow
-  // on the canvas element itself, so the ring and the border agree.
-  ctx.strokeStyle = onlineMode ? 'rgba(74,222,128,0.55)' : 'rgba(255,255,255,0.2)';
-  ctx.lineWidth = onlineMode ? 3 : 2;
+  // Minimap border
+  ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+  ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.arc(90,90,88,0,Math.PI*2);
   ctx.stroke();
@@ -5039,24 +4019,6 @@ function drawFullMap(){
     ctx.stroke();
     mapHoverTargets.push({ x:sx3, y:sz3, r:8, name:sh.name + (owned ? ' (Owned)' : '') });
   });
-
-  // Online players
-  if(onlineMode){
-    Object.values(remotePlayers).forEach(rp => {
-      const rx = mapX(rp.targetPos.x), rz = mapZ(rp.targetPos.z);
-      const role = rp.data?.pvpRole;
-      const col = role === 'cop' ? '#60a5fa' : role === 'robber' ? '#e879f9' : '#4ade80';
-      const roleLabel = role === 'cop' ? ' (Cop)' : role === 'robber' ? ' (Robber)' : '';
-      ctx.fillStyle = col;
-      ctx.strokeStyle = '#0d3b61';
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.arc(rx, rz, 5, 0, Math.PI*2);
-      ctx.fill();
-      ctx.stroke();
-      mapHoverTargets.push({ x:rx, y:rz, r:8, name:(rp.data?.name || 'Player') + roleLabel });
-    });
-  }
 
   // Player position
   let px, pz;
@@ -5379,159 +4341,6 @@ function handleRandomEvent(){
 // =====================================================================
 // SLEEP / SAVE
 // =====================================================================
-// ONLINE SAVE SYSTEM
-// A separate persistent profile, stored in Firestore instead of
-// localStorage, keyed by Firebase uid. This is intentionally decoupled
-// from local save slots — single-player progress and online progress
-// never touch each other. gameState itself stays the single runtime
-// source of truth either way; only where it's persisted differs.
-// =====================================================================
-
-function onlineSaveRef(){
-  if(!mpFs || !mpUser) return null;
-  return mpFs.collection('taxi4OnlineSaves').doc(mpUser.uid);
-}
-
-async function fetchOnlineProfile(){
-  const ref = onlineSaveRef();
-  if(!ref) return null;
-  try{
-    const snap = await ref.get();
-    return snap.exists ? snap.data() : null;
-  }catch(err){
-    console.error('Failed to fetch online profile:', err);
-    return null;
-  }
-}
-
-function getOnlineSavePayload(){
-  const base = getSavePayload();
-  base.ownedApartments = [...gameState.ownedApartments];
-  return base;
-}
-
-function applyOnlineDefaults(){
-  gameState.money = 500; gameState.health = 100; gameState.armor = 0; gameState.wanted = 0;
-  gameState.reputation = 0; gameState.ownedSafehouses = new Set(); gameState.ownedVehicles = [];
-  gameState.vehicleGarage = {}; gameState.houseUpgrades = {}; gameState.achievements = {};
-  gameState.ownedApartments = new Set(); gameState.currentBuilding = null;
-  player.pos.set(-280, 1.8, 0);
-}
-
-function applyOnlineSave(d){
-  applySave(d, gameState.activeSaveSlot);
-  gameState.ownedApartments = new Set(d.ownedApartments || []);
-}
-
-async function saveOnlineGame(showMsg=true){
-  const ref = onlineSaveRef();
-  if(!ref) return false;
-  try{
-    await ref.set(getOnlineSavePayload());
-    if(showMsg) showNotification('🌐 Online progress saved.');
-    return true;
-  }catch(err){
-    console.error('Online save failed:', err);
-    if(showMsg) showNotification('Could not save online progress.');
-    return false;
-  }
-}
-
-let onlineAutosaveTimer = null;
-
-function startOnlineAutosave(){
-  if(onlineAutosaveTimer) clearInterval(onlineAutosaveTimer);
-  onlineAutosaveTimer = setInterval(() => saveOnlineGame(false), 60000);
-}
-
-function stopOnlineAutosave(){
-  if(onlineAutosaveTimer){ clearInterval(onlineAutosaveTimer); onlineAutosaveTimer = null; }
-}
-
-async function enterOnlineWorld(){
-  if(!mpUser){
-    showNotification('Sign in via the Kalahari Launcher first.');
-    return;
-  }
-  const btn = document.getElementById('onlineEnterBtn');
-  if(btn){ btn.disabled = true; btn.textContent = 'CONNECTING...'; }
-
-  const existing = await fetchOnlineProfile();
-  if(existing){
-    applyOnlineSave(existing);
-    showNotification('🌐 Online profile loaded — welcome back.');
-  }else{
-    applyOnlineDefaults();
-    showNotification('🌐 New online profile created.');
-  }
-
-  gameState.isOnlineWorld = true;
-  document.getElementById('onlineProfileScreen').style.display = 'none';
-  document.getElementById('startScreen').style.display = 'none';
-  startGame();
-  await enableOnlineMode();
-  startOnlineAutosave();
-}
-
-async function leaveOnlineWorld(){
-  await saveOnlineGame(false);
-  stopOnlineAutosave();
-  disableOnlineMode();
-  location.reload();
-}
-
-async function resetOnlineProgress(){
-  if(!confirm('Reset your online progress? This deletes your online save (apartments and garage vehicles you own stay owned — clear those separately from inside the game). This cannot be undone.')) return;
-  const ref = onlineSaveRef();
-  if(!ref) return;
-  try{
-    await ref.delete();
-    showNotification('Online progress reset.');
-    openOnlineProfileScreen();
-  }catch(err){
-    console.error('Reset failed:', err);
-    showNotification('Could not reset online progress.');
-  }
-}
-
-async function openOnlineProfileScreen(){
-  document.getElementById('startScreen').style.display = 'none';
-  document.getElementById('onlineProfileScreen').style.display = 'flex';
-
-  const body = document.getElementById('onlineProfileBody');
-  body.innerHTML = '<div class="online-profile-loading">Loading your online profile...</div>';
-
-  if(!mpUser){
-    body.innerHTML = '<div class="online-profile-loading">Sign in via the Kalahari Launcher first, then come back here.</div>';
-    document.getElementById('onlineEnterBtn').disabled = true;
-    return;
-  }
-
-  const data = await fetchOnlineProfile();
-  document.getElementById('onlineEnterBtn').disabled = false;
-
-  if(data){
-    body.innerHTML = `
-      <div class="online-profile-stat"><span>Player</span><b>${mpUser.displayName || mpUser.email?.split('@')[0] || 'You'}</b></div>
-      <div class="online-profile-stat"><span>Money</span><b>$${(data.money||0).toLocaleString()}</b></div>
-      <div class="online-profile-stat"><span>Reputation</span><b>${data.reputation||0}</b></div>
-      <div class="online-profile-stat"><span>Apartments Owned</span><b>${(data.ownedApartments||[]).length}</b></div>
-      <div class="online-profile-stat"><span>Vehicles Owned</span><b>${(data.ownedVehicles||[]).length}</b></div>
-      <div class="online-profile-stat"><span>Last Saved</span><b>${data.savedAt ? new Date(data.savedAt).toLocaleString() : '—'}</b></div>
-    `;
-  }else{
-    body.innerHTML = `
-      <div class="online-profile-stat"><span>Player</span><b>${mpUser.displayName || mpUser.email?.split('@')[0] || 'You'}</b></div>
-      <div class="online-profile-loading">No online save found — entering will start a fresh online profile with $500.</div>
-    `;
-  }
-}
-
-function closeOnlineProfileScreen(){
-  document.getElementById('onlineProfileScreen').style.display = 'none';
-  document.getElementById('startScreen').style.display = 'flex';
-}
-
 function getSavePayload(){
   return {version:2,money:gameState.money,health:gameState.health,armor:gameState.armor,wanted:gameState.wanted,
     reputation:gameState.reputation,ownedSafehouses:[...gameState.ownedSafehouses],ownedVehicles:[...gameState.ownedVehicles],
@@ -5539,15 +4348,6 @@ function getSavePayload(){
     currentBuilding:gameState.currentBuilding,player:{x:player.pos.x,y:player.pos.y,z:player.pos.z,yaw:player.yaw},savedAt:new Date().toISOString()};
 }
 function saveGame(slot=gameState.activeSaveSlot){
-  if(gameState.isOnlineWorld){
-    const unitId = gameState.currentBuilding;
-    if(!gameState.inBuilding || !unitId || !gameState.ownedApartments.has(unitId)){
-      showNotification('Save inside one of your owned apartments.');
-      return false;
-    }
-    saveOnlineGame(true);
-    return true;
-  }
   const sh=SAFEHOUSES.find(s=>s.id===gameState.currentBuilding);
   if(!gameState.inBuilding || !sh || !gameState.ownedSafehouses.has(sh.id)){showNotification('Save at one of your owned homes.');return false;}
   localStorage.setItem('taxi4SaveSlot'+slot,JSON.stringify(getSavePayload()));
@@ -5593,8 +4393,8 @@ function closeSaveSlots(){document.getElementById('saveSlotsScreen').style.displ
 function saveToSlot(slot){if(saveGame(slot))showSaveSlots()}
 function loadSlot(slot){const d=loadSaveData(slot);if(!d)return;applySave(d,slot);closeSaveSlots();document.getElementById('startScreen').style.display='none';startGame();showNotification('Loaded Slot '+slot)}
 
-function showHowToPlay(){document.getElementById('infoTitle').textContent='HOW TO PLAY';document.getElementById('infoBody').innerHTML='<b>MOVE</b> WASD · <b>LOOK</b> Mouse · <b>INTERACT</b> E · <b>ENTER BUILDING</b> F · <b>MAP</b> M · <b>PAUSE</b> Esc · <b>RADIO</b> R · <b>CAMERA</b> C<br><br>Explore Kingston, buy one of the eight homes, work dynamic jobs, buy vehicles, upgrade your home, watch the day-night cycle and respond to random city events. Save into any of three slots from an owned home. Earn reputation and unlock achievements. Apartments with elevators let you move between floors.';document.getElementById('infoScreen').style.display='flex'}
-function showPatchNotes(){document.getElementById('infoTitle').textContent='UPDATE / PATCH NOTES';document.getElementById('infoBody').innerHTML='<b>Taxi 4 · Current Build</b><br>• Expanded urban islands and future countryside<br>• Enterable buildings and interactive job interiors<br>• Eight purchasable homes with area-specific designs<br>• Apartment elevators and interior interactions<br>• Street-name notifications<br>• Updated bridges and port infrastructure<br>• Futuristic blue, white and yellow presentation';document.getElementById('infoScreen').style.display='flex'}
+function showHowToPlay(){document.getElementById('infoTitle').textContent='HOW TO PLAY';document.getElementById('infoBody').innerHTML='<b>MOVE</b> WASD · <b>LOOK</b> Mouse · <b>INTERACT</b> E · <b>ENTER BUILDING</b> F · <b>MAP</b> M · <b>PAUSE</b> Esc · <b>RADIO</b> R · <b>CAMERA</b> C<br><br>Explore Kingston, buy one of the eight homes, work dynamic jobs, buy vehicles, upgrade your home, watch the day-night cycle and respond to random city events. Save into any of three slots from an owned home. Earn reputation and unlock achievements.';document.getElementById('infoScreen').style.display='flex'}
+function showPatchNotes(){document.getElementById('infoTitle').textContent='UPDATE / PATCH NOTES';document.getElementById('infoBody').innerHTML='<b>Taxi 4 · Current Build</b><br>• Expanded urban islands and future countryside<br>• Enterable buildings and interactive job interiors<br>• Eight purchasable homes with area-specific designs<br>• Street-name notifications<br>• Updated bridges and port infrastructure<br>• Refined gold and yellow demo presentation';document.getElementById('infoScreen').style.display='flex'}
 function closeInfo(){document.getElementById('infoScreen').style.display='none'}
 
 // =====================================================================
@@ -5633,8 +4433,6 @@ function gameLoop(){
   updateTrafficLights(dt);
   updateDayNight(dt);
   randomEventTick(dt);
-  if(onlineMode) updateRemotePlayers(dt);
-  if(onlineMode && myPvpRole) refreshPvpHud();
   if(frameCount % 3 === 0) updateSunFollow(); // shadow frustum is small now, doesn't need to track every frame
 
   // Update minimap every few frames

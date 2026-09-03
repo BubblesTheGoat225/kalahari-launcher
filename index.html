@@ -585,9 +585,13 @@ main{
 /* =========================================================
    ADMIN CONTROL CENTER
 ========================================================= */
-.admin-access-btn{margin-top:16px;width:100%;border:1px solid var(--border);background:var(--soft);color:var(--muted);border-radius:11px;padding:11px 14px;font-size:11px;font-weight:900;letter-spacing:.7px;text-transform:uppercase;transition:.2s}
-.admin-access-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(245,197,66,.07)}
-.admin-auth-note{margin-top:8px;text-align:center;color:var(--muted);font-size:10px;line-height:1.5}
+.admin-inline-access{margin-top:16px}
+.admin-auth-note{display:block;margin-bottom:8px;text-align:center;color:var(--muted);font-size:10px;line-height:1.5}
+.admin-inline-row{display:flex;gap:8px}
+.admin-inline-row input{flex:1;min-width:0;padding:12px 13px;border-radius:11px;border:1px solid var(--border);background:var(--field);color:var(--text);outline:none;font-size:12px}
+.admin-inline-row input:focus{border-color:var(--accent);box-shadow:0 0 0 3px #2388e818}
+.admin-inline-btn{flex:none;border:0;border-radius:11px;background:var(--accent);color:#101010;font-weight:850;padding:12px 18px;font-size:12px;transition:.2s}
+.admin-inline-btn:hover{background:var(--accent2);transform:translateY(-1px)}
 .admin-control-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .admin-control-card{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:15px}
 .admin-control-card h4{font-size:12px;margin-bottom:6px}
@@ -2818,8 +2822,14 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
           Please check back later.
         </div>
 
-        <button class="admin-access-btn" id="adminAccessBtn" type="button">Administrator Access</button>
-        <div class="admin-auth-note">Administrator access is available while the launcher is offline.</div>
+        <div class="admin-inline-access">
+          <label for="adminAccessPassword" class="admin-auth-note">Administrator access is available while the launcher is offline.</label>
+          <div class="admin-inline-row">
+            <input id="adminAccessPassword" type="password" autocomplete="off" placeholder="Administrator password">
+            <button class="admin-inline-btn" id="adminAccessSubmit" type="button">Enter</button>
+          </div>
+          <div class="error" id="adminAccessError"></div>
+        </div>
 
       </div>
 
@@ -3023,15 +3033,6 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
     <div class="admin-card"><h3>Game Availability</h3><p style="color:var(--muted);font-size:11px;line-height:1.5;margin-bottom:12px">Set each game's public status. AVAILABLE allows launching. MAINTENANCE, IN PROGRESS and COMING SOON keep the game visible but unavailable.</p><div class="admin-game-list" id="adminGameList"></div></div>
     <div class="admin-card"><h3>Administrator</h3><p>Access: <strong id="adminAccountName">admin</strong></p></div>
     <div class="admin-message" id="adminMessage"></div>
-  </div>
-</div>
-<div id="adminAuthOverlay" class="modal-overlay hidden">
-  <div class="modal" style="max-width:420px">
-    <div class="modal-top"><h3>ADMINISTRATOR ACCESS</h3><button class="close-modal" id="closeAdminAuth" type="button">×</button></div>
-    <p style="color:var(--muted);font-size:12px;line-height:1.6;margin-bottom:18px">The launcher is currently offline. Enter the administrator password to sign in anyway and reach the control center.</p>
-    <div class="field"><label for="adminAccessPassword">ADMINISTRATOR PASSWORD</label><input id="adminAccessPassword" type="password" autocomplete="off" placeholder="Enter administrator password"></div>
-    <button class="login-btn" id="adminAccessSubmit" type="button" style="width:100%;margin-top:6px">UNLOCK ADMINISTRATOR ACCESS</button>
-    <div class="error" id="adminAccessError"></div>
   </div>
 </div>
 
@@ -4586,18 +4587,16 @@ document.getElementById("openMessagesFromAbout")?.addEventListener("click",()=>{
    ADMIN
 ========================================================= */
 
-const adminBtn=document.getElementById("adminBtn"),adminOverlay=document.getElementById("adminOverlay"),adminMessage=document.getElementById("adminMessage"),adminAuthOverlay=document.getElementById("adminAuthOverlay"),adminAccessBtn=document.getElementById("adminAccessBtn"),adminAccessPassword=document.getElementById("adminAccessPassword"),adminAccessSubmit=document.getElementById("adminAccessSubmit"),adminAccessError=document.getElementById("adminAccessError");
+const adminBtn=document.getElementById("adminBtn"),adminOverlay=document.getElementById("adminOverlay"),adminMessage=document.getElementById("adminMessage"),adminAccessPassword=document.getElementById("adminAccessPassword"),adminAccessSubmit=document.getElementById("adminAccessSubmit"),adminAccessError=document.getElementById("adminAccessError");
 function isAdmin(user){return !!user&&(user.displayName||"").trim().toLowerCase()==="admin";}
 function canAdmin(){return adminOverride||isAdmin(auth?.currentUser);}
 function updateAdminVisibility(user){if(isAdmin(user)||adminOverride)adminBtn.classList.remove("hidden");else{adminBtn.classList.add("hidden");adminOverlay.classList.add("hidden");}}
 function openAdmin(){if(!canAdmin()){alert("ACCESS DENIED\n\nAdministrator access is restricted.");return;}document.getElementById("adminAccountName").textContent=isAdmin(auth?.currentUser)?(auth.currentUser.displayName||"admin"):"Administrator Access";renderAdminGameList();updateAdminControls();adminMessage.textContent="Administrator authentication verified.";adminOverlay.classList.remove("hidden");}
 function closeAdmin(){adminOverlay.classList.add("hidden");}
-function openAdminAuth(){adminAccessError.textContent="";adminAccessPassword.value="";adminAuthOverlay.classList.remove("hidden");setTimeout(()=>adminAccessPassword.focus(),50);}
-function closeAdminAuth(){adminAuthOverlay.classList.add("hidden");}
 async function writePlatformStatus(name,available){if(!canAdmin()||!db){adminMessage.textContent="Administrator access or Firebase is unavailable.";return;}try{await db.doc(`${PLATFORM_STATUS_PATH}/${name}`).set({status:available?"ON":"OFF",updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${name==="launcher"?"Kalahari Launcher":"Kalahari Messages"} is now ${available?"ONLINE":"OFFLINE"}.`;}catch(err){console.error(err);adminMessage.textContent="Could not save the status. Check your Firebase Firestore permissions.";updateAdminControls();}}
 function renderAdminGameList(){const list=document.getElementById("adminGameList");if(!list)return;list.innerHTML="";games.forEach(game=>{const row=document.createElement("div");row.className="admin-game-row";const def=game.status==="IN PRODUCTION"?"IN PROGRESS":game.status;const current=gameStatuses[game.id]||def;row.innerHTML=`<div><div class="admin-game-name">${game.name}</div><span class="admin-game-default">Current: <span class="admin-status-pill">${current}</span></span></div><select class="admin-select" data-game-status="${game.id}"><option>AVAILABLE</option><option>MAINTENANCE</option><option>IN PROGRESS</option><option>COMING SOON</option></select>`;const select=row.querySelector("select");select.value=current;select.addEventListener("change",()=>setGameStatus(game,select.value));list.appendChild(row);});}
 async function setGameStatus(game,status){if(!canAdmin()||!db)return;const previous=gameStatuses[game.id]||(game.status==="IN PRODUCTION"?"IN PROGRESS":game.status);gameStatuses[game.id]=status;renderGames(search.value,gameFilter.value);renderAdminGameList();try{await db.collection("gameStatus").doc(game.id).set({gameName:game.name,status,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${game.name} is now ${status}.`;}catch(err){console.error(err);gameStatuses[game.id]=previous;renderGames(search.value,gameFilter.value);renderAdminGameList();adminMessage.textContent="Could not update that game's status. Check your Firebase permissions.";}}
-adminBtn.addEventListener("click",openAdmin);document.getElementById("closeAdmin").addEventListener("click",closeAdmin);adminOverlay.addEventListener("click",e=>{if(e.target===adminOverlay)closeAdmin();});document.getElementById("launcherStatusToggle").addEventListener("change",e=>writePlatformStatus("launcher",e.target.checked));document.getElementById("messagesStatusToggle").addEventListener("change",e=>writePlatformStatus("messages",e.target.checked));adminAccessBtn.addEventListener("click",openAdminAuth);document.getElementById("closeAdminAuth").addEventListener("click",closeAdminAuth);adminAuthOverlay.addEventListener("click",e=>{if(e.target===adminAuthOverlay)closeAdminAuth();});adminAccessSubmit.addEventListener("click",()=>{if(adminAccessPassword.value===ADMIN_ACCESS_PASSWORD){adminOverride=true;closeAdminAuth();updateAdminVisibility(auth?.currentUser);if(auth?.currentUser){showLauncher(auth.currentUser);}else{setLauncherScreen(launcherAvailable);}}else adminAccessError.textContent="Incorrect administrator password.";});adminAccessPassword.addEventListener("keydown",e=>{if(e.key==="Enter")adminAccessSubmit.click();});
+adminBtn.addEventListener("click",openAdmin);document.getElementById("closeAdmin").addEventListener("click",closeAdmin);adminOverlay.addEventListener("click",e=>{if(e.target===adminOverlay)closeAdmin();});document.getElementById("launcherStatusToggle").addEventListener("change",e=>writePlatformStatus("launcher",e.target.checked));document.getElementById("messagesStatusToggle").addEventListener("change",e=>writePlatformStatus("messages",e.target.checked));function submitAdminAccess(){if(!adminAccessPassword)return;if(adminAccessPassword.value===ADMIN_ACCESS_PASSWORD){adminAccessError.textContent="";adminAccessPassword.value="";adminOverride=true;updateAdminVisibility(auth?.currentUser);if(auth?.currentUser){showLauncher(auth.currentUser);}else{setLauncherScreen(launcherAvailable);}}else adminAccessError.textContent="Incorrect administrator password.";}if(adminAccessSubmit)adminAccessSubmit.addEventListener("click",submitAdminAccess);if(adminAccessPassword)adminAccessPassword.addEventListener("keydown",e=>{if(e.key==="Enter")submitAdminAccess();});
 
 listenPlatformStatuses();
 

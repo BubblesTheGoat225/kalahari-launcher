@@ -905,7 +905,7 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
 <!-- Loading -->
 <div class="screen" id="loadingScreen">
   <div style="text-align:center">
-    <div class="loading-title">Taxi4</div>
+    <div class="loading-title">Taxi 4</div>
     <div class="loading-bar-bg"><div class="loading-bar"></div></div>
     <div class="loading-text">Loading game...</div>
   </div>
@@ -915,7 +915,7 @@ select.dev-input{width:100%;flex:none;margin-bottom:6px;}
 <div class="screen" id="startScreen" style="display:none">
   <div class="start-wrap">
     <div class="brand-block">
-      <div class="game-title">Taxi 4 - dev v2</div>
+      <div class="game-title">Taxi 4</div>
       <div class="game-subtitle">(C)2026 Kalahari Studios, Kalahari International, Kalahari Industries &amp; Kalahari Games</div>
     </div>
     <div class="menu-deck">
@@ -1283,6 +1283,11 @@ const DISTRICTS = [
   // Ashford (Island 2)
   { name:'Ashford Heights',  island:'Ashford', minX:  0,  maxX: 160, minZ:-230, maxZ:  0, color:'#27ae60' },
   { name:'Ironworks',        island:'Ashford', minX:  0,  maxX: 160, minZ:   0, maxZ:230, color:'#7f8c8d' },
+  // Middle Park — the park itself (x:260-470, z:-130-130) plus a buffer of
+  // surrounding blocks. Placed ahead of Meridian Row/Fairview below, which
+  // it partially overlaps (x:260-300), so getDistrictAt() resolves that
+  // strip to Middle Park rather than falling through to them.
+  { name:'Middle Park',      island:'Ashford', minX:220,  maxX: 510, minZ:-180, maxZ:180, color:'#4caf50' },
   { name:'Meridian Row',     island:'Ashford', minX:160,  maxX: 300, minZ:-230, maxZ:  0, color:'#8e44ad' },
   { name:'Fairview',         island:'Ashford', minX:160,  maxX: 300, minZ:   0, maxZ:230, color:'#16a085' },
   // Bayshore (Island 3)
@@ -1349,7 +1354,7 @@ const SPECIAL_BUILDINGS = [
   { id:'gym',        name:'Ironside Fitness',  type:'landmark',                       island:1, x:340,  z: 140, w:26, d:24, h:10, color:0xdc2626, desc:'Work out' },
   { id:'school',     name:'Ashford High School', type:'landmark',                     island:1, x: 90,  z: 40,  w:45, d:38, h:12, color:0xd97706, desc:'Local school' },
   { id:'clothing',   name:'Fairview Threads',  type:'landmark',                       island:1, x:460,  z: 220, w:22, d:18, h: 9, color:0xa78bfa, desc:'Buy new outfits' },
-  { id:'firestation',name:'Ashford Fire Co. 3',type:'landmark',                       island:1, x:180,  z:-260, w:32, d:26, h:12, color:0xb91c1c, desc:'Fire station' },
+  { id:'firestation',name:'Ashford Fire Co. 3',type:'job',jobType:'firefighter',   island:1, x:180,  z:-260, w:32, d:26, h:12, color:0xb91c1c, desc:'Fire station — respond to callouts around the city' },
   { id:'marina',     name:'Bayshore Marina',   type:'landmark',                       island:2, x:850,  z: 60,  w:34, d:26, h: 9, color:0x0e7490, desc:'Yacht club and marina' },
 
   // --- Food (heals) ---
@@ -1602,9 +1607,9 @@ function buildWorld(){
   });
 
   // Islands — each gets its own group so the whole borough's geometry can
-  // be hidden with one flag when the player is far away (see
-  // updateIslandCulling). With 3 boroughs' worth of buildings this cuts
-  // rendered draw calls dramatically most of the time.
+  // be hidden with one flag when the player is far away (see the
+  // islandGroups culling block in gameLoop). With 3 boroughs' worth of
+  // buildings this cuts rendered draw calls dramatically most of the time.
   islandGroups = [];
   ISLANDS.forEach((isl, idx) => {
     const grp = new THREE.Group();
@@ -2167,6 +2172,15 @@ function buildRoads(isl, idx, grp){
   const { hRoads, vRoads } = getRoadCounts(idx);
   const park = idx === 1 ? ASHFORD_PARK : null;
 
+  // Dash markers are identical geometry repeated hundreds of times per
+  // island (2 per 20 units of every road segment) — by far the biggest
+  // draw-call cost in the whole road system, so they're accumulated here
+  // and drawn as 2 InstancedMesh calls (one per orientation) at the end of
+  // this function instead of one Mesh each. Road slabs themselves keep
+  // their own individual meshes (they still need per-segment shadow
+  // casting/receiving exactly as before — nothing about shadows changes).
+  const hDashes = [], vDashes = [];
+
   // Draws one paved rectangle plus its dashed centre markings, from xStart
   // to xStart+width, at the given z. Pulled out of addHorizontal so a
   // gapped road can call it twice (once per side of the park) without
@@ -2177,8 +2191,7 @@ function buildRoads(isl, idx, grp){
     const road = new THREE.Mesh(rg,roadMat);
     road.position.set(xStart+width/2,0.15,zPos); road.receiveShadow=true; target.add(road);
     for(let j=0;j<Math.floor(width/20);j++){
-      const lg=new THREE.BoxGeometry(8,0.02,0.4);
-      [-1,1].forEach(off=>{const line=new THREE.Mesh(lg,lineMat);line.position.set(xStart+10+j*20,0.27,zPos+off*.6);target.add(line);});
+      [-1,1].forEach(off=> hDashes.push({x:xStart+10+j*20, z:zPos+off*.6}));
     }
   }
   function vSegment(xPos, zStart, depth){
@@ -2186,8 +2199,7 @@ function buildRoads(isl, idx, grp){
     const rg=new THREE.BoxGeometry(ROAD_WIDTH,0.25,depth);
     const road=new THREE.Mesh(rg,roadMat); road.position.set(xPos,0.15,zStart+depth/2); road.receiveShadow=true; target.add(road);
     for(let j=0;j<Math.floor(depth/20);j++){
-      const lg=new THREE.BoxGeometry(.4,.02,8);
-      [-1,1].forEach(off=>{const line=new THREE.Mesh(lg,whiteMat);line.position.set(xPos+off*.6,0.27,zStart+10+j*20);target.add(line);});
+      [-1,1].forEach(off=> vDashes.push({x:xPos+off*.6, z:zStart+10+j*20}));
     }
   }
   // width/depth here are centred spans (matching the original addHorizontal/
@@ -2237,6 +2249,20 @@ function buildRoads(isl, idx, grp){
     addVertical(690,isl.d-30);
     const spur=new THREE.Mesh(new THREE.BoxGeometry(100,0.25,ROAD_WIDTH),roadMat);
     spur.position.set(640,0.15,0); target.add(spur);
+  }
+
+  const dummy = new THREE.Object3D();
+  if(hDashes.length){
+    const m = new THREE.InstancedMesh(new THREE.BoxGeometry(8,0.02,0.4), lineMat, hDashes.length);
+    hDashes.forEach((p,i)=>{ dummy.position.set(p.x,0.27,p.z); dummy.updateMatrix(); m.setMatrixAt(i,dummy.matrix); });
+    m.instanceMatrix.needsUpdate = true;
+    target.add(m);
+  }
+  if(vDashes.length){
+    const m = new THREE.InstancedMesh(new THREE.BoxGeometry(.4,0.02,8), whiteMat, vDashes.length);
+    vDashes.forEach((p,i)=>{ dummy.position.set(p.x,0.27,p.z); dummy.updateMatrix(); m.setMatrixAt(i,dummy.matrix); });
+    m.instanceMatrix.needsUpdate = true;
+    target.add(m);
   }
 }
 
@@ -2741,7 +2767,7 @@ function addExteriorDetails(b, target){
     case 'pawnshop':
       [-0.6,0,0.6].forEach((o,i)=>{ const ball=new THREE.Mesh(new THREE.SphereGeometry(0.4,10,8),new THREE.MeshLambertMaterial({color:0xfbbf24,emissive:0xf59e0b,emissiveIntensity:.4})); ball.position.set(b.x+o*1.3,b.h+1+(i===1?0.6:0),front+0.3); target.add(ball); });
       break;
-    case 'firestation':
+    case 'firefighter':
       { const bay=new THREE.Mesh(new THREE.BoxGeometry(b.w*0.55,b.h*0.65,0.2),new THREE.MeshLambertMaterial({color:0x991b1b})); bay.position.set(b.x,b.h*0.32,front+0.15); target.add(bay);
         const tower=new THREE.Mesh(new THREE.BoxGeometry(3,b.h*0.6,3),new THREE.MeshLambertMaterial({color:0x7f1d1d})); tower.position.set(b.x+b.w*0.4,b.h+b.h*0.3,b.z-b.d*0.3); target.add(tower); }
       break;
@@ -3111,17 +3137,38 @@ function buildTrafficNetwork(){
 
   ISLANDS.forEach((isl, idx) => {
     const { hRoads, vRoads } = getRoadCounts(idx);
+    const park = idx === 1 ? ASHFORD_PARK : null;
     for(let i=0;i<hRoads;i++){
       const zPos = isl.z + (isl.d/(hRoads+1)) * (i+1);
       const xStart = isl.x + 8, xEnd = isl.x + isl.w - 8;
-      lanes.push({ id:`isl${idx}h${i}+`, axis:'x', fixed:zPos + laneOffset, min:xStart, max:xEnd, dir:1 });
-      lanes.push({ id:`isl${idx}h${i}-`, axis:'x', fixed:zPos - laneOffset, min:xStart, max:xEnd, dir:-1 });
+      // Same pavement-overlap check buildRoads() uses to decide whether a
+      // road gets gapped around the park — without this, traffic cars
+      // drove straight down what used to be a road and is now the park's
+      // lawn, since these lanes don't know the visual road was split.
+      if(park && (zPos - ROAD_WIDTH/2) < park.z2 && (zPos + ROAD_WIDTH/2) > park.z1){
+        [1,-1].forEach(dir => {
+          const fixed = zPos + dir*laneOffset;
+          lanes.push({ id:`isl${idx}h${i}${dir>0?'+':'-'}a`, axis:'x', fixed, min:xStart, max:park.x1, dir });
+          lanes.push({ id:`isl${idx}h${i}${dir>0?'+':'-'}b`, axis:'x', fixed, min:park.x2, max:xEnd, dir });
+        });
+      } else {
+        lanes.push({ id:`isl${idx}h${i}+`, axis:'x', fixed:zPos + laneOffset, min:xStart, max:xEnd, dir:1 });
+        lanes.push({ id:`isl${idx}h${i}-`, axis:'x', fixed:zPos - laneOffset, min:xStart, max:xEnd, dir:-1 });
+      }
     }
     for(let i=0;i<vRoads;i++){
       const xPos = isl.x + (isl.w/(vRoads+1)) * (i+1);
       const zStart = isl.z + 8, zEnd = isl.z + isl.d - 8;
-      lanes.push({ id:`isl${idx}v${i}+`, axis:'z', fixed:xPos + laneOffset, min:zStart, max:zEnd, dir:1 });
-      lanes.push({ id:`isl${idx}v${i}-`, axis:'z', fixed:xPos - laneOffset, min:zStart, max:zEnd, dir:-1 });
+      if(park && (xPos - ROAD_WIDTH/2) < park.x2 && (xPos + ROAD_WIDTH/2) > park.x1){
+        [1,-1].forEach(dir => {
+          const fixed = xPos + dir*laneOffset;
+          lanes.push({ id:`isl${idx}v${i}${dir>0?'+':'-'}a`, axis:'z', fixed, min:zStart, max:park.z1, dir });
+          lanes.push({ id:`isl${idx}v${i}${dir>0?'+':'-'}b`, axis:'z', fixed, min:park.z2, max:zEnd, dir });
+        });
+      } else {
+        lanes.push({ id:`isl${idx}v${i}+`, axis:'z', fixed:xPos + laneOffset, min:zStart, max:zEnd, dir:1 });
+        lanes.push({ id:`isl${idx}v${i}-`, axis:'z', fixed:xPos - laneOffset, min:zStart, max:zEnd, dir:-1 });
+      }
     }
   });
 
@@ -4138,8 +4185,16 @@ function distanceTo(ax, az, bx, bz){
 // unconditionally from anywhere without an idx===3 check.
 const TERRAIN_HW_X = COUNTRYSIDE_BRIDGE.x + COUNTRYSIDE_BRIDGE.w/2; // 240
 const TERRAIN_FLAT_ZONES = [
-  // Highway corridor, north from the bridge to the far edge.
-  { type:'rect', x1:TERRAIN_HW_X-38, x2:TERRAIN_HW_X+38, z1:-1500, z2:-690 },
+  // Highway corridor, north from the bridge to the far edge. z2 extends
+  // to -470 (past the -520 line where getTerrainHeight's own bounding-box
+  // check unconditionally returns 0) rather than stopping at -690 — the
+  // old boundary left a ~170-unit stretch, right where the countryside
+  // bridge deck actually sits, that was neither flattened by this zone
+  // nor yet covered by that box-check cutoff. Real hill noise applied
+  // there (dipping ~5 units below the bridge surface), then snapped
+  // instantly to 0 the moment z crossed -520 — exactly the "fall under
+  // the map, then fly back up" symptom when driving the bridge.
+  { type:'rect', x1:TERRAIN_HW_X-38, x2:TERRAIN_HW_X+38, z1:-1500, z2:-470 },
   // Millbrook and Ashwood Falls.
   { type:'circle', x:200, z:-790, r:210 },
   { type:'circle', x:520, z:-1190, r:200 },
@@ -4267,6 +4322,12 @@ function onKeyDown(e){
   if(gameState.simpleJobActive && gameState.simpleJobKey){
     if(e.code === 'Key' + gameState.simpleJobKey || e.key.toUpperCase() === gameState.simpleJobKey){
       handleSimpleJobKeyPress();
+    }
+  }
+  // Firefighter job key press — same panel again, own state flag.
+  if(gameState.fireExtinguishActive && gameState.fireExtinguishKey){
+    if(e.code === 'Key' + gameState.fireExtinguishKey || e.key.toUpperCase() === gameState.fireExtinguishKey){
+      handleFireExtinguishKeyPress();
     }
   }
 }
@@ -4677,6 +4738,9 @@ function updateVehicleControl(dt){
   // Update taxi job
   if(gameState.jobActive && gameState.currentJob === 'taxi'){
     updateTaxiJob();
+  }
+  if(gameState.jobActive && gameState.currentJob === 'firefighter'){
+    updateFirefighterJob();
   }
 
   checkDistrict();
@@ -5155,7 +5219,7 @@ const CATEGORY_INTERIOR_SIZES = {
   nightclub:{hw:22,hd:19}, gym:{hw:20,hd:18}, cinema:{hw:22,hd:19}, marina:{hw:20,hd:16},
   food:{hw:14,hd:12}, taxi:{hw:16,hd:14}, supermarket:{hw:22,hd:18}, mechanic:{hw:20,hd:17},
   dockworker:{hw:22,hd:18}, courier:{hw:16,hd:14}, gas:{hw:12,hd:10}, clothing:{hw:14,hd:12},
-  pawnshop:{hw:12,hd:10}, firestation:{hw:20,hd:17},
+  pawnshop:{hw:12,hd:10}, firefighter:{hw:20,hd:17},
   apartment_complex:{hw:30,hd:24}, apartment_unit:{hw:11,hd:9}, apartment_garage:{hw:28,hd:22},
   country_store:{hw:13,hd:11}, country_hall:{hw:17,hd:14}, country_chapel:{hw:12,hd:18},
 };
@@ -5255,7 +5319,7 @@ function furnishInterior(cat, HW, HD, CZ){
       for(let i=0;i<3;i++) solid(0.15,2.6,0.6,-HW*0.5+i*3,1.3,CZ+HD*0.5,0x78350f); // guitars/gear on the wall
       solid(2.6,1,1.2,HW*0.55,0.5,CZ+HD*0.4,0x6b7280); // counter
       break;
-    case 'firestation':
+    case 'firefighter':
       { const truck=buildMiniCar(0xdc2626); truck.scale.set(1.4,1.4,1.6); deco(truck,0,0,CZ-HD*0.1); }
       solid(0.15,4,0.15,-HW*0.5,2,CZ+HD*0.5,0xfbbf24); // sliding pole
       solid(2.4,2,0.6,HW*0.55,1,CZ+HD*0.4,0x991b1b); // gear lockers
@@ -5446,7 +5510,7 @@ function buildActiveInterior(info){
   }
   // Job/action desk colors themed per building category instead of the
   // same flat orange/green box everywhere.
-  const JOB_DESK_COLOR = { taxi:0xf59e0b, supermarket:0xfbbf24, mechanic:0xb45309, dockworker:0x475569, courier:0x059669 };
+  const JOB_DESK_COLOR = { taxi:0xf59e0b, supermarket:0xfbbf24, mechanic:0xb45309, dockworker:0x475569, courier:0x059669, firefighter:0xdc2626 };
   const ACTION_DESK_COLOR = { hospital:0xef4444, food:0xfbbf24, dealership:0x6366f1, police:0x1e40af };
   if(info.source?.type==='job'){
     const jx=0, jz=CZ-HD+4;
@@ -5816,6 +5880,10 @@ function openJobScreen(b){
     document.getElementById('jobScreenSub').textContent = 'CASHIER';
     document.getElementById('jobScreenDesc').textContent = 'Work the checkout. Press the key shown on screen to process each customer. Serve as many as you can in 60 seconds!';
     document.getElementById('jobScreenPay').textContent = '$5 per customer · $200 bonus for full shift';
+  } else if(b.jobType === 'firefighter'){
+    document.getElementById('jobScreenSub').textContent = 'FIREFIGHTER';
+    document.getElementById('jobScreenDesc').textContent = 'Get in a vehicle, then race to each callout marked on your map. Once you arrive, press the key shown on screen to put out the fire before it spreads.';
+    document.getElementById('jobScreenPay').textContent = '$60–$120 per callout';
   } else {
     const names={mechanic:'MECHANIC',dockworker:'DOCK WORKER',courier:'COURIER'};
     document.getElementById('jobScreenSub').textContent=names[b.jobType]||'WORKER';
@@ -5838,6 +5906,7 @@ function startJob(type){
 
   if(type === 'taxi') startTaxiJob();
   else if(type === 'supermarket') startSupermarketJob();
+  else if(type === 'firefighter') startFirefighterJob();
   else startSimpleJob(type);
 }
 
@@ -6012,6 +6081,105 @@ function endTaxiJob(){
   document.getElementById('jobHud').style.display = 'none';
 }
 
+// ---- FIREFIGHTER JOB ----
+// Same drive-to-a-marker structure as the taxi job, followed by a
+// keypress-mash minigame once you arrive — a fixed 4-callout shift like
+// the mechanic/dockworker/courier jobs, rather than endless like taxi,
+// since "drive to a fire and put it out" reads better as a bounded shift.
+const FIRE_LOCATIONS = [
+  {x:-250,z:-150},{x:-450,z:80},{x:-150,z:200},{x:150,z:-50},
+  {x:300,z:150},{x:450,z:-120},{x:500,z:100},{x:-350,z:-200},
+  {x:80,z:220},{x:380,z:-200},
+];
+let fireMarker = null;
+let firePos = null;
+
+function startFirefighterJob(){
+  if(!gameState.inVehicle){
+    showNotification('Get in a vehicle first, then start your shift!');
+    gameState.jobActive = false;
+    gameState.currentJob = null;
+    return;
+  }
+  gameState.fireShiftTotal = 4;
+  gameState.fireShiftDone = 0;
+  document.getElementById('jobHud').style.display = 'block';
+  document.getElementById('jobTitle').textContent = 'FIREFIGHTER';
+  spawnFireCallout();
+}
+
+function spawnFireCallout(){
+  firePos = FIRE_LOCATIONS[Math.floor(Math.random()*FIRE_LOCATIONS.length)];
+  if(fireMarker) scene.remove(fireMarker);
+  const mg = new THREE.CylinderGeometry(2.2, 2.2, 0.3, 16);
+  const mm = new THREE.MeshLambertMaterial({ color:0xff5500, emissive:0xff5500, emissiveIntensity:0.9 });
+  fireMarker = new THREE.Mesh(mg, mm);
+  fireMarker.position.set(firePos.x, 0.5, firePos.z);
+  scene.add(fireMarker);
+  document.getElementById('jobInfo').textContent = `Callout ${gameState.fireShiftDone+1}/${gameState.fireShiftTotal}: drive to the fire (orange marker)`;
+  document.getElementById('jobProgressBar').style.width = ((gameState.fireShiftDone/gameState.fireShiftTotal)*100)+'%';
+}
+
+function updateFirefighterJob(){
+  if(fireMarker){ fireMarker.rotation.y += 0.03; fireMarker.position.y = 0.3 + Math.sin(Date.now()*0.006)*0.25; }
+  if(gameState.fireExtinguishActive) return; // already arrived, busy with the keypress phase
+  if(!gameState.inVehicle || !gameState.currentVehicle || !firePos) return;
+  const vx = gameState.currentVehicle.group.position.x, vz = gameState.currentVehicle.group.position.z;
+  if(distanceTo(vx, vz, firePos.x, firePos.z) < 8){
+    gameState.fireExtinguishActive = true;
+    gameState.fireExtinguishProgress = 0;
+    gameState.fireExtinguishTotal = 6;
+    document.getElementById('jobInfo').textContent = 'On scene! Press the key to extinguish the fire!';
+    document.getElementById('supermarketGame').style.display = 'block';
+    document.querySelector('#supermarketGame .smg-title').textContent = 'Press the key!';
+    document.querySelector('#supermarketGame .smg-instruction').textContent = 'Put out the fire';
+    nextFireExtinguishKey();
+  }
+}
+
+function nextFireExtinguishKey(){
+  const key = SMG_KEYS[Math.floor(Math.random()*SMG_KEYS.length)];
+  gameState.fireExtinguishKey = key;
+  const el = document.getElementById('smgKey');
+  el.textContent = key;
+  el.style.animation = 'none';
+  setTimeout(() => el.style.animation = 'keyPop 0.2s ease-out', 10);
+}
+
+function handleFireExtinguishKeyPress(){
+  gameState.fireExtinguishProgress++;
+  document.getElementById('jobProgressBar').style.width = ((gameState.fireExtinguishProgress/gameState.fireExtinguishTotal)*100)+'%';
+  if(gameState.fireExtinguishProgress >= gameState.fireExtinguishTotal){
+    const pay = 60 + Math.floor(Math.random()*61);
+    addMoney(pay); addReputation(4); unlockAchievement('firstjob');
+    showNotification(`🚒 Fire extinguished! +$${pay}`);
+    gameState.fireExtinguishActive = false;
+    gameState.fireExtinguishKey = null;
+    document.getElementById('supermarketGame').style.display = 'none';
+    gameState.fireShiftDone++;
+    if(gameState.fireShiftDone >= gameState.fireShiftTotal){
+      endFirefighterJob();
+    } else {
+      setTimeout(() => spawnFireCallout(), 1000);
+    }
+  } else {
+    nextFireExtinguishKey();
+  }
+}
+
+function endFirefighterJob(){
+  gameState.jobActive = false;
+  gameState.currentJob = null;
+  gameState.fireExtinguishActive = false;
+  gameState.fireExtinguishKey = null;
+  if(fireMarker) scene.remove(fireMarker);
+  fireMarker = null; firePos = null;
+  document.getElementById('jobHud').style.display = 'none';
+  document.getElementById('supermarketGame').style.display = 'none';
+  finishJobProgress(10);
+  showNotification('Shift complete! All callouts handled.');
+}
+
 // ---- SUPERMARKET JOB ----
 const SMG_KEYS = ['A','B','C','D','E','F','G','H','J','K','L','M','N','P','Q','R','S','T','U','V','W','X','Y','Z'];
 let smgTimeLeft = 60;
@@ -6173,16 +6341,18 @@ function updateMinimap(){
     ctx.beginPath(); ctx.moveTo(toMM(-500,cx), toMM(-1200,cz)); ctx.lineTo(toMM(240,cx), toMM(-1200,cz)); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(toMM(240,cx), toMM(-1250,cz)); ctx.lineTo(toMM(950,cx), toMM(-1250,cz)); ctx.stroke();
 
-    // Forest + creek (west of the towns)
+    // Forest + creek (west of the towns) — bounds match the actual
+    // forest (buildForestAndCreek: center -1000,-1100, half-extents
+    // 330x440), not the smaller pre-expansion rectangle this used to draw.
     ctx.fillStyle = 'rgba(47,82,51,0.55)';
-    ctx.fillRect(toMM(-1260,cx), toMM(-1420,cz), 520*MM_SCALE, 640*MM_SCALE);
+    ctx.fillRect(toMM(-1330,cx), toMM(-1540,cz), 660*MM_SCALE, 880*MM_SCALE);
     ctx.strokeStyle = '#3a6ea5';
     ctx.lineWidth = Math.max(1, 4*MM_SCALE);
     ctx.beginPath();
     for(let i=0;i<=8;i++){
       const t = i/8;
-      const cz2 = -1420 + t*640;
-      const cx2 = -1000 + Math.sin(t*640*0.012)*60;
+      const cz2 = -1540 + t*880;
+      const cx2 = -1000 + Math.sin((cz2 - (-1540)) * 0.012) * 60;
       const mx = toMM(cx2,cx), mz = toMM(cz2,cz);
       if(i===0) ctx.moveTo(mx,mz); else ctx.lineTo(mx,mz);
     }
@@ -6196,7 +6366,7 @@ function updateMinimap(){
         bank:'#fbbf24', casino:'#fb7185', nightclub:'#c084fc', gym:'#34d399',
         cinema:'#fbbf24', marina:'#38bdf8', supermarket:'#facc15', mechanic:'#94a3b8',
         dockworker:'#0ea5e9', courier:'#fb923c', gas:'#9ca3af', clothing:'#f472b6',
-        pawnshop:'#a3a3a3', firestation:'#dc2626', apartment_complex:'#60a5fa',
+        pawnshop:'#a3a3a3', firefighter:'#dc2626', apartment_complex:'#60a5fa',
         country_store:'#d4a24c', country_hall:'#e0d5b8', country_chapel:'#f1f5f9',
       };
       const col = dotColors[b.type] || '#a78bfa';
@@ -6464,9 +6634,17 @@ function drawFullMap(){
   // always match what's currently on screen.
   mapHoverTargets = [];
 
-  // Ocean
-  ctx.fillStyle = '#0d3b61';
+  // Ocean — matches the menu/minimap's navy-gradient dispatch-console
+  // look instead of the old flat mid-blue fill.
+  const oceanGrad = ctx.createRadialGradient(W/2,H*0.4,40, W/2,H*0.4,W*0.8);
+  oceanGrad.addColorStop(0, '#0f2744');
+  oceanGrad.addColorStop(1, '#050f1c');
+  ctx.fillStyle = oceanGrad;
   ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle = 'rgba(85,183,255,0.06)';
+  ctx.lineWidth = 1;
+  for(let gx=0; gx<W; gx+=28){ ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,H); ctx.stroke(); }
+  for(let gy=0; gy<H; gy+=28){ ctx.beginPath(); ctx.moveTo(0,gy); ctx.lineTo(W,gy); ctx.stroke(); }
 
   // Scale/offset to fit world in map
   const worldMinX = -1400, worldMaxX = 1500, worldMinZ = -2000, worldMaxZ = 450;
@@ -6482,11 +6660,13 @@ function drawFullMap(){
   const mapZ = z => offZ + z*sc;
 
   // Islands
-  const islandColors = ['#4a5568','#374151','#2d3748','#5c7a4a'];
+  const islandColors = ['#1e3a5f','#1a3352','#16304d','#3d5a3f'];
   ISLANDS.forEach((isl, i) => {
-    ctx.fillStyle = islandColors[i] || '#5c7a4a';
-    ctx.strokeStyle = '#546e7a';
+    ctx.fillStyle = islandColors[i] || '#3d5a3f';
+    ctx.strokeStyle = '#55b7ff';
     ctx.lineWidth = 2;
+    ctx.shadowColor = 'rgba(85,183,255,0.5)';
+    ctx.shadowBlur = 6;
     ctx.beginPath();
     if(isl.shape){
       isl.shape.forEach(([px,pz],pi) => {
@@ -6501,8 +6681,9 @@ function drawFullMap(){
     }
     ctx.fill();
     ctx.stroke();
+    ctx.shadowBlur = 0;
     // Island name
-    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
     ctx.font = 'bold 12px Rajdhani';
     ctx.textAlign = 'center';
     ctx.fillText(isl.name.toUpperCase(), mapX(isl.x + isl.w/2), mapZ(isl.z + isl.d/2));
@@ -6554,16 +6735,17 @@ function drawFullMap(){
   ctx.beginPath(); ctx.moveTo(mapX(-500), mapZ(-1200)); ctx.lineTo(mapX(240), mapZ(-1200)); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(mapX(240), mapZ(-1250)); ctx.lineTo(mapX(950), mapZ(-1250)); ctx.stroke();
 
-  // Forest + creek (west of the towns)
+  // Forest + creek (west of the towns) — bounds match the actual forest
+  // (buildForestAndCreek: center -1000,-1100, half-extents 330x440).
   ctx.fillStyle = 'rgba(47,82,51,0.55)';
-  ctx.fillRect(mapX(-1260), mapZ(-1420), 520*sc, 640*sc);
+  ctx.fillRect(mapX(-1330), mapZ(-1540), 660*sc, 880*sc);
   ctx.strokeStyle = '#3a6ea5';
   ctx.lineWidth = Math.max(1, 4*sc);
   ctx.beginPath();
   for(let i=0;i<=8;i++){
     const t = i/8;
-    const cz2 = -1420 + t*640;
-    const cx2 = -1000 + Math.sin(t*640*0.012)*60;
+    const cz2 = -1540 + t*880;
+    const cx2 = -1000 + Math.sin((cz2 - (-1540)) * 0.012) * 60;
     const mx = mapX(cx2), mz = mapZ(cz2);
     if(i===0) ctx.moveTo(mx,mz); else ctx.lineTo(mx,mz);
   }
@@ -6571,7 +6753,7 @@ function drawFullMap(){
   ctx.fillStyle = 'rgba(200,230,210,0.6)';
   ctx.font = '10px Rajdhani';
   ctx.textAlign = 'center';
-  ctx.fillText('FOREST', mapX(-1000), mapZ(-1420)-4);
+  ctx.fillText('FOREST', mapX(-1000), mapZ(-1540)-4);
   ctx.textAlign = 'start';
 
   // Districts (subtle overlay)
@@ -6587,7 +6769,7 @@ function drawFullMap(){
     bank:'#fbbf24', casino:'#fb7185', nightclub:'#c084fc', gym:'#34d399',
     cinema:'#fbbf24', marina:'#38bdf8', supermarket:'#facc15', mechanic:'#94a3b8',
     dockworker:'#0ea5e9', courier:'#fb923c', gas:'#9ca3af', clothing:'#f472b6',
-    pawnshop:'#a3a3a3', firestation:'#dc2626', apartment_complex:'#818cf8',
+    pawnshop:'#a3a3a3', firefighter:'#dc2626', apartment_complex:'#818cf8',
     country_store:'#d4a24c', country_hall:'#e0d5b8', country_chapel:'#f1f5f9',
     dealership:'#818cf8',
   };
@@ -6641,8 +6823,12 @@ function drawFullMap(){
   } else {
     px = player.pos.x; pz = player.pos.z;
   }
+  const pulse = 9 + Math.sin(Date.now()*0.005)*2;
+  ctx.strokeStyle = 'rgba(255,210,60,0.5)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(mapX(px), mapZ(pz), pulse, 0, Math.PI*2); ctx.stroke();
   ctx.fillStyle = '#fff';
-  ctx.strokeStyle = '#000';
+  ctx.strokeStyle = '#06101f';
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.arc(mapX(px), mapZ(pz), 7, 0, Math.PI*2);
@@ -6662,6 +6848,26 @@ function drawFullMap(){
     ctx.arc(mapX(taxiDestPos.x), mapZ(taxiDestPos.z), 6, 0, Math.PI*2);
     ctx.fill();
   }
+  // Fire callout marker
+  if(firePos && gameState.jobActive && gameState.currentJob === 'firefighter'){
+    ctx.fillStyle = '#ff5500';
+    ctx.beginPath();
+    ctx.arc(mapX(firePos.x), mapZ(firePos.z), 6, 0, Math.PI*2);
+    ctx.fill();
+  }
+
+  // Compass rose
+  const crX = W-38, crY = 38;
+  ctx.strokeStyle = 'rgba(85,183,255,0.4)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.arc(crX,crY,20,0,Math.PI*2); ctx.stroke();
+  ctx.fillStyle = 'rgba(255,210,60,0.85)';
+  ctx.font = 'bold 12px "Share Tech Mono", monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('N', crX, crY-22);
+  ctx.strokeStyle = 'rgba(255,210,60,0.7)';
+  ctx.beginPath(); ctx.moveTo(crX,crY-16); ctx.lineTo(crX,crY+16); ctx.moveTo(crX-16,crY); ctx.lineTo(crX+16,crY); ctx.stroke();
+  ctx.textAlign = 'start';
 
   // Current district highlight
   if(gameState.currentDistrict){
@@ -7293,6 +7499,28 @@ function gameLoop(){
     const dx = car.group.position.x - renderPX, dz = car.group.position.z - renderPZ;
     car.group.visible = (dx*dx + dz*dz) < renderCull2;
   });
+
+  // Distance-based island culling — hides a whole borough's static
+  // geometry (roads, buildings, trees, everything added into its
+  // islandGroups entry) when the player is far from it. Uses distance to
+  // the NEAREST point on the island's bounding box, not its centre, so a
+  // large island's near edge never gets prematurely hidden while the
+  // player is still close to it — distance is exactly 0 (never culled)
+  // anywhere inside the box, including the island the player is currently
+  // standing on. 1400 units is generous enough that this only kicks in
+  // when the player is genuinely on the far side of the map from a given
+  // borough, well past where any pop-in would be visible.
+  if(islandGroups){
+    const cullDist = 1400, cullDist2 = cullDist*cullDist;
+    islandGroups.forEach((grp, idx) => {
+      if(!grp) return;
+      const isl = ISLANDS[idx];
+      const nearX = Math.max(isl.x, Math.min(renderPX, isl.x+isl.w));
+      const nearZ = Math.max(isl.z, Math.min(renderPZ, isl.z+isl.d));
+      const dx = renderPX - nearX, dz = renderPZ - nearZ;
+      grp.visible = (dx*dx + dz*dz) < cullDist2;
+    });
+  }
 
   updateStreetName();
   renderer.render(scene, camera);

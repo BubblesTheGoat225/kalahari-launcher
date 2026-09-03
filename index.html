@@ -3923,10 +3923,19 @@ const savedGameFilter=
     "kalahariGameFilter"
   );
 
-if(savedGameFilter){
+if(savedGameFilter && [...gameFilter.options].some(o=>o.value===savedGameFilter)){
 
   gameFilter.value=
     savedGameFilter;
+
+}else if(savedGameFilter){
+
+  // Stale value from an older version of the site that no
+  // longer matches a real category — clear it instead of
+  // letting it silently filter out every game forever.
+  localStorage.removeItem(
+    "kalahariGameFilter"
+  );
 
 }
 

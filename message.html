@@ -242,6 +242,152 @@ header:after{
 }
 
 /* =========================================================
+   MESSAGES PLATFORM STATUS
+========================================================= */
+
+function isAdmin(user){
+  return !!user && (user.displayName || "").trim().toLowerCase() === "admin";
+}
+
+function setLivePill(available){
+  if(!livePill)return;
+  livePill.innerHTML = available
+    ? '<span class="live-dot"></span>Live'
+    : '<span class="live-dot" style="background:#b93838;box-shadow:none;animation:none"></span>Offline';
+  livePill.style.color = available ? "var(--success)" : "#ff7272";
+  livePill.style.borderColor = available ? "#52d47b40" : "#b9383840";
+  livePill.style.background = available ? "#52d47b12" : "#b9383812";
+}
+
+function showMessagesLoading(){
+  messagesStatusScreen.classList.remove("hidden");
+  messagesLoadingCard.classList.remove("hidden");
+  messagesOfflineCard.classList.add("hidden");
+}
+
+function showMessagesOffline(){
+  messagesStatusScreen.classList.remove("hidden");
+  messagesLoadingCard.classList.add("hidden");
+  messagesOfflineCard.classList.remove("hidden");
+  messagesOfflineDate.textContent = MESSAGES_OFFLINE_DATE;
+  gate.classList.add("hidden");
+  app.classList.add("hidden");
+  setLivePill(false);
+  msgInput.disabled = true;
+  sendBtn.disabled = true;
+  newDmBtn.disabled = true;
+}
+
+function hideMessagesStatus(){
+  messagesStatusScreen.classList.add("hidden");
+  setLivePill(true);
+  msgInput.disabled = false;
+  newDmBtn.disabled = false;
+}
+
+function stopMessageListeners(){
+  if(messagesUnsub){messagesUnsub();messagesUnsub=null;}
+  if(dmListUnsub){dmListUnsub();dmListUnsub=null;}
+  if(directoryUnsub){directoryUnsub();directoryUnsub=null;}
+  if(newDmOverlay)newDmOverlay.classList.add("hidden");
+}
+
+function applyMessagesPlatformStatus(available){
+  messagesPlatformAvailable = !!available;
+
+  if(messagesOfflineTimer){clearTimeout(messagesOfflineTimer);messagesOfflineTimer=null;}
+
+  if(!messagesPlatformAvailable){
+    stopMessageListeners();
+    showMessagesLoading();
+    messagesOfflineTimer = setTimeout(() => {
+      if(!messagesPlatformAvailable)showMessagesOffline();
+    },5000);
+    return;
+  }
+
+  hideMessagesStatus();
+  if(currentUser)startMessagesForUser(currentUser);
+}
+
+function updateAdminStatusUI(available){
+  const on=!!available;
+  messagesStatusToggle.checked=on;
+  adminMessagesStatus.textContent=on ? "ONLINE" : "OFFLINE";
+  adminMessagesStatus.classList.toggle("on",on);
+  adminMessagesStatus.classList.toggle("off",!on);
+  adminStatusHint.textContent=on ? "Messages is available to signed-in users." : "Messages is disabled for all users.";
+}
+
+function listenMessagesPlatformStatus(){
+  showMessagesLoading();
+  if(!db){
+    applyMessagesPlatformStatus(false);
+    return;
+  }
+
+  messagesStatusUnsub = db.doc(MESSAGES_STATUS_PATH).onSnapshot(snap=>{
+    const data=snap.exists ? snap.data() : null;
+    const status=String(data?.status || MESSAGES_STATUS_DEFAULT).toUpperCase();
+    applyMessagesPlatformStatus(status === "ON");
+    if(isAdmin(auth?.currentUser))updateAdminStatusUI(status === "ON");
+  },err=>{
+    console.error("Messages platform status error:",err);
+    applyMessagesPlatformStatus(false);
+    if(isAdmin(auth?.currentUser))adminMessage.textContent="Could not read platform status. Messages has been placed offline.";
+  });
+}
+
+function openAdmin(){
+  const user=auth?.currentUser;
+  if(!isAdmin(user)){
+    alert("ACCESS DENIED\\n\\nAdministrator access is restricted.");
+    adminOverlay.classList.add("hidden");
+    return;
+  }
+  adminAccountName.textContent=user.displayName || "admin";
+  updateAdminStatusUI(messagesPlatformAvailable);
+  adminMessage.textContent="Administrator authentication verified.";
+  adminOverlay.classList.remove("hidden");
+}
+
+function closeAdminPanel(){adminOverlay.classList.add("hidden");}
+
+async function setMessagesPlatformStatus(available){
+  const user=auth?.currentUser;
+  if(!isAdmin(user)){
+    adminMessage.textContent="ACCESS DENIED.";
+    messagesStatusToggle.checked=messagesPlatformAvailable;
+    return;
+  }
+
+  messagesStatusToggle.disabled=true;
+  adminMessage.textContent="Updating Kalahari Messages status...";
+  try{
+    await db.doc(MESSAGES_STATUS_PATH).set({
+      status:available ? "ON" : "OFF",
+      updatedAt:firebase.firestore.FieldValue.serverTimestamp(),
+      updatedBy:user.uid,
+      updatedByName:user.displayName || "admin"
+    },{merge:true});
+    adminMessage.textContent=available
+      ? "Kalahari Messages is now ONLINE."
+      : "Kalahari Messages is now OFFLINE. Users will see the 5-second loading screen before the unavailable notice.";
+  }catch(err){
+    console.error("Messages platform status update error:",err);
+    messagesStatusToggle.checked=messagesPlatformAvailable;
+    adminMessage.textContent="Could not update the platform status. Check your Firebase permissions.";
+  }finally{
+    messagesStatusToggle.disabled=false;
+  }
+}
+
+adminBtn.addEventListener("click",openAdmin);
+closeAdmin.addEventListener("click",closeAdminPanel);
+adminOverlay.addEventListener("click",e=>{if(e.target===adminOverlay)closeAdminPanel();});
+messagesStatusToggle.addEventListener("change",()=>setMessagesPlatformStatus(messagesStatusToggle.checked));
+
+/* =========================================================
    SIGN-IN GATE
 ========================================================= */
 
@@ -1004,6 +1150,37 @@ header:after{
 }
 
 /* =========================================================
+   PLATFORM STATUS / LOADING
+========================================================= */
+#messagesStatusScreen{position:fixed;inset:60px 0 0 0;z-index:50;display:flex;align-items:center;justify-content:center;padding:30px;background:rgba(8,11,16,.97)}
+.status-card{width:100%;max-width:520px;text-align:center;background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:42px 36px;box-shadow:0 24px 80px rgba(0,0,0,.45)}
+.status-icon{width:78px;height:78px;margin:0 auto 22px;display:grid;place-items:center;background:var(--accent);color:#111;clip-path:polygon(15% 0,100% 0,85% 100%,0 100%);font-size:28px;font-weight:950}
+.status-icon.offline{background:var(--danger);color:#fff}
+.status-card h2{font-size:30px;margin-bottom:9px}
+.status-subtitle{color:#ff7272;font-size:12px;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:17px}
+.status-info{color:var(--muted);font-size:14px;line-height:1.7;margin-bottom:18px}
+.status-date{color:var(--text);background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-size:11px}
+.loading-spinner{width:42px;height:42px;margin:0 auto 20px;border:3px solid #27303c;border-top-color:var(--accent);border-radius:50%;animation:statusSpin .8s linear infinite}
+@keyframes statusSpin{to{transform:rotate(360deg)}}
+.admin-open-btn{border:1px solid var(--border);background:var(--panel2);color:var(--muted);padding:7px 10px;border-radius:7px;font-size:10px;font-weight:900;letter-spacing:.6px;text-transform:uppercase}
+.admin-open-btn:hover{border-color:var(--accent);color:var(--accent)}
+.admin-modal{max-width:560px}
+.admin-card{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:12px}
+.admin-card h3{font-size:14px;margin-bottom:7px}
+.admin-card p{color:var(--muted);font-size:12px;line-height:1.5}
+.admin-status-row{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:14px}
+.admin-status-label strong{display:block;color:var(--text);font-size:12px;margin-bottom:4px}
+.admin-status-label span{color:var(--muted);font-size:10px}
+.status-toggle{position:relative;width:58px;height:32px;flex:none}
+.status-toggle input{opacity:0;width:0;height:0}
+.status-toggle-track{position:absolute;inset:0;border-radius:20px;background:#252c36;border:1px solid var(--border);transition:.2s}
+.status-toggle-track:before{content:"";position:absolute;width:24px;height:24px;left:3px;top:3px;border-radius:50%;background:#929baa;transition:.2s;box-shadow:0 3px 8px rgba(0,0,0,.35)}
+.status-toggle input:checked + .status-toggle-track{background:#52d47b24;border-color:#52d47b70}
+.status-toggle input:checked + .status-toggle-track:before{transform:translateX(26px);background:var(--success)}
+.admin-current-status{font-weight:900;letter-spacing:.6px}.admin-current-status.on{color:var(--success)}.admin-current-status.off{color:#ff7272}
+.admin-message{min-height:20px;margin-top:12px;color:var(--success);font-size:12px;line-height:1.5}
+
+/* =========================================================
    MOBILE
 ========================================================= */
 
@@ -1045,6 +1222,8 @@ header:after{
 
   <div class="header-right">
 
+    <button class="admin-open-btn hidden" id="adminBtn" type="button">Admin</button>
+
     <div class="live-pill" id="livePill">
       <span class="live-dot"></span>
       Live
@@ -1060,6 +1239,25 @@ header:after{
 
 </header>
 
+
+<!-- =========================================================
+     MESSAGES PLATFORM STATUS
+========================================================= -->
+<div id="messagesStatusScreen" class="hidden">
+  <div class="status-card" id="messagesLoadingCard">
+    <div class="loading-spinner"></div>
+    <h2>Loading Kalahari Messages</h2>
+    <div class="status-subtitle">Checking platform status</div>
+    <p class="status-info">Please wait while we connect to Kalahari Messages.</p>
+  </div>
+  <div class="status-card hidden" id="messagesOfflineCard">
+    <div class="status-icon offline">!</div>
+    <h2>Kalahari Messages Unavailable</h2>
+    <div class="status-subtitle">Platform Offline</div>
+    <p class="status-info">Kalahari Messages is currently unavailable while we perform maintenance. Messaging, direct messages and other Messages features are temporarily disabled. Please check back later.</p>
+    <div class="status-date" id="messagesOfflineDate">Status: Offline • Please check the Kalahari Studios announcements for updates.</div>
+  </div>
+</div>
 
 <!-- =========================================================
      SIGN-IN GATE
@@ -1255,6 +1453,29 @@ header:after{
 
 
 <!-- =========================================================
+     ADMIN
+========================================================= -->
+<div id="adminOverlay" class="modal-overlay hidden">
+  <div class="modal admin-modal">
+    <div class="modal-top">
+      <h3>ADMIN ACCESS ONLY</h3>
+      <button class="modal-close" id="closeAdmin" type="button">×</button>
+    </div>
+    <div class="admin-card">
+      <h3>Kalahari Messages Status</h3>
+      <p>Use this switch to activate or deactivate the Kalahari Messages platform for all users.</p>
+      <div class="admin-status-row">
+        <div class="admin-status-label"><strong>Platform availability</strong><span id="adminStatusHint">Loading current status...</span></div>
+        <label class="status-toggle" title="Toggle Kalahari Messages availability"><input type="checkbox" id="messagesStatusToggle"><span class="status-toggle-track"></span></label>
+      </div>
+      <p style="margin-top:12px;">Current status: <strong class="admin-current-status" id="adminMessagesStatus">Loading...</strong></p>
+    </div>
+    <div class="admin-card"><h3>Administrator</h3><p>Currently authenticated administrator: <strong id="adminAccountName">admin</strong></p></div>
+    <div class="admin-message" id="adminMessage"></div>
+  </div>
+</div>
+
+<!-- =========================================================
      NEW DM MODAL
 ========================================================= -->
 
@@ -1407,6 +1628,20 @@ const newDmOverlay =
 const closeNewDm =
   document.getElementById("closeNewDm");
 
+const messagesStatusScreen = document.getElementById("messagesStatusScreen");
+const messagesLoadingCard = document.getElementById("messagesLoadingCard");
+const messagesOfflineCard = document.getElementById("messagesOfflineCard");
+const messagesOfflineDate = document.getElementById("messagesOfflineDate");
+const livePill = document.getElementById("livePill");
+const adminBtn = document.getElementById("adminBtn");
+const adminOverlay = document.getElementById("adminOverlay");
+const closeAdmin = document.getElementById("closeAdmin");
+const messagesStatusToggle = document.getElementById("messagesStatusToggle");
+const adminMessagesStatus = document.getElementById("adminMessagesStatus");
+const adminStatusHint = document.getElementById("adminStatusHint");
+const adminAccountName = document.getElementById("adminAccountName");
+const adminMessage = document.getElementById("adminMessage");
+
 const dmSearch =
   document.getElementById("dmSearch");
 
@@ -1434,6 +1669,14 @@ let messagesUnsub = null;
 let dmListUnsub = null;
 
 let directoryUnsub = null;
+
+let messagesPlatformAvailable = true;
+let messagesStatusUnsub = null;
+let messagesStatusReady = false;
+let messagesOfflineTimer = null;
+const MESSAGES_STATUS_DEFAULT = "OFF";
+const MESSAGES_STATUS_PATH = "platformStatus/messages";
+const MESSAGES_OFFLINE_DATE = "Status: Offline • Kalahari Launcher and Kalahari Messages are undergoing maintenence and major updates. Please note, messages may be deleted and the systems may be unfamiliar.";
 
 
 /* =========================================================
@@ -2341,62 +2584,48 @@ async function sendMessage(){
    AUTH STATE
 ========================================================= */
 
-if(!auth || !db){
-
-  showGate(
-    "Messaging isn't available right now — Firebase failed to initialize."
-  );
-
-}else{
-
-  auth.onAuthStateChanged(user => {
-
-    if(!user){
-
-      currentUser = null;
-
-      showGate();
-
-      return;
-
-    }
-
-    currentUser = user;
-
-    meAvatar.src =
-      avatarFor({
-        displayName:user.displayName,
-        photoURL:user.photoURL
-      });
-
-    meName.textContent =
-      user.displayName ||
-      user.email?.split("@")[0] ||
-      "User";
-
-    showApp();
-
-    listenDirectory();
-
-    listenDmList();
-
-    openGlobal();
-
-  }, err => {
-
-    console.error(
-      "Auth state error:",
-      err
-    );
-
-    showGate(
-      "Unable to check your session. Please refresh."
-    );
-
-  });
-
+function startMessagesForUser(user){
+  if(!user || !messagesPlatformAvailable)return;
+  currentUser=user;
+  meAvatar.src=avatarFor({displayName:user.displayName,photoURL:user.photoURL});
+  meName.textContent=user.displayName || user.email?.split("@")[0] || "User";
+  updateAdminVisibility(user);
+  showApp();
+  listenDirectory();
+  listenDmList();
+  openGlobal();
 }
 
+function updateAdminVisibility(user){
+  if(isAdmin(user))adminBtn.classList.remove("hidden");
+  else{
+    adminBtn.classList.add("hidden");
+    closeAdminPanel();
+  }
+}
+
+if(!auth || !db){
+  showMessagesLoading();
+  setTimeout(()=>{
+    showMessagesOffline();
+    gateText.textContent="Kalahari Messages is unavailable right now — Firebase failed to initialize.";
+  },5000);
+}else{
+  listenMessagesPlatformStatus();
+  auth.onAuthStateChanged(user=>{
+    updateAdminVisibility(user);
+    if(!user){
+      currentUser=null;
+      if(messagesPlatformAvailable){hideMessagesStatus();showGate();}
+      return;
+    }
+    currentUser=user;
+    if(messagesPlatformAvailable)startMessagesForUser(user);
+  },err=>{
+    console.error("Auth state error:",err);
+    showGate("Unable to check your session. Please refresh.");
+  });
+}
 </script>
 
 </body>

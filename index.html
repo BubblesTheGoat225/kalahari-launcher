@@ -2555,11 +2555,19 @@ body.login-2050 .login-theme-btn.active{color:#dff2ff;border-color:#75c7ff;backg
 .settings-tab{border:0;background:transparent;color:var(--muted);text-align:left;border-radius:9px;padding:10px 11px;font-size:11px;font-weight:800;cursor:pointer}
 .settings-tab:hover{background:var(--soft);color:var(--text)}
 .settings-tab.active{background:var(--accent);color:#111}
-.settings-content{min-width:0;overflow:auto;padding:25px 28px 30px}
-.settings-content .modal-top{margin-bottom:18px}
+.settings-content{min-width:0;display:flex;flex-direction:column;overflow:hidden;padding:25px 28px 0}
+.settings-content .modal-top{margin-bottom:18px;flex:0 0 auto}
 .settings-content .modal-top h2{font-size:27px}
-.settings-intro{color:var(--muted);font-size:12px;line-height:1.6;margin:-10px 0 20px}
-.settings-section{display:none}.settings-section.active{display:block}
+.settings-intro{color:var(--muted);font-size:12px;line-height:1.6;margin:-10px 0 20px;flex:0 0 auto}
+.settings-section{display:none;flex:1 1 auto;min-height:0;overflow-y:auto;padding-bottom:28px}
+.settings-section.active{display:block}
+
+/* Themed scrollbars for every settings section — follows whichever theme/mode is active */
+.settings-section,.settings-sidebar{scrollbar-width:thin;scrollbar-color:var(--accent) var(--panel2)}
+.settings-section::-webkit-scrollbar,.settings-sidebar::-webkit-scrollbar{width:10px;height:10px}
+.settings-section::-webkit-scrollbar-track,.settings-sidebar::-webkit-scrollbar-track{background:var(--panel2);border-radius:10px}
+.settings-section::-webkit-scrollbar-thumb,.settings-sidebar::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--accent),var(--accent2));border-radius:10px;border:2px solid var(--panel2)}
+.settings-section::-webkit-scrollbar-thumb:hover,.settings-sidebar::-webkit-scrollbar-thumb:hover{background:var(--accent2)}
 .settings-card{border:1px solid var(--border);background:var(--soft);border-radius:14px;padding:16px;margin-bottom:12px}
 .settings-card h3{font-size:13px;margin-bottom:5px}.settings-card p{font-size:11px;color:var(--muted);line-height:1.5}
 .settings-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
@@ -3020,9 +3028,9 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
 <div id="adminAuthOverlay" class="modal-overlay hidden">
   <div class="modal" style="max-width:420px">
     <div class="modal-top"><h3>ADMINISTRATOR ACCESS</h3><button class="close-modal" id="closeAdminAuth" type="button">×</button></div>
-    <p style="color:var(--muted);font-size:12px;line-height:1.6;margin-bottom:18px">The launcher is currently offline. Enter the administrator password to access the control center.</p>
+    <p style="color:var(--muted);font-size:12px;line-height:1.6;margin-bottom:18px">The launcher is currently offline. Enter the administrator password to sign in anyway and reach the control center.</p>
     <div class="field"><label for="adminAccessPassword">ADMINISTRATOR PASSWORD</label><input id="adminAccessPassword" type="password" autocomplete="off" placeholder="Enter administrator password"></div>
-    <button class="login-btn" id="adminAccessSubmit" type="button" style="width:100%;margin-top:6px">ACCESS ADMIN CENTER</button>
+    <button class="login-btn" id="adminAccessSubmit" type="button" style="width:100%;margin-top:6px">UNLOCK ADMINISTRATOR ACCESS</button>
     <div class="error" id="adminAccessError"></div>
   </div>
 </div>
@@ -4589,7 +4597,7 @@ function closeAdminAuth(){adminAuthOverlay.classList.add("hidden");}
 async function writePlatformStatus(name,available){if(!canAdmin()||!db){adminMessage.textContent="Administrator access or Firebase is unavailable.";return;}try{await db.doc(`${PLATFORM_STATUS_PATH}/${name}`).set({status:available?"ON":"OFF",updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${name==="launcher"?"Kalahari Launcher":"Kalahari Messages"} is now ${available?"ONLINE":"OFFLINE"}.`;}catch(err){console.error(err);adminMessage.textContent="Could not save the status. Check your Firebase Firestore permissions.";updateAdminControls();}}
 function renderAdminGameList(){const list=document.getElementById("adminGameList");if(!list)return;list.innerHTML="";games.forEach(game=>{const row=document.createElement("div");row.className="admin-game-row";const def=game.status==="IN PRODUCTION"?"IN PROGRESS":game.status;const current=gameStatuses[game.id]||def;row.innerHTML=`<div><div class="admin-game-name">${game.name}</div><span class="admin-game-default">Current: <span class="admin-status-pill">${current}</span></span></div><select class="admin-select" data-game-status="${game.id}"><option>AVAILABLE</option><option>MAINTENANCE</option><option>IN PROGRESS</option><option>COMING SOON</option></select>`;const select=row.querySelector("select");select.value=current;select.addEventListener("change",()=>setGameStatus(game,select.value));list.appendChild(row);});}
 async function setGameStatus(game,status){if(!canAdmin()||!db)return;const previous=gameStatuses[game.id]||(game.status==="IN PRODUCTION"?"IN PROGRESS":game.status);gameStatuses[game.id]=status;renderGames(search.value,gameFilter.value);renderAdminGameList();try{await db.collection("gameStatus").doc(game.id).set({gameName:game.name,status,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${game.name} is now ${status}.`;}catch(err){console.error(err);gameStatuses[game.id]=previous;renderGames(search.value,gameFilter.value);renderAdminGameList();adminMessage.textContent="Could not update that game's status. Check your Firebase permissions.";}}
-adminBtn.addEventListener("click",openAdmin);document.getElementById("closeAdmin").addEventListener("click",closeAdmin);adminOverlay.addEventListener("click",e=>{if(e.target===adminOverlay)closeAdmin();});document.getElementById("launcherStatusToggle").addEventListener("change",e=>writePlatformStatus("launcher",e.target.checked));document.getElementById("messagesStatusToggle").addEventListener("change",e=>writePlatformStatus("messages",e.target.checked));adminAccessBtn.addEventListener("click",openAdminAuth);document.getElementById("closeAdminAuth").addEventListener("click",closeAdminAuth);adminAuthOverlay.addEventListener("click",e=>{if(e.target===adminAuthOverlay)closeAdminAuth();});adminAccessSubmit.addEventListener("click",()=>{if(adminAccessPassword.value===ADMIN_ACCESS_PASSWORD){adminOverride=true;closeAdminAuth();updateAdminVisibility(auth?.currentUser);openAdmin();}else adminAccessError.textContent="Incorrect administrator password.";});adminAccessPassword.addEventListener("keydown",e=>{if(e.key==="Enter")adminAccessSubmit.click();});
+adminBtn.addEventListener("click",openAdmin);document.getElementById("closeAdmin").addEventListener("click",closeAdmin);adminOverlay.addEventListener("click",e=>{if(e.target===adminOverlay)closeAdmin();});document.getElementById("launcherStatusToggle").addEventListener("change",e=>writePlatformStatus("launcher",e.target.checked));document.getElementById("messagesStatusToggle").addEventListener("change",e=>writePlatformStatus("messages",e.target.checked));adminAccessBtn.addEventListener("click",openAdminAuth);document.getElementById("closeAdminAuth").addEventListener("click",closeAdminAuth);adminAuthOverlay.addEventListener("click",e=>{if(e.target===adminAuthOverlay)closeAdminAuth();});adminAccessSubmit.addEventListener("click",()=>{if(adminAccessPassword.value===ADMIN_ACCESS_PASSWORD){adminOverride=true;closeAdminAuth();updateAdminVisibility(auth?.currentUser);if(auth?.currentUser){showLauncher(auth.currentUser);}else{setLauncherScreen(launcherAvailable);}}else adminAccessError.textContent="Incorrect administrator password.";});adminAccessPassword.addEventListener("keydown",e=>{if(e.key==="Enter")adminAccessSubmit.click();});
 
 listenPlatformStatuses();
 

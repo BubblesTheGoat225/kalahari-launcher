@@ -1491,24 +1491,35 @@ let directoryUnsub = null;
 
 let messagesPlatformAvailable = true;
 let messagesStatusUnsub = null;
+let launcherStatusUnsub = null;
 let messagesStatusReady = false;
 let messagesOfflineTimer = null;
+let messagesStatusOn = true;
+let launcherStatusOn = true;
+let isAdminUser = false;
 const MESSAGES_STATUS_DEFAULT = "ON";
 const MESSAGES_STATUS_PATH = "platformStatus/messages";
+const LAUNCHER_STATUS_DEFAULT = "ON";
+const LAUNCHER_STATUS_PATH = "platformStatus/launcher";
 const MESSAGES_OFFLINE_DATE = "Status: Offline • Please check the Kalahari Studios announcements for updates.";
 
 
 /* =========================================================
    MESSAGES PLATFORM STATUS
    Controlled centrally from index.html Admin Control Center.
+   Messages also go offline for non-admins whenever the main
+   Launcher is switched off — only an admin account (same rule
+   as the launcher: displayName "admin") can still get in.
 ========================================================= */
+function isAdmin(user){return !!user&&(user.displayName||"").trim().toLowerCase()==="admin";}
 function setLivePill(available){if(!livePill)return;livePill.innerHTML=available?'<span class="live-dot"></span>Live':'<span class="live-dot" style="background:#b93838;box-shadow:none;animation:none"></span>Offline';livePill.style.color=available?"var(--success)":"#ff7272";livePill.style.borderColor=available?"#52d47b40":"#b9383840";livePill.style.background=available?"#52d47b12":"#b9383812";}
 function showMessagesLoading(){messagesStatusScreen.classList.remove("hidden");messagesLoadingCard.classList.remove("hidden");messagesOfflineCard.classList.add("hidden");}
 function showMessagesOffline(){messagesStatusScreen.classList.remove("hidden");messagesLoadingCard.classList.add("hidden");messagesOfflineCard.classList.remove("hidden");messagesOfflineDate.textContent=MESSAGES_OFFLINE_DATE;gate.classList.add("hidden");app.classList.add("hidden");setLivePill(false);msgInput.disabled=true;sendBtn.disabled=true;newDmBtn.disabled=true;}
 function hideMessagesStatus(){messagesStatusScreen.classList.add("hidden");setLivePill(true);msgInput.disabled=false;sendBtn.disabled=false;newDmBtn.disabled=false;}
 function stopMessageListeners(){if(messagesUnsub){messagesUnsub();messagesUnsub=null;}if(dmListUnsub){dmListUnsub();dmListUnsub=null;}if(directoryUnsub){directoryUnsub();directoryUnsub=null;}if(newDmOverlay)newDmOverlay.classList.add("hidden");}
 function applyMessagesPlatformStatus(available){messagesPlatformAvailable=!!available;if(messagesOfflineTimer){clearTimeout(messagesOfflineTimer);messagesOfflineTimer=null;}if(!messagesPlatformAvailable){stopMessageListeners();showMessagesLoading();messagesOfflineTimer=setTimeout(()=>{if(!messagesPlatformAvailable)showMessagesOffline();},5000);return;}hideMessagesStatus();if(currentUser)startMessagesForUser(currentUser);}
-function listenMessagesPlatformStatus(){showMessagesLoading();if(!db){applyMessagesPlatformStatus(false);return;}messagesStatusUnsub=db.doc(MESSAGES_STATUS_PATH).onSnapshot(snap=>{const data=snap.exists?snap.data():null;const status=String(data?.status||MESSAGES_STATUS_DEFAULT).toUpperCase();applyMessagesPlatformStatus(status==="ON");},err=>{console.error("Messages platform status error:",err);applyMessagesPlatformStatus(false);});}
+function recomputeMessagesAvailability(){applyMessagesPlatformStatus(messagesStatusOn&&(launcherStatusOn||isAdminUser));}
+function listenMessagesPlatformStatus(){showMessagesLoading();if(!db){applyMessagesPlatformStatus(false);return;}messagesStatusUnsub=db.doc(MESSAGES_STATUS_PATH).onSnapshot(snap=>{const data=snap.exists?snap.data():null;const status=String(data?.status||MESSAGES_STATUS_DEFAULT).toUpperCase();messagesStatusOn=status==="ON";recomputeMessagesAvailability();},err=>{console.error("Messages platform status error:",err);messagesStatusOn=false;recomputeMessagesAvailability();});launcherStatusUnsub=db.doc(LAUNCHER_STATUS_PATH).onSnapshot(snap=>{const data=snap.exists?snap.data():null;const status=String(data?.status||LAUNCHER_STATUS_DEFAULT).toUpperCase();launcherStatusOn=status==="ON";recomputeMessagesAvailability();},err=>{console.error("Launcher platform status error:",err);});}
 
 /* =========================================================
    HELPERS
@@ -2435,12 +2446,15 @@ if(!auth || !db){
 }else{
   listenMessagesPlatformStatus();
   auth.onAuthStateChanged(user=>{
-      if(!user){
+    isAdminUser=isAdmin(user);
+    if(!user){
       currentUser=null;
+      recomputeMessagesAvailability();
       if(messagesPlatformAvailable){hideMessagesStatus();showGate();}
       return;
     }
     currentUser=user;
+    recomputeMessagesAvailability();
     if(messagesPlatformAvailable)startMessagesForUser(user);
   },err=>{
     console.error("Auth state error:",err);

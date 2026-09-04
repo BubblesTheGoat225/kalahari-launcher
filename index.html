@@ -3,13 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kalahari Studios Launcher</title>
+<title>Kalahari Alcora</title>
 
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
@@ -27,8 +31,8 @@
   --panel2:#151c26;
   --text:#f5f7fa;
   --muted:#929baa;
-  --accent:#f5c542;
-  --accent2:#ffdf73;
+  --accent:#d97757;
+  --accent2:#f2a488;
   --border:#27303c;
   --header:#0a0e14e8;
   --input:#0d1219;
@@ -44,8 +48,8 @@ body.light-mode{
   --panel2:#0a2744;
   --text:#f4f9ff;
   --muted:#72a9c9;
-  --accent:#ffd21a;
-  --accent2:#ffe56a;
+  --accent:#d97757;
+  --accent2:#f2a488;
   --border:#17466c;
   --header:rgba(5,20,38,.94);
   --input:#061a31;
@@ -64,7 +68,7 @@ html{
 }
 
 body{
-  font-family:Inter,Segoe UI,Arial,sans-serif;
+  font-family:Sora,Inter,Segoe UI,Arial,sans-serif;
   background:var(--bg);
   color:var(--text);
   min-height:100vh;
@@ -375,7 +379,7 @@ main{
   border:1px solid var(--border);
   border-radius:22px;
   background:
-    radial-gradient(circle at 85% 20%,rgba(245,197,66,.12),transparent 28%),
+    radial-gradient(circle at 85% 20%,rgba(217,119,87,.12),transparent 28%),
     linear-gradient(135deg,var(--panel2),var(--panel));
   display:flex;
   align-items:center;
@@ -459,7 +463,7 @@ main{
 .search{flex:1;min-width:0}
 .filter-select{width:165px}
 .search:focus,
-.filter-select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(245,197,66,.08)}
+.filter-select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(217,119,87,.08)}
 
 .grid{
   display:grid;
@@ -607,7 +611,7 @@ main{
 .admin-game-row{display:grid;grid-template-columns:minmax(0,1fr) 160px;gap:10px;align-items:center;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:10px}
 .admin-game-name{font-size:11px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .admin-game-default{display:block;color:var(--muted);font-size:9px;margin-top:3px}
-.admin-status-pill{display:inline-flex;align-items:center;justify-content:center;padding:5px 8px;border-radius:999px;background:rgba(245,197,66,.08);border:1px solid var(--border);font-size:9px;font-weight:900;letter-spacing:.5px}
+.admin-status-pill{display:inline-flex;align-items:center;justify-content:center;padding:5px 8px;border-radius:999px;background:rgba(217,119,87,.08);border:1px solid var(--border);font-size:9px;font-weight:900;letter-spacing:.5px}
 @media(max-width:700px){.admin-control-grid{grid-template-columns:1fr}.admin-game-row{grid-template-columns:1fr}}
 
 /* =========================================================
@@ -620,8 +624,8 @@ body.modern{
   --panel2:#101a2b;
   --text:#f7fbff;
   --muted:#91a1b7;
-  --accent:#ffd447;
-  --accent2:#fff0a3;
+  --accent:#d97757;
+  --accent2:#f2a488;
   --border:#203149;
   --header:rgba(5,9,19,.82);
   --input:#080f1b;
@@ -1002,8 +1006,8 @@ body.modern .hero .eyebrow:before{
   width:6px;
   height:6px;
   border-radius:50%;
-  background:#ffd447;
-  box-shadow:0 0 12px #ffd447;
+  background:#d97757;
+  box-shadow:0 0 12px #d97757;
 }
 
 body.modern .hero h2{
@@ -1194,8 +1198,8 @@ body.modern .modern-filter-pill:hover{
 
 body.modern .modern-filter-pill.active{
   color:#111;
-  background:#ffd447;
-  border-color:#ffd447;
+  background:#d97757;
+  border-color:#d97757;
   box-shadow:0 7px 22px rgba(255,212,71,.14);
 }
 
@@ -1549,8 +1553,8 @@ body.simple{
   --panel2:#f8f9fa;
   --text:#17191c;
   --muted:#737980;
-  --accent:#e7b900;
-  --accent2:#f3cf38;
+  --accent:#c05a3a;
+  --accent2:#e08a63;
   --border:#d9dde2;
   --header:#ffffff;
   --input:#ffffff;
@@ -1817,7 +1821,7 @@ body.modern .card.wide-card h4{
   border-radius:10px;
   border:1px solid #806b25;
   border-left:3px solid var(--accent);
-  background:rgba(245,197,66,.08);
+  background:rgba(217,119,87,.08);
 }
 
 .game-update-title{
@@ -2077,8 +2081,8 @@ body.modern footer{
 
 .design-option.active{
   border-color:var(--accent);
-  box-shadow:0 0 0 2px #ffd44718;
-  background:#ffd4470c;
+  box-shadow:0 0 0 2px #d9775718;
+  background:#d977570c;
 }
 
 .design-preview{
@@ -2102,7 +2106,7 @@ body.modern footer{
   bottom:10px;
   height:13px;
   border-radius:5px;
-  background:#ffd447;
+  background:#d97757;
 }
 
 
@@ -2553,13 +2557,13 @@ body.login-2050 .login-theme-btn.active{color:#dff2ff;border-color:#75c7ff;backg
 /* =========================================================
    REVAMPED SETTINGS
 ========================================================= */
-.settings-shell{width:min(1050px,94vw);max-height:86vh;display:grid;grid-template-columns:205px 1fr;overflow:hidden;background:var(--panel);border:1px solid var(--border);border-radius:22px;box-shadow:0 35px 100px #0009}
+.settings-shell{width:min(1050px,94vw);height:86vh;display:grid;grid-template-columns:205px 1fr;overflow:hidden;background:var(--panel);border:1px solid var(--border);border-radius:22px;box-shadow:0 35px 100px #0009}
 .settings-sidebar{background:var(--soft);border-right:1px solid var(--border);padding:18px 12px;display:flex;flex-direction:column;gap:5px}
 .settings-side-title{padding:9px 11px 15px;font-size:11px;font-weight:950;letter-spacing:1.6px;color:var(--muted)}
 .settings-tab{border:0;background:transparent;color:var(--muted);text-align:left;border-radius:9px;padding:10px 11px;font-size:11px;font-weight:800;cursor:pointer}
 .settings-tab:hover{background:var(--soft);color:var(--text)}
 .settings-tab.active{background:var(--accent);color:#111}
-.settings-content{min-width:0;display:flex;flex-direction:column;overflow:hidden;padding:25px 28px 0}
+.settings-content{min-width:0;min-height:0;display:flex;flex-direction:column;overflow:hidden;padding:25px 28px 0}
 .settings-content .modal-top{margin-bottom:18px;flex:0 0 auto}
 .settings-content .modal-top h2{font-size:27px}
 .settings-intro{color:var(--muted);font-size:12px;line-height:1.6;margin:-10px 0 20px;flex:0 0 auto}
@@ -2590,7 +2594,7 @@ body.light-mode .check-row .switch .slider{background:#d9e1e8;border-color:#c4ce
 body.light-mode .check-row .switch input:checked + .slider{background:var(--accent);border-color:var(--accent)}
 
 .settings-status{font-size:10px;color:var(--muted);margin-top:9px}
-@media(max-width:700px){.settings-shell{grid-template-columns:1fr;max-height:92vh}.settings-sidebar{border-right:0;border-bottom:1px solid var(--border);flex-direction:row;overflow:auto}.settings-side-title{display:none}.settings-tab{white-space:nowrap}.settings-content{padding:18px}.login-theme-selector{margin-top:18px}}
+@media(max-width:700px){.settings-shell{grid-template-columns:1fr;height:92vh}.settings-sidebar{border-right:0;border-bottom:1px solid var(--border);flex-direction:row;overflow:auto}.settings-side-title{display:none}.settings-tab{white-space:nowrap}.settings-content{padding:18px}.login-theme-selector{margin-top:18px}}
 
 .reduced-motion *, .reduced-motion *::before, .reduced-motion *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
 .reduced-transparency .settings-shell,.reduced-transparency .modal,.reduced-transparency .login-card{backdrop-filter:none!important;background:var(--panel)!important}
@@ -2600,10 +2604,10 @@ body.light-mode .check-row .switch input:checked + .slider{background:var(--acce
    SPECIAL TAXI 4 / OPEN WORLD CARD
 ========================================================= */
 .card.taxi4-special{grid-column:1/-1!important;min-height:470px!important;border-radius:24px!important;position:relative;overflow:hidden;border:1px solid rgba(255,212,71,.35)!important;background:linear-gradient(135deg,#080d14,#101c2b 55%,#17283a)!important;box-shadow:0 25px 70px rgba(0,0,0,.4),0 0 50px rgba(255,212,71,.05)!important}
-.taxi4-release{position:absolute;top:0;left:0;right:0;height:38px;display:flex;align-items:center;justify-content:center;background:#ffd447;color:#101010;font-size:10px;font-weight:950;letter-spacing:2px;z-index:5;text-transform:uppercase}
+.taxi4-release{position:absolute;top:0;left:0;right:0;height:38px;display:flex;align-items:center;justify-content:center;background:#d97757;color:#101010;font-size:10px;font-weight:950;letter-spacing:2px;z-index:5;text-transform:uppercase}
 .taxi4-special .taxi4-visual{height:285px;margin-top:38px;position:relative;overflow:hidden;background:radial-gradient(circle at 70% 35%,rgba(255,212,71,.18),transparent 25%),linear-gradient(120deg,#0b1522,#101c2d 45%,#1b2e40)}
 .taxi4-special .taxi4-visual:before{content:"TAXI 4";position:absolute;right:3%;bottom:-38px;font-size:170px;line-height:1;font-weight:1000;letter-spacing:-10px;color:#ffffff08}
-.taxi4-special .taxi4-visual:after{content:"Kingston City, 2025";position:absolute;left:28px;bottom:20px;font-size:11px;letter-spacing:3px;font-weight:950;color:#ffd447}
+.taxi4-special .taxi4-visual:after{content:"Kingston City, 2025";position:absolute;left:28px;bottom:20px;font-size:11px;letter-spacing:3px;font-weight:950;color:#d97757}
 .taxi4-lines{position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.035) 35.2%,transparent 35.5%),linear-gradient(165deg,transparent 58%,rgba(255,212,71,.08) 58.2%,transparent 58.5%)}
 .taxi4-body{padding:22px 28px 25px;display:flex;justify-content:space-between;gap:25px;align-items:end}.taxi4-body h4{font-size:31px;letter-spacing:-1px;margin-bottom:7px}.taxi4-body p{max-width:700px;color:#91a4b8;font-size:12px;line-height:1.6}.taxi4-meta{display:flex;gap:8px;margin-top:13px;flex-wrap:wrap}.taxi4-pill{font-size:9px;padding:6px 9px;border:1px solid rgba(255,255,255,.09);border-radius:999px;color:#a9bacb}.taxi4-action{min-width:145px}.taxi4-action .play-btn{width:100%;padding:13px 18px;border-radius:11px}
 body.light-mode .card.taxi4-special{background:linear-gradient(135deg,#f5f9fd,#e9f2f8)!important;border-color:#d9b72d!important}.light-mode .taxi4-special .taxi4-visual{background:linear-gradient(120deg,#dceefe,#f8fbff)}.light-mode .taxi4-special .taxi4-visual:before{color:#06192c08}.light-mode .taxi4-special .taxi4-body p{color:#5f7890}.light-mode .taxi4-pill{color:#526b80;border-color:#cbdce8}
@@ -2631,7 +2635,7 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
       <div>
 
         <div class="modern-kicker">
-          Kalahari Studios • 2026
+          Kalahari-Cheviot Industries • 2026
         </div>
 
         <div class="modern-brand-title">
@@ -2676,11 +2680,11 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
       <div class="logo">
 
         <div class="logo-mark">
-          KS
+          KA
         </div>
 
         <h1>
-          Kalahari <span>Studios</span>
+          Kalahari <span>Alcora</span>
         </h1>
 
       </div>
@@ -2805,14 +2809,14 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
         </h2>
 
         <div class="down-subtitle">
-          Kalahari Studios Launcher
+          Kalahari Alcora
         </div>
 
         <p
           class="launcher-down-info"
           id="launcherDownInfo"
         >
-          The Kalahari Studios Launcher is currently unavailable.
+          Kalahari Alcora is currently unavailable.
         </p>
 
         <div
@@ -2877,10 +2881,10 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
   <div class="header-logo">
 
     <div class="mini">
-      KS
+      KA
     </div>
 
-    Kalahari <b>Studios</b>
+    Kalahari <b>Alcora</b>
 
   </div>
 
@@ -3010,7 +3014,7 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
       <section class="settings-section" id="accessibilityTab"><div class="settings-card"><h3>Accessibility</h3><p>Make the interface easier to use.</p><div class="check-row"><div class="check-copy"><strong>Reduce animations</strong><span>Syncs with Appearance.</span></div><input type="checkbox" id="accessibilityMotion"></div><div class="check-row"><div class="check-copy"><strong>High contrast</strong><span>Increase borders and text contrast.</span></div><input type="checkbox" id="highContrastToggle"></div></div></section>
       <section class="settings-section" id="advancedTab"><div class="settings-card"><h3>Advanced</h3><p>Tools for troubleshooting the launcher.</p><div class="settings-actions"><button class="save-btn" id="clearLocalData">Clear local settings</button><button class="save-btn" id="reloadLauncher2">Reload</button></div><div class="settings-status" id="advancedStatus">Firebase connection is managed automatically.</div></div></section>
       <section class="settings-section" id="aboutTab">
-  <div class="settings-card"><h3>Kalahari Studios Launcher</h3><p>Launcher v2.38</p><p style="margin-top:8px">Games, accounts, announcements and Kalahari experiences in one place.</p></div>
+  <div class="settings-card"><h3>Kalahari Alcora</h3><p>Launcher v2.38</p><p style="margin-top:8px">Games, accounts, announcements and Kalahari-Cheviot Industries experiences in one place.</p></div>
   <div class="settings-card"><h3>Need help?</h3><p>You can chat to a moderator through the <strong>Messages</strong> page if you need help, want to report an issue, or have a question about the launcher.</p><div class="settings-actions"><button class="save-btn" id="openMessagesFromAbout">Open Messages</button></div></div>
 </section>
     </div>
@@ -3027,7 +3031,7 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
     <div class="modal-top"><div><h2>ADMIN CONTROL CENTER</h2><p style="color:var(--muted);font-size:11px;margin-top:5px">Launcher, Messages and game availability controls.</p></div><button class="close-modal" id="closeAdmin" type="button">×</button></div>
     <div class="admin-warning">⚠ <strong>Administrator Area</strong><br>Only the administrator should use these controls. Changes are applied through Firebase and affect all users.</div>
     <div class="admin-control-grid">
-      <div class="admin-control-card"><h4>Launcher Access</h4><p>Turn the Kalahari Studios Launcher on or off for normal users. Administrator access remains available when offline.</p><div class="admin-switch-row"><strong id="adminLauncherStatus">Loading...</strong><label class="admin-switch"><input type="checkbox" id="launcherStatusToggle"><span class="admin-switch-track"></span></label></div></div>
+      <div class="admin-control-card"><h4>Launcher Access</h4><p>Turn Kalahari Alcora on or off for normal users. Administrator access remains available when offline.</p><div class="admin-switch-row"><strong id="adminLauncherStatus">Loading...</strong><label class="admin-switch"><input type="checkbox" id="launcherStatusToggle"><span class="admin-switch-track"></span></label></div></div>
       <div class="admin-control-card"><h4>Kalahari Messages</h4><p>Control whether Kalahari Messages is available. When OFF, Messages shows its loading screen before the unavailable notice.</p><div class="admin-switch-row"><strong id="adminMessagesStatus">Loading...</strong><label class="admin-switch"><input type="checkbox" id="messagesStatusToggle"><span class="admin-switch-track"></span></label></div></div>
     </div>
     <div class="admin-card"><h3>Game Availability</h3><p style="color:var(--muted);font-size:11px;line-height:1.5;margin-bottom:12px">Set each game's public status. AVAILABLE allows launching. MAINTENANCE, IN PROGRESS and COMING SOON keep the game visible but unavailable.</p><div class="admin-game-list" id="adminGameList"></div></div>
@@ -3048,7 +3052,7 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
   <div class="hero-content">
 
     <div class="eyebrow">
-      Kalahari Studios • Game Launcher
+      Kalahari-Cheviot Industries • Game Launcher
     </div>
 
     <h2>
@@ -3128,7 +3132,7 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
     </h3>
 
     <p>
-      Browse the Kalahari Studios game library
+      Browse the Kalahari-Cheviot Industries game library
     </p>
 
   </div>
@@ -3206,7 +3210,7 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
 
 
 <footer>
-  © 2026 Kalahari Studios • Launcher v2.40
+  © 2026 Kalahari-Cheviot Industries • Kalahari Alcora v2.40
 </footer>
 
 </main>
@@ -3304,13 +3308,13 @@ let gameStatusUnsub=null;
 let gameStatuses={};
 
 const LAUNCHER_DOWN_TITLE=
-  "Kalahari Launcher Down";
+  "Kalahari Alcora Down";
 
 const LAUNCHER_DOWN_INFO=
-  "The Kalahari Launcher & Kalahari Messages is currently unavailable while we perform maintenance. Please check back later.";
+  "Kalahari Alcora & Kalahari Messages is currently unavailable while we perform maintenance. Please check back later.";
 
 const LAUNCHER_DOWN_DATE=
-  "Status: Offline • Please check the Kalahari Studios announcements for updates.";
+  "Status: Offline • Please check the Kalahari-Cheviot Industries announcements for updates.";
 
 const IMPORTANT_NEWS="ANN";
 
@@ -3965,7 +3969,7 @@ document.addEventListener(
     if(!launcherAvailable && !adminOverride){
 
       alert(
-        "The Kalahari Studios Launcher is currently offline."
+        "Kalahari Alcora is currently offline."
       );
 
       return;

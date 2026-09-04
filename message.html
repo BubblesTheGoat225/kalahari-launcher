@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kalahari Studios Launcher - Messages</title>
+<title>Kalahari Alcora - Messages</title>
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -1070,7 +1070,7 @@ header:after{
 <header>
 
   <div class="brand">
-    <div class="brand-icon">KS</div>
+    <div class="brand-icon">KCI</div>
     Kalahari <span>Messages</span>
   </div>
 
@@ -1106,7 +1106,7 @@ header:after{
     <h2>Kalahari Messages Unavailable</h2>
     <div class="status-subtitle">Platform Offline</div>
     <p class="status-info">Kalahari Messages is currently unavailable while we perform maintenance. Messaging, direct messages and other Messages features are temporarily disabled. Please check back later.</p>
-    <div class="status-date" id="messagesOfflineDate">Status: Offline • Please check the Kalahari Studios announcements for updates.</div>
+    <div class="status-date" id="messagesOfflineDate">Status: Offline • Please check the Kalahari-Cheviot Industries announcements for updates.</div>
   </div>
 </div>
 
@@ -1127,7 +1127,7 @@ header:after{
     </h2>
 
     <p id="gateText">
-      Hang on while we verify you're signed in to Kalahari Studios.
+      Hang on while we verify you're signed in to Kalahari-Cheviot Industries.
     </p>
 
     <a
@@ -1501,7 +1501,7 @@ const MESSAGES_STATUS_DEFAULT = "ON";
 const MESSAGES_STATUS_PATH = "platformStatus/messages";
 const LAUNCHER_STATUS_DEFAULT = "ON";
 const LAUNCHER_STATUS_PATH = "platformStatus/launcher";
-const MESSAGES_OFFLINE_DATE = "Status: Offline • Please check the Kalahari Studios announcements for updates.";
+const MESSAGES_OFFLINE_DATE = "Status: Offline • Please check the Kalahari-Cheviot Industries announcements for updates.";
 
 
 /* =========================================================
@@ -1623,7 +1623,7 @@ function showGate(message){
 
   gateText.textContent =
     message ||
-    "Sign in through the Kalahari Studios Launcher first, then come back here.";
+    "Sign in through Kalahari Alcora first, then come back here.";
 
 }
 
@@ -2025,7 +2025,7 @@ function renderChatHeader(){
   if(currentView === "global"){
 
     chatAvatar.src =
-      "https://ui-avatars.com/api/?name=KS&background=151c26&color=f5c542";
+      "https://ui-avatars.com/api/?name=KCI&background=151c26&color=f5c542";
 
     chatTitle.textContent =
       "Global Room";

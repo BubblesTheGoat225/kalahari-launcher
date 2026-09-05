@@ -124,23 +124,18 @@ button{
 }
 
 .logo{
-  display:flex;
+  display:inline-flex;
   align-items:center;
-  gap:12px;
+  background:#fff;
+  padding:14px 22px;
+  border-radius:16px;
   margin-bottom:34px;
 }
 
-.logo-mark{
-  width:48px;
-  height:48px;
-  border-radius:14px;
-  background:var(--accent);
-  color:#111;
-  display:grid;
-  place-items:center;
-  font-size:25px;
-  font-weight:900;
-  transform:rotate(-5deg);
+.logo-full{
+  display:block;
+  height:52px;
+  width:auto;
 }
 
 .logo h1{
@@ -296,7 +291,8 @@ header{
   border-radius:10px;
   display:grid;
   place-items:center;
-  background:var(--accent);
+  background:transparent;
+  object-fit:contain;
   color:#111;
   font-size:12px;
   font-weight:950;
@@ -2667,7 +2663,7 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
       </div>
 
       <div class="modern-kicker">
-        KS / GAME PLATFORM
+        ALCORA / GAME PLATFORM
       </div>
 
     </div>
@@ -2679,13 +2675,11 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
 
       <div class="logo">
 
-        <div class="logo-mark">
-          KA
-        </div>
-
-        <h1>
-          Kalahari <span>Alcora</span>
-        </h1>
+        <img
+          class="logo-full"
+          src="alcora-logo-full.png"
+          alt="Kalahari Alcora"
+        >
 
       </div>
 
@@ -2880,9 +2874,11 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
 
   <div class="header-logo">
 
-    <div class="mini">
-      KA
-    </div>
+    <img
+      class="mini"
+      src="alcora-logo-mark.png"
+      alt="Kalahari Alcora"
+    >
 
     Kalahari <b>Alcora</b>
 
@@ -2974,7 +2970,7 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
 
       <section class="settings-section active" id="appearanceTab">
         <div class="settings-card"><h3>Launcher design</h3><p>Choose the layout used after you sign in.</p><div class="design-choice">
-          <button class="design-option" id="oldDesignBtn"><div class="design-preview old-preview"></div><strong>Original</strong><span>Classic Kalahari launcher.</span></button>
+          <button class="design-option" id="oldDesignBtn"><div class="design-preview old-preview"></div><strong>Original</strong><span>Classic Kalahari Alcora.</span></button>
           <button class="design-option" id="modernDesignBtn"><div class="design-preview modern-preview"></div><strong>Modern</strong><span>Redesigned gaming dashboard.</span></button>
           <button class="design-option" id="simpleDesignBtn"><div class="design-preview simple-preview"></div><strong>Simple</strong><span>Minimal slots, small text and Play.</span></button>
         </div></div>
@@ -3325,7 +3321,7 @@ const NEWS_TITLE=
   "Kalahari ALL APPLICATIONS Major Update!";
 
 const NEWS_INFO=
-  "Every application operated by Kalahari Industries will be undergoing maintenence for the rest of the week, so you will be unable to use Kalahari Launcher, Kalahari Messages and other apps.";
+  "Every application operated by Kalahari Industries will be undergoing maintenence for the rest of the week, so you will be unable to use Kalahari Alcora, Kalahari Messages and other apps.";
 
 
 /* =========================================================
@@ -4606,7 +4602,7 @@ function canAdmin(){return adminOverride||isAdmin(auth?.currentUser);}
 function updateAdminVisibility(user){if(isAdmin(user)||adminOverride)adminBtn.classList.remove("hidden");else{adminBtn.classList.add("hidden");adminOverlay.classList.add("hidden");}}
 function openAdmin(){if(!canAdmin()){alert("ACCESS DENIED\n\nAdministrator access is restricted.");return;}document.getElementById("adminAccountName").textContent=isAdmin(auth?.currentUser)?(auth.currentUser.displayName||"admin"):"Administrator Access";renderAdminGameList();updateAdminControls();adminMessage.textContent="Administrator authentication verified.";adminOverlay.classList.remove("hidden");}
 function closeAdmin(){adminOverlay.classList.add("hidden");}
-async function writePlatformStatus(name,available){if(!canAdmin()||!db){adminMessage.textContent="Administrator access or Firebase is unavailable.";return;}try{await db.doc(`${PLATFORM_STATUS_PATH}/${name}`).set({status:available?"ON":"OFF",updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${name==="launcher"?"Kalahari Launcher":"Kalahari Messages"} is now ${available?"ONLINE":"OFFLINE"}.`;}catch(err){console.error(err);adminMessage.textContent="Could not save the status. Check your Firebase Firestore permissions.";updateAdminControls();}}
+async function writePlatformStatus(name,available){if(!canAdmin()||!db){adminMessage.textContent="Administrator access or Firebase is unavailable.";return;}try{await db.doc(`${PLATFORM_STATUS_PATH}/${name}`).set({status:available?"ON":"OFF",updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${name==="launcher"?"Kalahari Alcora":"Kalahari Messages"} is now ${available?"ONLINE":"OFFLINE"}.`;}catch(err){console.error(err);adminMessage.textContent="Could not save the status. Check your Firebase Firestore permissions.";updateAdminControls();}}
 function renderAdminGameList(){const list=document.getElementById("adminGameList");if(!list)return;list.innerHTML="";games.forEach(game=>{const row=document.createElement("div");row.className="admin-game-row";const def=game.status==="IN PRODUCTION"?"IN PROGRESS":game.status;const current=gameStatuses[game.id]||def;row.innerHTML=`<div><div class="admin-game-name">${game.name}</div><span class="admin-game-default">Current: <span class="admin-status-pill">${current}</span></span></div><select class="admin-select" data-game-status="${game.id}"><option>AVAILABLE</option><option>MAINTENANCE</option><option>IN PROGRESS</option><option>COMING SOON</option></select>`;const select=row.querySelector("select");select.value=current;select.addEventListener("change",()=>setGameStatus(game,select.value));list.appendChild(row);});}
 async function setGameStatus(game,status){if(!canAdmin()||!db)return;const previous=gameStatuses[game.id]||(game.status==="IN PRODUCTION"?"IN PROGRESS":game.status);gameStatuses[game.id]=status;renderGames(search.value,gameFilter.value);renderAdminGameList();try{await db.collection("gameStatus").doc(game.id).set({gameName:game.name,status,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${game.name} is now ${status}.`;}catch(err){console.error(err);gameStatuses[game.id]=previous;renderGames(search.value,gameFilter.value);renderAdminGameList();adminMessage.textContent="Could not update that game's status. Check your Firebase permissions.";}}
 adminBtn.addEventListener("click",openAdmin);document.getElementById("closeAdmin").addEventListener("click",closeAdmin);adminOverlay.addEventListener("click",e=>{if(e.target===adminOverlay)closeAdmin();});document.getElementById("launcherStatusToggle").addEventListener("change",e=>writePlatformStatus("launcher",e.target.checked));document.getElementById("messagesStatusToggle").addEventListener("change",e=>writePlatformStatus("messages",e.target.checked));function submitAdminAccess(){if(!adminAccessPassword)return;if(adminAccessPassword.value===ADMIN_ACCESS_PASSWORD){adminAccessError.textContent="";adminAccessPassword.value="";adminOverride=true;updateAdminVisibility(auth?.currentUser);if(auth?.currentUser){showLauncher(auth.currentUser);}else{setLauncherScreen(launcherAvailable);}}else adminAccessError.textContent="Incorrect administrator password.";}if(adminAccessSubmit)adminAccessSubmit.addEventListener("click",submitAdminAccess);if(adminAccessPassword)adminAccessPassword.addEventListener("keydown",e=>{if(e.key==="Enter")submitAdminAccess();});

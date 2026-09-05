@@ -3,22 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>404 — Kalahari Studios</title>
+<title>404 — Kalahari Alcora</title>
 
 <link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 :root{
   --bg:#080b10;--panel:#10151d;--text:#f5f7fa;
-  --muted:#929baa;--accent:#f5c542;--accent2:#ffdf73;--border:#27303c;
+  --muted:#929baa;--accent:#d97757;--accent2:#f2a488;--border:#27303c;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{
-  font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);
+  font-family:Sora,Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);
   min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
-  background:radial-gradient(circle at 50% 0%,#26303e 0,#11161e 35%,#080b10 75%);
+  background:radial-gradient(circle at 50% 0%,#1a222d 0,#11161e 35%,#080b10 75%);
 }
 .card{
   width:100%;max-width:480px;text-align:center;background:rgba(16,21,29,.94);
@@ -26,38 +32,36 @@ body{
   box-shadow:0 30px 80px #0009;backdrop-filter:blur(14px);
 }
 .logo-mark{
-  width:56px;height:56px;border-radius:16px;background:var(--accent);color:#111;
-  display:grid;place-items:center;font-size:28px;font-weight:900;transform:rotate(-5deg);
-  margin:0 auto 28px;
+  height:56px;width:auto;display:block;margin:0 auto 28px;
 }
 .code{
-  font-size:84px;font-weight:900;letter-spacing:-3px;color:var(--accent);
+  font-size:84px;font-weight:800;letter-spacing:-3px;color:var(--accent);
   line-height:1;margin-bottom:6px;
 }
-h1{font-size:22px;margin-bottom:10px;letter-spacing:-.4px}
+h1{font-size:22px;font-weight:700;margin-bottom:10px;letter-spacing:-.4px}
 p{color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:30px}
 p b{color:#cbd1da}
 .actions{display:flex;gap:10px}
 .btn{
-  flex:1;padding:13px 16px;border-radius:11px;font-weight:850;font-size:13px;
-  text-decoration:none;cursor:pointer;border:0;transition:.2s;
+  flex:1;padding:13px 16px;border-radius:11px;font-weight:800;font-size:12px;
+  letter-spacing:.3px;text-decoration:none;cursor:pointer;border:0;transition:.2s;
+  font-family:inherit;
 }
 .btn-primary{background:var(--accent);color:#101010}
 .btn-primary:hover{background:var(--accent2);transform:translateY(-1px)}
 .btn-secondary{background:#27303c;color:#fff}
 .btn-secondary:hover{background:#384556;transform:translateY(-1px)}
-.taxi{position:absolute;font-size:120px;opacity:.05;pointer-events:none;user-select:none}
 </style>
 </head>
 <body>
 
 <div class="card">
-  <div class="logo-mark">KS</div>
+  <img class="logo-mark" src="alcora-logo-mark.png" alt="Kalahari Alcora">
   <div class="code">404</div>
   <h1>This page doesn't exist</h1>
-  <p> Wrong turn, dead end, or a link that never made it to the finish line.</b> Let's get you back to the launcher.</p>
+  <p>Wrong turn, dead end, or a link that never made it to the finish line. Let's get you back to <b>Kalahari Alcora</b>.</p>
   <div class="actions">
-    <a href="index.html" class="btn btn-primary">BACK TO LAUNCHER</a>
+    <a href="index.html" class="btn btn-primary">BACK TO ALCORA</a>
     <a href="javascript:history.back()" class="btn btn-secondary">GO BACK</a>
   </div>
 </div>

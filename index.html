@@ -124,22 +124,20 @@ button{
 }
 
 .logo{
-  display:inline-flex;
+  display:flex;
   align-items:center;
-  background:#fff;
-  padding:14px 22px;
-  border-radius:16px;
+  gap:14px;
   margin-bottom:34px;
 }
 
-.logo-full{
+.logo-mark{
   display:block;
-  height:52px;
+  height:56px;
   width:auto;
 }
 
 .logo h1{
-  font-size:23px;
+  font-size:26px;
 }
 
 .logo span{
@@ -781,9 +779,8 @@ body.modern .modern-login-side .logo{
 }
 
 body.modern .modern-login-side .logo-mark{
-  width:44px;
-  height:44px;
-  border-radius:13px;
+  height:60px;
+  width:auto;
 }
 
 body.modern .login-card h2{
@@ -2524,7 +2521,7 @@ body.login-simple-light .login-card{max-width:410px;background:#fff;border:1px s
 body.login-simple-light .modern-login-brand{display:none}
 body.login-simple-light .modern-login-side{padding:0}
 body.login-simple-light .logo{margin-bottom:28px}
-body.login-simple-light .logo-mark{width:38px;height:38px;border-radius:9px;font-size:17px;transform:none}
+body.login-simple-light .logo-mark{height:42px;width:auto}
 body.login-simple-light .logo h1{font-size:18px}
 body.login-simple-light .login-card h2{font-size:25px}
 body.login-simple-light .subtitle{font-size:13px}
@@ -2538,7 +2535,7 @@ body.login-2050 #loginScreen:before{content:"";position:fixed;inset:0;pointer-ev
 body.login-2050 .login-card{max-width:470px;background:rgba(7,13,22,.82);border:1px solid rgba(121,190,255,.18);border-radius:18px;box-shadow:0 30px 90px #000b,0 0 70px rgba(48,151,235,.08);backdrop-filter:blur(20px);padding:34px}
 body.login-2050 .modern-login-brand{display:none}
 body.login-2050 .modern-login-side{padding:0}
-body.login-2050 .logo-mark{width:40px;height:40px;border-radius:8px;transform:none;background:#dff2ff;color:#071421;box-shadow:0 0 28px rgba(95,190,255,.2)}
+body.login-2050 .logo-mark{height:44px;width:auto;filter:drop-shadow(0 0 18px rgba(95,190,255,.25))}
 body.login-2050 .logo h1{font-size:18px;letter-spacing:.2px}
 body.login-2050 .login-card h2{font-size:30px;letter-spacing:-1px}
 body.login-2050 .subtitle{font-size:12px}
@@ -2676,10 +2673,14 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
       <div class="logo">
 
         <img
-          class="logo-full"
-          src="alcora-logo-full.png"
+          class="logo-mark"
+          src="alcora-logo-mark.png"
           alt="Kalahari Alcora"
         >
+
+        <h1>
+          Kalahari <span>Alcora</span>
+        </h1>
 
       </div>
 

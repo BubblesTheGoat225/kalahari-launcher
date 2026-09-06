@@ -126,18 +126,25 @@ button{
 .logo{
   display:flex;
   align-items:center;
-  gap:14px;
+  gap:12px;
   margin-bottom:34px;
 }
 
 .logo-mark{
-  display:block;
-  height:56px;
-  width:auto;
+  width:48px;
+  height:48px;
+  border-radius:14px;
+  background:var(--accent);
+  color:#111;
+  display:grid;
+  place-items:center;
+  font-size:25px;
+  font-weight:900;
+  transform:rotate(-5deg);
 }
 
 .logo h1{
-  font-size:26px;
+  font-size:23px;
 }
 
 .logo span{
@@ -289,8 +296,7 @@ header{
   border-radius:10px;
   display:grid;
   place-items:center;
-  background:transparent;
-  object-fit:contain;
+  background:var(--accent);
   color:#111;
   font-size:12px;
   font-weight:950;
@@ -779,8 +785,9 @@ body.modern .modern-login-side .logo{
 }
 
 body.modern .modern-login-side .logo-mark{
-  height:60px;
-  width:auto;
+  width:44px;
+  height:44px;
+  border-radius:13px;
 }
 
 body.modern .login-card h2{
@@ -2521,7 +2528,7 @@ body.login-simple-light .login-card{max-width:410px;background:#fff;border:1px s
 body.login-simple-light .modern-login-brand{display:none}
 body.login-simple-light .modern-login-side{padding:0}
 body.login-simple-light .logo{margin-bottom:28px}
-body.login-simple-light .logo-mark{height:42px;width:auto}
+body.login-simple-light .logo-mark{width:38px;height:38px;border-radius:9px;font-size:17px;transform:none}
 body.login-simple-light .logo h1{font-size:18px}
 body.login-simple-light .login-card h2{font-size:25px}
 body.login-simple-light .subtitle{font-size:13px}
@@ -2535,7 +2542,7 @@ body.login-2050 #loginScreen:before{content:"";position:fixed;inset:0;pointer-ev
 body.login-2050 .login-card{max-width:470px;background:rgba(7,13,22,.82);border:1px solid rgba(121,190,255,.18);border-radius:18px;box-shadow:0 30px 90px #000b,0 0 70px rgba(48,151,235,.08);backdrop-filter:blur(20px);padding:34px}
 body.login-2050 .modern-login-brand{display:none}
 body.login-2050 .modern-login-side{padding:0}
-body.login-2050 .logo-mark{height:44px;width:auto;filter:drop-shadow(0 0 18px rgba(95,190,255,.25))}
+body.login-2050 .logo-mark{width:40px;height:40px;border-radius:8px;transform:none;background:#dff2ff;color:#071421;box-shadow:0 0 28px rgba(95,190,255,.2)}
 body.login-2050 .logo h1{font-size:18px;letter-spacing:.2px}
 body.login-2050 .login-card h2{font-size:30px;letter-spacing:-1px}
 body.login-2050 .subtitle{font-size:12px}
@@ -2660,7 +2667,7 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
       </div>
 
       <div class="modern-kicker">
-        ALCORA / GAME PLATFORM
+        KS / GAME PLATFORM
       </div>
 
     </div>
@@ -2672,11 +2679,9 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
 
       <div class="logo">
 
-        <img
-          class="logo-mark"
-          src="alcora-logo-mark.png"
-          alt="Kalahari Alcora"
-        >
+        <div class="logo-mark">
+          KA
+        </div>
 
         <h1>
           Kalahari <span>Alcora</span>
@@ -2875,11 +2880,9 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
 
   <div class="header-logo">
 
-    <img
-      class="mini"
-      src="alcora-logo-mark.png"
-      alt="Kalahari Alcora"
-    >
+    <div class="mini">
+      KA
+    </div>
 
     Kalahari <b>Alcora</b>
 
@@ -2971,7 +2974,7 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
 
       <section class="settings-section active" id="appearanceTab">
         <div class="settings-card"><h3>Launcher design</h3><p>Choose the layout used after you sign in.</p><div class="design-choice">
-          <button class="design-option" id="oldDesignBtn"><div class="design-preview old-preview"></div><strong>Original</strong><span>Classic Kalahari Alcora.</span></button>
+          <button class="design-option" id="oldDesignBtn"><div class="design-preview old-preview"></div><strong>Original</strong><span>Classic Kalahari launcher.</span></button>
           <button class="design-option" id="modernDesignBtn"><div class="design-preview modern-preview"></div><strong>Modern</strong><span>Redesigned gaming dashboard.</span></button>
           <button class="design-option" id="simpleDesignBtn"><div class="design-preview simple-preview"></div><strong>Simple</strong><span>Minimal slots, small text and Play.</span></button>
         </div></div>
@@ -3030,6 +3033,19 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
     <div class="admin-control-grid">
       <div class="admin-control-card"><h4>Launcher Access</h4><p>Turn Kalahari Alcora on or off for normal users. Administrator access remains available when offline.</p><div class="admin-switch-row"><strong id="adminLauncherStatus">Loading...</strong><label class="admin-switch"><input type="checkbox" id="launcherStatusToggle"><span class="admin-switch-track"></span></label></div></div>
       <div class="admin-control-card"><h4>Kalahari Messages</h4><p>Control whether Kalahari Messages is available. When OFF, Messages shows its loading screen before the unavailable notice.</p><div class="admin-switch-row"><strong id="adminMessagesStatus">Loading...</strong><label class="admin-switch"><input type="checkbox" id="messagesStatusToggle"><span class="admin-switch-track"></span></label></div></div>
+    </div>
+    <div class="admin-card">
+      <h3>Announcement Banner</h3>
+      <p style="color:var(--muted);font-size:11px;line-height:1.5;margin-bottom:12px">Shows at the top of the launcher for every signed-in user. Turn it off when there's nothing to say — no need to clear the text.</p>
+      <div class="admin-switch-row" style="margin-bottom:14px"><strong id="adminAnnouncementStatus">Loading...</strong><label class="admin-switch"><input type="checkbox" id="announcementActiveToggle"><span class="admin-switch-track"></span></label></div>
+      <div class="field"><label>TITLE</label><input class="settings-input" id="announcementTitle" placeholder="Announcement title" maxlength="120"></div>
+      <div class="field"><label>MESSAGE</label><textarea class="settings-input" id="announcementBody" rows="3" placeholder="What's going on?" style="resize:vertical;font-family:inherit" maxlength="600"></textarea></div>
+      <div class="field"><label>DATE LABEL</label><input class="settings-input" id="announcementDate" placeholder="e.g. September 7, 2026" maxlength="60"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="save-btn" id="publishAnnouncement" type="button">Publish announcement</button>
+        <button class="save-btn danger-btn" id="clearAnnouncement" type="button">Turn off banner</button>
+      </div>
+      <div class="settings-message" id="announcementMessage"></div>
     </div>
     <div class="admin-card"><h3>Game Availability</h3><p style="color:var(--muted);font-size:11px;line-height:1.5;margin-bottom:12px">Set each game's public status. AVAILABLE allows launching. MAINTENANCE, IN PROGRESS and COMING SOON keep the game visible but unavailable.</p><div class="admin-game-list" id="adminGameList"></div></div>
     <div class="admin-card"><h3>Administrator</h3><p>Access: <strong id="adminAccountName">admin</strong></p></div>
@@ -3302,7 +3318,9 @@ let adminOverride=false;
 let launcherStatusUnsub=null;
 let messagesStatusUnsub=null;
 let gameStatusUnsub=null;
+let announcementUnsub=null;
 let gameStatuses={};
+let currentAnnouncement={active:false,title:"",body:"",date:""};
 
 const LAUNCHER_DOWN_TITLE=
   "Kalahari Alcora Down";
@@ -3312,17 +3330,6 @@ const LAUNCHER_DOWN_INFO=
 
 const LAUNCHER_DOWN_DATE=
   "Status: Offline • Please check the Kalahari-Cheviot Industries announcements for updates.";
-
-const IMPORTANT_NEWS="ANN";
-
-const NEWS_DATE=
-  "September 3, 2026";
-
-const NEWS_TITLE=
-  "Kalahari ALL APPLICATIONS Major Update!";
-
-const NEWS_INFO=
-  "Every application operated by Kalahari Industries will be undergoing maintenence for the rest of the week, so you will be unable to use Kalahari Alcora, Kalahari Messages and other apps.";
 
 
 /* =========================================================
@@ -3580,7 +3587,7 @@ const modernFilterPills=
 ========================================================= */
 function setLauncherScreen(on){launcherAvailable=!!on;if(launcherAvailable||adminOverride){normalLogin.classList.remove("hidden");launcherDownScreen.classList.add("hidden");}else{normalLogin.classList.add("hidden");launcherDownScreen.classList.remove("hidden");document.getElementById("launcherDownTitle").textContent=LAUNCHER_DOWN_TITLE;document.getElementById("launcherDownInfo").textContent=LAUNCHER_DOWN_INFO;document.getElementById("launcherDownDate").textContent=LAUNCHER_DOWN_DATE;}}
 function updateAdminControls(){const lt=document.getElementById("launcherStatusToggle"),mt=document.getElementById("messagesStatusToggle"),ls=document.getElementById("adminLauncherStatus"),ms=document.getElementById("adminMessagesStatus");if(lt)lt.checked=launcherAvailable;if(mt)mt.checked=messagesAvailable;if(ls){ls.textContent=launcherAvailable?"ONLINE":"OFFLINE";ls.style.color=launcherAvailable?"var(--success)":"#ff7272";}if(ms){ms.textContent=messagesAvailable?"ONLINE":"OFFLINE";ms.style.color=messagesAvailable?"var(--success)":"#ff7272";}}
-function listenPlatformStatuses(){if(!db){setLauncherScreen(false);return;}launcherStatusUnsub=db.doc(`${PLATFORM_STATUS_PATH}/launcher`).onSnapshot(snap=>{const status=String(snap.exists?(snap.data().status||LAUNCHER_STATUS_DEFAULT):LAUNCHER_STATUS_DEFAULT).toUpperCase();launcherAvailable=status==="ON";setLauncherScreen(launcherAvailable);updateAdminControls();},err=>{console.error("Launcher status error:",err);setLauncherScreen(false);});messagesStatusUnsub=db.doc(`${PLATFORM_STATUS_PATH}/messages`).onSnapshot(snap=>{const status=String(snap.exists?(snap.data().status||"ON"):"ON").toUpperCase();messagesAvailable=status==="ON";updateAdminControls();},err=>console.error("Messages status error:",err));gameStatusUnsub=db.collection("gameStatus").onSnapshot(snap=>{gameStatuses={};snap.forEach(doc=>{if(doc.exists&&doc.data().status)gameStatuses[doc.id]=String(doc.data().status).toUpperCase();});if(typeof renderGames==="function")renderGames(search.value,gameFilter.value);if(typeof renderAdminGameList==="function")renderAdminGameList();},err=>console.error("Game status error:",err));}
+function listenPlatformStatuses(){if(!db){setLauncherScreen(false);return;}launcherStatusUnsub=db.doc(`${PLATFORM_STATUS_PATH}/launcher`).onSnapshot(snap=>{const status=String(snap.exists?(snap.data().status||LAUNCHER_STATUS_DEFAULT):LAUNCHER_STATUS_DEFAULT).toUpperCase();launcherAvailable=status==="ON";setLauncherScreen(launcherAvailable);updateAdminControls();},err=>{console.error("Launcher status error:",err);setLauncherScreen(false);});messagesStatusUnsub=db.doc(`${PLATFORM_STATUS_PATH}/messages`).onSnapshot(snap=>{const status=String(snap.exists?(snap.data().status||"ON"):"ON").toUpperCase();messagesAvailable=status==="ON";updateAdminControls();},err=>console.error("Messages status error:",err));gameStatusUnsub=db.collection("gameStatus").onSnapshot(snap=>{gameStatuses={};snap.forEach(doc=>{if(doc.exists&&doc.data().status)gameStatuses[doc.id]=String(doc.data().status).toUpperCase();});if(typeof renderGames==="function")renderGames(search.value,gameFilter.value);if(typeof renderAdminGameList==="function")renderAdminGameList();},err=>console.error("Game status error:",err));announcementUnsub=db.doc(`${PLATFORM_STATUS_PATH}/announcement`).onSnapshot(snap=>{const data=snap.exists?snap.data():{};currentAnnouncement={active:!!data.active,title:data.title||"",body:data.body||"",date:data.date||""};renderAnnouncement();updateAnnouncementAdminStatus();},err=>console.error("Announcement status error:",err));}
 
 /* =========================================================
    GAME RENDERING
@@ -3996,33 +4003,35 @@ document.addEventListener(
 
 
 /* =========================================================
-   NEWS
+   ANNOUNCEMENT BANNER
+   Live from platformStatus/announcement — published through
+   the Admin Control Center, no code edits required.
 ========================================================= */
 
-function loadNews(){
+function renderAnnouncement(){
 
   const newsBox=
     document.getElementById(
       "news-box"
     );
 
-
-  if(IMPORTANT_NEWS==="ANN"){
+  if(currentAnnouncement.active &&
+     (currentAnnouncement.title || currentAnnouncement.body)){
 
     document.getElementById(
       "news-date"
     ).textContent=
-      NEWS_DATE;
+      currentAnnouncement.date;
 
     document.getElementById(
       "news-title"
     ).textContent=
-      NEWS_TITLE;
+      currentAnnouncement.title;
 
     document.getElementById(
       "news-info"
     ).textContent=
-      NEWS_INFO;
+      currentAnnouncement.body;
 
     newsBox.classList.remove(
       "hidden"
@@ -4038,7 +4047,19 @@ function loadNews(){
 
 }
 
-loadNews();
+function updateAnnouncementAdminStatus(){
+
+  const toggle=document.getElementById("announcementActiveToggle"),
+        status=document.getElementById("adminAnnouncementStatus");
+
+  if(toggle)toggle.checked=currentAnnouncement.active;
+
+  if(status){
+    status.textContent=currentAnnouncement.active?"ON":"OFF";
+    status.style.color=currentAnnouncement.active?"var(--success)":"#ff7272";
+  }
+
+}
 
 
 /* =========================================================
@@ -4597,16 +4618,48 @@ document.getElementById("openMessagesFromAbout")?.addEventListener("click",()=>{
    ADMIN
 ========================================================= */
 
-const adminBtn=document.getElementById("adminBtn"),adminOverlay=document.getElementById("adminOverlay"),adminMessage=document.getElementById("adminMessage"),adminAccessPassword=document.getElementById("adminAccessPassword"),adminAccessSubmit=document.getElementById("adminAccessSubmit"),adminAccessError=document.getElementById("adminAccessError");
+const adminBtn=document.getElementById("adminBtn"),adminOverlay=document.getElementById("adminOverlay"),adminMessage=document.getElementById("adminMessage"),adminAccessPassword=document.getElementById("adminAccessPassword"),adminAccessSubmit=document.getElementById("adminAccessSubmit"),adminAccessError=document.getElementById("adminAccessError"),announcementMessage=document.getElementById("announcementMessage");
 function isAdmin(user){return !!user&&(user.displayName||"").trim().toLowerCase()==="admin";}
 function canAdmin(){return adminOverride||isAdmin(auth?.currentUser);}
 function updateAdminVisibility(user){if(isAdmin(user)||adminOverride)adminBtn.classList.remove("hidden");else{adminBtn.classList.add("hidden");adminOverlay.classList.add("hidden");}}
-function openAdmin(){if(!canAdmin()){alert("ACCESS DENIED\n\nAdministrator access is restricted.");return;}document.getElementById("adminAccountName").textContent=isAdmin(auth?.currentUser)?(auth.currentUser.displayName||"admin"):"Administrator Access";renderAdminGameList();updateAdminControls();adminMessage.textContent="Administrator authentication verified.";adminOverlay.classList.remove("hidden");}
+function openAdmin(){if(!canAdmin()){alert("ACCESS DENIED\n\nAdministrator access is restricted.");return;}document.getElementById("adminAccountName").textContent=isAdmin(auth?.currentUser)?(auth.currentUser.displayName||"admin"):"Administrator Access";renderAdminGameList();updateAdminControls();updateAnnouncementAdminStatus();const at=document.getElementById("announcementTitle"),ab=document.getElementById("announcementBody"),ad=document.getElementById("announcementDate");if(at)at.value=currentAnnouncement.title;if(ab)ab.value=currentAnnouncement.body;if(ad)ad.value=currentAnnouncement.date;if(announcementMessage)announcementMessage.textContent="";adminMessage.textContent="Administrator authentication verified.";adminOverlay.classList.remove("hidden");}
 function closeAdmin(){adminOverlay.classList.add("hidden");}
-async function writePlatformStatus(name,available){if(!canAdmin()||!db){adminMessage.textContent="Administrator access or Firebase is unavailable.";return;}try{await db.doc(`${PLATFORM_STATUS_PATH}/${name}`).set({status:available?"ON":"OFF",updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${name==="launcher"?"Kalahari Alcora":"Kalahari Messages"} is now ${available?"ONLINE":"OFFLINE"}.`;}catch(err){console.error(err);adminMessage.textContent="Could not save the status. Check your Firebase Firestore permissions.";updateAdminControls();}}
+async function writePlatformStatus(name,available){if(!canAdmin()||!db){adminMessage.textContent="Administrator access or Firebase is unavailable.";return;}try{await db.doc(`${PLATFORM_STATUS_PATH}/${name}`).set({status:available?"ON":"OFF",updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${name==="launcher"?"Kalahari Launcher":"Kalahari Messages"} is now ${available?"ONLINE":"OFFLINE"}.`;}catch(err){console.error(err);adminMessage.textContent="Could not save the status. Check your Firebase Firestore permissions.";updateAdminControls();}}
+
+async function saveAnnouncement(active){
+  if(!canAdmin()||!db){if(announcementMessage)announcementMessage.textContent="Administrator access or Firebase is unavailable.";return;}
+  const titleEl=document.getElementById("announcementTitle"),
+        bodyEl=document.getElementById("announcementBody"),
+        dateEl=document.getElementById("announcementDate");
+  const title=(titleEl?.value||"").trim();
+  const body=(bodyEl?.value||"").trim();
+  const date=(dateEl?.value||"").trim();
+  if(active && !title && !body){
+    if(announcementMessage)announcementMessage.textContent="Add a title or message before publishing.";
+    const toggleEl=document.getElementById("announcementActiveToggle");
+    if(toggleEl)toggleEl.checked=false;
+    return;
+  }
+  try{
+    await db.doc(`${PLATFORM_STATUS_PATH}/announcement`).set({
+      active,
+      title,
+      body,
+      date,
+      updatedAt:firebase.firestore.FieldValue.serverTimestamp(),
+      updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",
+      updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"
+    },{merge:true});
+    if(announcementMessage)announcementMessage.textContent=active?"Announcement published.":"Announcement banner turned off.";
+  }catch(err){
+    console.error(err);
+    if(announcementMessage)announcementMessage.textContent="Could not save the announcement. Check your Firebase Firestore permissions.";
+    updateAnnouncementAdminStatus();
+  }
+}
 function renderAdminGameList(){const list=document.getElementById("adminGameList");if(!list)return;list.innerHTML="";games.forEach(game=>{const row=document.createElement("div");row.className="admin-game-row";const def=game.status==="IN PRODUCTION"?"IN PROGRESS":game.status;const current=gameStatuses[game.id]||def;row.innerHTML=`<div><div class="admin-game-name">${game.name}</div><span class="admin-game-default">Current: <span class="admin-status-pill">${current}</span></span></div><select class="admin-select" data-game-status="${game.id}"><option>AVAILABLE</option><option>MAINTENANCE</option><option>IN PROGRESS</option><option>COMING SOON</option></select>`;const select=row.querySelector("select");select.value=current;select.addEventListener("change",()=>setGameStatus(game,select.value));list.appendChild(row);});}
 async function setGameStatus(game,status){if(!canAdmin()||!db)return;const previous=gameStatuses[game.id]||(game.status==="IN PRODUCTION"?"IN PROGRESS":game.status);gameStatuses[game.id]=status;renderGames(search.value,gameFilter.value);renderAdminGameList();try{await db.collection("gameStatus").doc(game.id).set({gameName:game.name,status,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${game.name} is now ${status}.`;}catch(err){console.error(err);gameStatuses[game.id]=previous;renderGames(search.value,gameFilter.value);renderAdminGameList();adminMessage.textContent="Could not update that game's status. Check your Firebase permissions.";}}
-adminBtn.addEventListener("click",openAdmin);document.getElementById("closeAdmin").addEventListener("click",closeAdmin);adminOverlay.addEventListener("click",e=>{if(e.target===adminOverlay)closeAdmin();});document.getElementById("launcherStatusToggle").addEventListener("change",e=>writePlatformStatus("launcher",e.target.checked));document.getElementById("messagesStatusToggle").addEventListener("change",e=>writePlatformStatus("messages",e.target.checked));function submitAdminAccess(){if(!adminAccessPassword)return;if(adminAccessPassword.value===ADMIN_ACCESS_PASSWORD){adminAccessError.textContent="";adminAccessPassword.value="";adminOverride=true;updateAdminVisibility(auth?.currentUser);if(auth?.currentUser){showLauncher(auth.currentUser);}else{setLauncherScreen(launcherAvailable);}}else adminAccessError.textContent="Incorrect administrator password.";}if(adminAccessSubmit)adminAccessSubmit.addEventListener("click",submitAdminAccess);if(adminAccessPassword)adminAccessPassword.addEventListener("keydown",e=>{if(e.key==="Enter")submitAdminAccess();});
+adminBtn.addEventListener("click",openAdmin);document.getElementById("closeAdmin").addEventListener("click",closeAdmin);adminOverlay.addEventListener("click",e=>{if(e.target===adminOverlay)closeAdmin();});document.getElementById("launcherStatusToggle").addEventListener("change",e=>writePlatformStatus("launcher",e.target.checked));document.getElementById("messagesStatusToggle").addEventListener("change",e=>writePlatformStatus("messages",e.target.checked));document.getElementById("publishAnnouncement").addEventListener("click",()=>saveAnnouncement(true));document.getElementById("clearAnnouncement").addEventListener("click",()=>saveAnnouncement(false));document.getElementById("announcementActiveToggle").addEventListener("change",e=>saveAnnouncement(e.target.checked));function submitAdminAccess(){if(!adminAccessPassword)return;if(adminAccessPassword.value===ADMIN_ACCESS_PASSWORD){adminAccessError.textContent="";adminAccessPassword.value="";adminOverride=true;updateAdminVisibility(auth?.currentUser);if(auth?.currentUser){showLauncher(auth.currentUser);}else{setLauncherScreen(launcherAvailable);}}else adminAccessError.textContent="Incorrect administrator password.";}if(adminAccessSubmit)adminAccessSubmit.addEventListener("click",submitAdminAccess);if(adminAccessPassword)adminAccessPassword.addEventListener("keydown",e=>{if(e.key==="Enter")submitAdminAccess();});
 
 listenPlatformStatuses();
 

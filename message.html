@@ -2076,6 +2076,19 @@ function openGlobal(){
 
   listenMessages();
 
+  markGlobalRead();
+
+}
+
+
+function markGlobalRead(){
+
+  if(!db || !currentUser)return;
+
+  db.collection("users").doc(currentUser.uid).set({
+    lastReadGlobal: firebase.firestore.FieldValue.serverTimestamp()
+  }, { merge:true }).catch(err=>console.error("Mark global read error:",err));
+
 }
 
 
@@ -2098,6 +2111,19 @@ function openDm(convId,otherUid){
   renderChatHeader();
 
   listenMessages();
+
+  markDmRead(convId);
+
+}
+
+
+function markDmRead(convId){
+
+  if(!db || !currentUser)return;
+
+  db.collection("dms").doc(convId).set({
+    lastRead: { [currentUser.uid]: firebase.firestore.FieldValue.serverTimestamp() }
+  }, { merge:true }).catch(err=>console.error("Mark DM read error:",err));
 
 }
 

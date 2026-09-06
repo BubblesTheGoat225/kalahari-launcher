@@ -365,7 +365,22 @@ header{
   color:#111;
   font-size:13px;
   font-weight:900;
+  position:relative;
 }
+
+.unread-dot{
+  position:absolute;
+  top:-3px;
+  right:-3px;
+  width:11px;
+  height:11px;
+  border-radius:50%;
+  background:#ff4d4d;
+  border:2px solid var(--panel);
+  box-shadow:0 0 0 1px #ff4d4d55;
+}
+
+.unread-dot.hidden{display:none}
 
 main{
   width:min(1200px,100%);
@@ -2921,6 +2936,7 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
 
       <span class="messages-badge">
         ✉
+        <span id="messagesUnreadDot" class="unread-dot hidden"></span>
       </span>
 
       <span>
@@ -4681,6 +4697,8 @@ function showLogin(){
     null
   );
 
+  stopUnreadListeners();
+
 }
 
 
@@ -4729,6 +4747,80 @@ function showLauncher(user){
 
   updateGameList();
 
+  listenUnreadMessages(user.uid);
+
+}
+
+
+/* =========================================================
+   MESSAGE NOTIFICATIONS
+   A red dot on the Kalahari Messages button whenever there's
+   an unread global message or DM.
+========================================================= */
+
+let unreadUnsubs=[];
+let unreadState={global:false,dms:false};
+let lastReadGlobalTs=null;
+let latestGlobalMsgTs=null;
+
+function tsMillis(ts){
+  return (ts && typeof ts.toMillis==="function") ? ts.toMillis() : 0;
+}
+
+function updateUnreadDot(){
+  const dot=document.getElementById("messagesUnreadDot");
+  if(!dot)return;
+  dot.classList.toggle("hidden", !(unreadState.global || unreadState.dms));
+}
+
+function recomputeGlobalUnread(){
+  unreadState.global = tsMillis(latestGlobalMsgTs) > tsMillis(lastReadGlobalTs);
+  updateUnreadDot();
+}
+
+function listenUnreadMessages(uid){
+
+  stopUnreadListeners();
+
+  if(!db)return;
+
+  unreadUnsubs.push(
+    db.collection("users").doc(uid).onSnapshot(snap=>{
+      lastReadGlobalTs = snap.exists ? (snap.data().lastReadGlobal||null) : null;
+      recomputeGlobalUnread();
+    }, err=>console.error("Unread (profile) error:",err))
+  );
+
+  unreadUnsubs.push(
+    db.collection("globalMessages").orderBy("createdAt","desc").limit(1).onSnapshot(snap=>{
+      latestGlobalMsgTs = snap.empty ? null : snap.docs[0].data().createdAt;
+      recomputeGlobalUnread();
+    }, err=>console.error("Unread (global) error:",err))
+  );
+
+  unreadUnsubs.push(
+    db.collection("dms").where("participants","array-contains",uid).onSnapshot(snap=>{
+      let any=false;
+      snap.forEach(doc=>{
+        const data=doc.data();
+        const lastMsg=tsMillis(data.lastMessageAt);
+        const lastRead=tsMillis(data.lastRead && data.lastRead[uid]);
+        if(lastMsg>lastRead)any=true;
+      });
+      unreadState.dms=any;
+      updateUnreadDot();
+    }, err=>console.error("Unread (dms) error:",err))
+  );
+
+}
+
+function stopUnreadListeners(){
+  unreadUnsubs.forEach(u=>{ try{u();}catch(e){} });
+  unreadUnsubs=[];
+  unreadState={global:false,dms:false};
+  lastReadGlobalTs=null;
+  latestGlobalMsgTs=null;
+  updateUnreadDot();
 }
 
 

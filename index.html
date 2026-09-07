@@ -2842,12 +2842,7 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
         </div>
 
         <div class="admin-inline-access">
-          <label for="adminAccessPassword" class="admin-auth-note">Administrator access is available while the launcher is offline.</label>
-          <div class="admin-inline-row">
-            <input id="adminAccessPassword" type="password" autocomplete="off" placeholder="Administrator password">
-            <button class="admin-inline-btn" id="adminAccessSubmit" type="button">Enter</button>
-          </div>
-          <div class="error" id="adminAccessError"></div>
+          <div class="admin-auth-note">Administrator access is available to authorised Firebase administrator accounts while the launcher is offline.</div>
         </div>
 
       </div>
@@ -3327,10 +3322,9 @@ function syncUserProfile(user){
 
 const LAUNCHER_STATUS_DEFAULT="ON";
 const PLATFORM_STATUS_PATH="platformStatus";
-const ADMIN_ACCESS_PASSWORD="administrator";
 let launcherAvailable=true;
 let messagesAvailable=true;
-let adminOverride=false;
+let adminVerified=false;
 let launcherStatusUnsub=null;
 let messagesStatusUnsub=null;
 let gameStatusUnsub=null;
@@ -3601,7 +3595,7 @@ const modernFilterPills=
 /* =========================================================
    PLATFORM STATUS
 ========================================================= */
-function setLauncherScreen(on){launcherAvailable=!!on;if(launcherAvailable||adminOverride){normalLogin.classList.remove("hidden");launcherDownScreen.classList.add("hidden");}else{normalLogin.classList.add("hidden");launcherDownScreen.classList.remove("hidden");document.getElementById("launcherDownTitle").textContent=LAUNCHER_DOWN_TITLE;document.getElementById("launcherDownInfo").textContent=LAUNCHER_DOWN_INFO;document.getElementById("launcherDownDate").textContent=LAUNCHER_DOWN_DATE;}}
+function setLauncherScreen(on){launcherAvailable=!!on;if(launcherAvailable||adminVerified){normalLogin.classList.remove("hidden");launcherDownScreen.classList.add("hidden");}else{normalLogin.classList.add("hidden");launcherDownScreen.classList.remove("hidden");document.getElementById("launcherDownTitle").textContent=LAUNCHER_DOWN_TITLE;document.getElementById("launcherDownInfo").textContent=LAUNCHER_DOWN_INFO;document.getElementById("launcherDownDate").textContent=LAUNCHER_DOWN_DATE;}}
 function updateAdminControls(){const lt=document.getElementById("launcherStatusToggle"),mt=document.getElementById("messagesStatusToggle"),ls=document.getElementById("adminLauncherStatus"),ms=document.getElementById("adminMessagesStatus");if(lt)lt.checked=launcherAvailable;if(mt)mt.checked=messagesAvailable;if(ls){ls.textContent=launcherAvailable?"ONLINE":"OFFLINE";ls.style.color=launcherAvailable?"var(--success)":"#ff7272";}if(ms){ms.textContent=messagesAvailable?"ONLINE":"OFFLINE";ms.style.color=messagesAvailable?"var(--success)":"#ff7272";}}
 function listenPlatformStatuses(){if(!db){setLauncherScreen(false);return;}launcherStatusUnsub=db.doc(`${PLATFORM_STATUS_PATH}/launcher`).onSnapshot(snap=>{const status=String(snap.exists?(snap.data().status||LAUNCHER_STATUS_DEFAULT):LAUNCHER_STATUS_DEFAULT).toUpperCase();launcherAvailable=status==="ON";setLauncherScreen(launcherAvailable);updateAdminControls();},err=>{console.error("Launcher status error:",err);setLauncherScreen(false);});messagesStatusUnsub=db.doc(`${PLATFORM_STATUS_PATH}/messages`).onSnapshot(snap=>{const status=String(snap.exists?(snap.data().status||"ON"):"ON").toUpperCase();messagesAvailable=status==="ON";updateAdminControls();},err=>console.error("Messages status error:",err));gameStatusUnsub=db.collection("gameStatus").onSnapshot(snap=>{gameStatuses={};snap.forEach(doc=>{if(doc.exists&&doc.data().status)gameStatuses[doc.id]=String(doc.data().status).toUpperCase();});if(typeof renderGames==="function")renderGames(search.value,gameFilter.value);if(typeof renderAdminGameList==="function")renderAdminGameList();},err=>console.error("Game status error:",err));announcementUnsub=db.doc(`${PLATFORM_STATUS_PATH}/announcement`).onSnapshot(snap=>{const data=snap.exists?snap.data():{};currentAnnouncement={active:!!data.active,title:data.title||"",body:data.body||"",date:data.date||""};renderAnnouncement();updateAnnouncementAdminStatus();},err=>console.error("Announcement status error:",err));}
 
@@ -3986,7 +3980,7 @@ document.addEventListener(
        button.disabled)return;
 
 
-    if(!launcherAvailable && !adminOverride){
+    if(!launcherAvailable && !adminVerified){
 
       alert(
         "Kalahari Alcora is currently offline."
@@ -4634,13 +4628,38 @@ document.getElementById("openMessagesFromAbout")?.addEventListener("click",()=>{
    ADMIN
 ========================================================= */
 
-const adminBtn=document.getElementById("adminBtn"),adminOverlay=document.getElementById("adminOverlay"),adminMessage=document.getElementById("adminMessage"),adminAccessPassword=document.getElementById("adminAccessPassword"),adminAccessSubmit=document.getElementById("adminAccessSubmit"),adminAccessError=document.getElementById("adminAccessError"),announcementMessage=document.getElementById("announcementMessage");
-function isAdmin(user){return !!user&&(user.displayName||"").trim().toLowerCase()==="admin";}
-function canAdmin(){return adminOverride||isAdmin(auth?.currentUser);}
-function updateAdminVisibility(user){if(isAdmin(user)||adminOverride)adminBtn.classList.remove("hidden");else{adminBtn.classList.add("hidden");adminOverlay.classList.add("hidden");}}
-function openAdmin(){if(!canAdmin()){alert("ACCESS DENIED\n\nAdministrator access is restricted.");return;}document.getElementById("adminAccountName").textContent=isAdmin(auth?.currentUser)?(auth.currentUser.displayName||"admin"):"Administrator Access";renderAdminGameList();updateAdminControls();updateAnnouncementAdminStatus();const at=document.getElementById("announcementTitle"),ab=document.getElementById("announcementBody"),ad=document.getElementById("announcementDate");if(at)at.value=currentAnnouncement.title;if(ab)ab.value=currentAnnouncement.body;if(ad)ad.value=currentAnnouncement.date;if(announcementMessage)announcementMessage.textContent="";adminMessage.textContent="Administrator authentication verified.";adminOverlay.classList.remove("hidden");}
+const adminBtn=document.getElementById("adminBtn"),adminOverlay=document.getElementById("adminOverlay"),adminMessage=document.getElementById("adminMessage"),announcementMessage=document.getElementById("announcementMessage");
+async function refreshAdminClaim(user){
+  adminVerified=false;
+  if(!user||!auth)return false;
+  try{
+    const tokenResult=await user.getIdTokenResult(true);
+    adminVerified=tokenResult.claims.admin===true;
+  }catch(err){
+    console.error("Admin claim check failed:",err);
+    adminVerified=false;
+  }
+  updateAdminVisibility(user);
+  return adminVerified;
+}
+function isAdmin(user){return !!user && adminVerified;}
+function canAdmin(){return !!auth?.currentUser && adminVerified;}
+function updateAdminVisibility(user){
+  if(user&&adminVerified)adminBtn.classList.remove("hidden");
+  else{adminBtn.classList.add("hidden");adminOverlay.classList.add("hidden");}
+}
+function openAdmin(){
+  if(!canAdmin()){alert("ACCESS DENIED\n\nAdministrator access is restricted to authorised Firebase administrator accounts.");return;}
+  document.getElementById("adminAccountName").textContent=auth.currentUser.displayName||auth.currentUser.email||"Administrator";
+  renderAdminGameList();updateAdminControls();updateAnnouncementAdminStatus();
+  const at=document.getElementById("announcementTitle"),ab=document.getElementById("announcementBody"),ad=document.getElementById("announcementDate");
+  if(at)at.value=currentAnnouncement.title;if(ab)ab.value=currentAnnouncement.body;if(ad)ad.value=currentAnnouncement.date;
+  if(announcementMessage)announcementMessage.textContent="";
+  adminMessage.textContent="Administrator authentication verified by Firebase.";
+  adminOverlay.classList.remove("hidden");
+}
 function closeAdmin(){adminOverlay.classList.add("hidden");}
-async function writePlatformStatus(name,available){if(!canAdmin()||!db){adminMessage.textContent="Administrator access or Firebase is unavailable.";return;}try{await db.doc(`${PLATFORM_STATUS_PATH}/${name}`).set({status:available?"ON":"OFF",updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${name==="launcher"?"Kalahari Launcher":"Kalahari Messages"} is now ${available?"ONLINE":"OFFLINE"}.`;}catch(err){console.error(err);adminMessage.textContent="Could not save the status. Check your Firebase Firestore permissions.";updateAdminControls();}}
+async function writePlatformStatus(name,available){if(!canAdmin()||!db){adminMessage.textContent="Administrator access or Firebase is unavailable.";return;}try{await db.doc(`${PLATFORM_STATUS_PATH}/${name}`).set({status:available?"ON":"OFF",updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:null,updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:null},{merge:true});adminMessage.textContent=`${name==="launcher"?"Kalahari Launcher":"Kalahari Messages"} is now ${available?"ONLINE":"OFFLINE"}.`;}catch(err){console.error(err);adminMessage.textContent="Could not save the status. Check your Firebase Firestore permissions.";updateAdminControls();}}
 
 async function saveAnnouncement(active){
   if(!canAdmin()||!db){if(announcementMessage)announcementMessage.textContent="Administrator access or Firebase is unavailable.";return;}
@@ -4663,8 +4682,8 @@ async function saveAnnouncement(active){
       body,
       date,
       updatedAt:firebase.firestore.FieldValue.serverTimestamp(),
-      updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",
-      updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"
+      updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:null,
+      updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:null
     },{merge:true});
     if(announcementMessage)announcementMessage.textContent=active?"Announcement published.":"Announcement banner turned off.";
   }catch(err){
@@ -4674,8 +4693,8 @@ async function saveAnnouncement(active){
   }
 }
 function renderAdminGameList(){const list=document.getElementById("adminGameList");if(!list)return;list.innerHTML="";games.forEach(game=>{const row=document.createElement("div");row.className="admin-game-row";const def=game.status==="IN PRODUCTION"?"IN PROGRESS":game.status;const current=gameStatuses[game.id]||def;row.innerHTML=`<div><div class="admin-game-name">${game.name}</div><span class="admin-game-default">Current: <span class="admin-status-pill">${current}</span></span></div><select class="admin-select" data-game-status="${game.id}"><option>AVAILABLE</option><option>MAINTENANCE</option><option>IN PROGRESS</option><option>COMING SOON</option></select>`;const select=row.querySelector("select");select.value=current;select.addEventListener("change",()=>setGameStatus(game,select.value));list.appendChild(row);});}
-async function setGameStatus(game,status){if(!canAdmin()||!db)return;const previous=gameStatuses[game.id]||(game.status==="IN PRODUCTION"?"IN PROGRESS":game.status);gameStatuses[game.id]=status;renderGames(search.value,gameFilter.value);renderAdminGameList();try{await db.collection("gameStatus").doc(game.id).set({gameName:game.name,status,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${game.name} is now ${status}.`;}catch(err){console.error(err);gameStatuses[game.id]=previous;renderGames(search.value,gameFilter.value);renderAdminGameList();adminMessage.textContent="Could not update that game's status. Check your Firebase permissions.";}}
-adminBtn.addEventListener("click",openAdmin);document.getElementById("closeAdmin").addEventListener("click",closeAdmin);adminOverlay.addEventListener("click",e=>{if(e.target===adminOverlay)closeAdmin();});document.getElementById("launcherStatusToggle").addEventListener("change",e=>writePlatformStatus("launcher",e.target.checked));document.getElementById("messagesStatusToggle").addEventListener("change",e=>writePlatformStatus("messages",e.target.checked));document.getElementById("publishAnnouncement").addEventListener("click",()=>saveAnnouncement(true));document.getElementById("clearAnnouncement").addEventListener("click",()=>saveAnnouncement(false));document.getElementById("announcementActiveToggle").addEventListener("change",e=>saveAnnouncement(e.target.checked));function submitAdminAccess(){if(!adminAccessPassword)return;if(adminAccessPassword.value===ADMIN_ACCESS_PASSWORD){adminAccessError.textContent="";adminAccessPassword.value="";adminOverride=true;updateAdminVisibility(auth?.currentUser);if(auth?.currentUser){showLauncher(auth.currentUser);}else{setLauncherScreen(launcherAvailable);}}else adminAccessError.textContent="Incorrect administrator password.";}if(adminAccessSubmit)adminAccessSubmit.addEventListener("click",submitAdminAccess);if(adminAccessPassword)adminAccessPassword.addEventListener("keydown",e=>{if(e.key==="Enter")submitAdminAccess();});
+async function setGameStatus(game,status){if(!canAdmin()||!db)return;const previous=gameStatuses[game.id]||(game.status==="IN PRODUCTION"?"IN PROGRESS":game.status);gameStatuses[game.id]=status;renderGames(search.value,gameFilter.value);renderAdminGameList();try{await db.collection("gameStatus").doc(game.id).set({gameName:game.name,status,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:null,updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:null},{merge:true});adminMessage.textContent=`${game.name} is now ${status}.`;}catch(err){console.error(err);gameStatuses[game.id]=previous;renderGames(search.value,gameFilter.value);renderAdminGameList();adminMessage.textContent="Could not update that game's status. Check your Firebase permissions.";}}
+adminBtn.addEventListener("click",openAdmin);document.getElementById("closeAdmin").addEventListener("click",closeAdmin);adminOverlay.addEventListener("click",e=>{if(e.target===adminOverlay)closeAdmin();});document.getElementById("launcherStatusToggle").addEventListener("change",e=>writePlatformStatus("launcher",e.target.checked));document.getElementById("messagesStatusToggle").addEventListener("change",e=>writePlatformStatus("messages",e.target.checked));document.getElementById("publishAnnouncement").addEventListener("click",()=>saveAnnouncement(true));document.getElementById("clearAnnouncement").addEventListener("click",()=>saveAnnouncement(false));document.getElementById("announcementActiveToggle").addEventListener("change",e=>saveAnnouncement(e.target.checked));
 
 listenPlatformStatuses();
 
@@ -4684,6 +4703,8 @@ listenPlatformStatuses();
 ========================================================= */
 
 function showLogin(){
+
+  adminVerified=false;
 
   launcher.classList.add(
     "hidden"
@@ -4704,7 +4725,7 @@ function showLogin(){
 
 function showLauncher(user){
 
-  if(!launcherAvailable && !adminOverride){
+  if(!launcherAvailable && !adminVerified){
 
     showLogin();
 
@@ -4853,7 +4874,7 @@ document
       }
 
 
-      if(!launcherAvailable && !adminOverride)
+      if(!launcherAvailable && !adminVerified)
         return;
 
 
@@ -5002,7 +5023,7 @@ const guestBtn=document.getElementById("guestBtn");
 if(guestBtn) guestBtn.addEventListener("click",async()=>{
   errorBox.textContent=""; errorBox.style.color="#ff7272"; authStatus.textContent="";
   if(!auth){errorBox.textContent="Firebase authentication is unavailable.";return;}
-  if(!launcherAvailable && !adminOverride) return;
+  if(!launcherAvailable && !adminVerified) return;
   authStatus.textContent="Creating guest session...";
   guestBtn.disabled=true;
   try{
@@ -5047,7 +5068,7 @@ document
       }
 
 
-      if(!launcherAvailable && !adminOverride)
+      if(!launcherAvailable && !adminVerified)
         return;
 
 
@@ -5193,30 +5214,23 @@ if(auth){
 
   auth.onAuthStateChanged(
 
-    user=>{
+    async user=>{
 
-      if(
-        !launcherAvailable && !adminOverride
-      ){
+      adminVerified=false;
 
+      if(!user){
         showLogin();
-
         return;
-
       }
 
+      await refreshAdminClaim(user);
 
-      if(user){
-
-        showLauncher(
-          user
-        );
-
-      }else{
-
+      if(!launcherAvailable && !adminVerified){
         showLogin();
-
+        return;
       }
+
+      showLauncher(user);
 
     },
 

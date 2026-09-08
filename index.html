@@ -361,8 +361,21 @@ header{
   border-radius:8px;
   display:grid;
   place-items:center;
-  background:var(--accent);
+  background:#f5c542;
   color:#111;
+  font-size:13px;
+  font-weight:900;
+  position:relative;
+}
+
+.markhor-badge{
+  width:26px;
+  height:26px;
+  border-radius:8px;
+  display:grid;
+  place-items:center;
+  background:#a13446;
+  color:#fff;
   font-size:13px;
   font-weight:900;
   position:relative;
@@ -613,7 +626,7 @@ main{
 .admin-security-btn{width:100%}
 .admin-inline-btn{flex:none;border:0;border-radius:11px;background:var(--accent);color:#101010;font-weight:850;padding:12px 18px;font-size:12px;transition:.2s}
 .admin-inline-btn:hover{background:var(--accent2);transform:translateY(-1px)}
-.admin-control-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.admin-control-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
 .admin-control-card{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:15px}
 .admin-control-card h4{font-size:12px;margin-bottom:6px}
 .admin-control-card p{color:var(--muted);font-size:10px;line-height:1.5;margin-bottom:12px}
@@ -927,6 +940,11 @@ body.modern .messages-btn{
 }
 
 body.modern .messages-badge{
+  width:30px;
+  height:30px;
+}
+
+body.modern .markhor-badge{
   width:30px;
   height:30px;
 }
@@ -1713,6 +1731,13 @@ body.simple .messages-btn{
 }
 
 body.simple .messages-badge{
+  width:20px;
+  height:20px;
+  border-radius:5px;
+  font-size:9px;
+}
+
+body.simple .markhor-badge{
   width:20px;
   height:20px;
   border-radius:5px;
@@ -2588,6 +2613,10 @@ body.modern footer{
     margin:auto;
   }
 
+  body.modern .markhor-badge{
+    margin:auto;
+  }
+
   body.modern .logout{
     font-size:0;
   }
@@ -3026,6 +3055,21 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
 
     </a>
 
+    <a
+      href="https://BubblesTheGoat225.github.io/kalahari-launcher/markhor.html"
+      class="messages-btn"
+    >
+
+      <span class="markhor-badge">
+        📺
+      </span>
+
+      <span>
+        Kalahari Markhor
+      </span>
+
+    </a>
+
 
     <button
       class="header-btn"
@@ -3130,6 +3174,7 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
     <div class="admin-control-grid">
       <div class="admin-control-card"><h4>Launcher Access</h4><p>Turn Kalahari Alcora on or off for normal users. Administrator access remains available when offline.</p><div class="admin-switch-row"><strong id="adminLauncherStatus">Loading...</strong><label class="admin-switch"><input type="checkbox" id="launcherStatusToggle"><span class="admin-switch-track"></span></label></div></div>
       <div class="admin-control-card"><h4>Kalahari Messages</h4><p>Control whether Kalahari Messages is available. When OFF, Messages shows its loading screen before the unavailable notice.</p><div class="admin-switch-row"><strong id="adminMessagesStatus">Loading...</strong><label class="admin-switch"><input type="checkbox" id="messagesStatusToggle"><span class="admin-switch-track"></span></label></div></div>
+      <div class="admin-control-card"><h4>Kalahari Markhor</h4><p>Control whether Kalahari Markhor (Crews &amp; the Server Board) is available. When OFF, only you can still get in.</p><div class="admin-switch-row"><strong id="adminMarkhorStatus">Loading...</strong><label class="admin-switch"><input type="checkbox" id="markhorStatusToggle"><span class="admin-switch-track"></span></label></div></div>
     </div>
     <div class="admin-card">
       <h3>Announcement Banner</h3>
@@ -3445,9 +3490,11 @@ const PLATFORM_STATUS_PATH="platformStatus";
 const ADMIN_ACCESS_CODE=[102,105,114,110,115,110,120,121,119,102,121,116,119,54];function checkAdminAccessPassword(v){return v===String.fromCharCode(...ADMIN_ACCESS_CODE.map(c=>c-5));}
 let launcherAvailable=true;
 let messagesAvailable=true;
+let markhorAvailable=true;
 let adminOverride=false;
 let launcherStatusUnsub=null;
 let messagesStatusUnsub=null;
+let markhorStatusUnsub=null;
 let gameStatusUnsub=null;
 let announcementUnsub=null;
 let gameStatuses={};
@@ -3717,8 +3764,8 @@ const modernFilterPills=
    PLATFORM STATUS
 ========================================================= */
 function setLauncherScreen(on){launcherAvailable=!!on;if(launcherAvailable||adminOverride){normalLogin.classList.remove("hidden");launcherDownScreen.classList.add("hidden");}else{normalLogin.classList.add("hidden");launcherDownScreen.classList.remove("hidden");document.getElementById("launcherDownTitle").textContent=LAUNCHER_DOWN_TITLE;document.getElementById("launcherDownInfo").textContent=LAUNCHER_DOWN_INFO;document.getElementById("launcherDownDate").textContent=LAUNCHER_DOWN_DATE;}}
-function updateAdminControls(){const lt=document.getElementById("launcherStatusToggle"),mt=document.getElementById("messagesStatusToggle"),ls=document.getElementById("adminLauncherStatus"),ms=document.getElementById("adminMessagesStatus");if(lt)lt.checked=launcherAvailable;if(mt)mt.checked=messagesAvailable;if(ls){ls.textContent=launcherAvailable?"ONLINE":"OFFLINE";ls.style.color=launcherAvailable?"var(--success)":"#ff7272";}if(ms){ms.textContent=messagesAvailable?"ONLINE":"OFFLINE";ms.style.color=messagesAvailable?"var(--success)":"#ff7272";}}
-function listenPlatformStatuses(){if(!db){setLauncherScreen(false);return;}launcherStatusUnsub=db.doc(`${PLATFORM_STATUS_PATH}/launcher`).onSnapshot(snap=>{const status=String(snap.exists?(snap.data().status||LAUNCHER_STATUS_DEFAULT):LAUNCHER_STATUS_DEFAULT).toUpperCase();launcherAvailable=status==="ON";setLauncherScreen(launcherAvailable);updateAdminControls();},err=>{console.error("Launcher status error:",err);setLauncherScreen(false);});messagesStatusUnsub=db.doc(`${PLATFORM_STATUS_PATH}/messages`).onSnapshot(snap=>{const status=String(snap.exists?(snap.data().status||"ON"):"ON").toUpperCase();messagesAvailable=status==="ON";updateAdminControls();},err=>console.error("Messages status error:",err));gameStatusUnsub=db.collection("gameStatus").onSnapshot(snap=>{gameStatuses={};snap.forEach(doc=>{if(doc.exists&&doc.data().status)gameStatuses[doc.id]=String(doc.data().status).toUpperCase();});if(typeof renderGames==="function")renderGames(search.value,gameFilter.value);if(typeof renderAdminGameList==="function")renderAdminGameList();},err=>console.error("Game status error:",err));announcementUnsub=db.doc(`${PLATFORM_STATUS_PATH}/announcement`).onSnapshot(snap=>{const data=snap.exists?snap.data():{};currentAnnouncement={active:!!data.active,title:data.title||"",body:data.body||"",date:data.date||""};renderAnnouncement();updateAnnouncementAdminStatus();},err=>console.error("Announcement status error:",err));}
+function updateAdminControls(){const lt=document.getElementById("launcherStatusToggle"),mt=document.getElementById("messagesStatusToggle"),kt=document.getElementById("markhorStatusToggle"),ls=document.getElementById("adminLauncherStatus"),ms=document.getElementById("adminMessagesStatus"),ks=document.getElementById("adminMarkhorStatus");if(lt)lt.checked=launcherAvailable;if(mt)mt.checked=messagesAvailable;if(kt)kt.checked=markhorAvailable;if(ls){ls.textContent=launcherAvailable?"ONLINE":"OFFLINE";ls.style.color=launcherAvailable?"var(--success)":"#ff7272";}if(ms){ms.textContent=messagesAvailable?"ONLINE":"OFFLINE";ms.style.color=messagesAvailable?"var(--success)":"#ff7272";}if(ks){ks.textContent=markhorAvailable?"ONLINE":"OFFLINE";ks.style.color=markhorAvailable?"var(--success)":"#ff7272";}}
+function listenPlatformStatuses(){if(!db){setLauncherScreen(false);return;}launcherStatusUnsub=db.doc(`${PLATFORM_STATUS_PATH}/launcher`).onSnapshot(snap=>{const status=String(snap.exists?(snap.data().status||LAUNCHER_STATUS_DEFAULT):LAUNCHER_STATUS_DEFAULT).toUpperCase();launcherAvailable=status==="ON";setLauncherScreen(launcherAvailable);updateAdminControls();},err=>{console.error("Launcher status error:",err);setLauncherScreen(false);});messagesStatusUnsub=db.doc(`${PLATFORM_STATUS_PATH}/messages`).onSnapshot(snap=>{const status=String(snap.exists?(snap.data().status||"ON"):"ON").toUpperCase();messagesAvailable=status==="ON";updateAdminControls();},err=>console.error("Messages status error:",err));markhorStatusUnsub=db.doc(`${PLATFORM_STATUS_PATH}/markhor`).onSnapshot(snap=>{const status=String(snap.exists?(snap.data().status||"ON"):"ON").toUpperCase();markhorAvailable=status==="ON";updateAdminControls();},err=>console.error("Markhor status error:",err));gameStatusUnsub=db.collection("gameStatus").onSnapshot(snap=>{gameStatuses={};snap.forEach(doc=>{if(doc.exists&&doc.data().status)gameStatuses[doc.id]=String(doc.data().status).toUpperCase();});if(typeof renderGames==="function")renderGames(search.value,gameFilter.value);if(typeof renderAdminGameList==="function")renderAdminGameList();},err=>console.error("Game status error:",err));announcementUnsub=db.doc(`${PLATFORM_STATUS_PATH}/announcement`).onSnapshot(snap=>{const data=snap.exists?snap.data():{};currentAnnouncement={active:!!data.active,title:data.title||"",body:data.body||"",date:data.date||""};renderAnnouncement();updateAnnouncementAdminStatus();},err=>console.error("Announcement status error:",err));}
 
 /* =========================================================
    GAME RENDERING
@@ -5043,7 +5090,7 @@ function canAdmin(){return adminOverride||isAdmin(auth?.currentUser);}
 function updateAdminVisibility(user){if(isAdmin(user)||adminOverride)adminBtn.classList.remove("hidden");else{adminBtn.classList.add("hidden");adminOverlay.classList.add("hidden");}}
 function openAdmin(){if(!canAdmin()){alert("ACCESS DENIED\n\nAdministrator access is restricted.");return;}document.getElementById("adminAccountName").textContent=isAdmin(auth?.currentUser)?(auth.currentUser.displayName||"admin"):"Administrator Access";renderAdminGameList();updateAdminControls();updateAnnouncementAdminStatus();const at=document.getElementById("announcementTitle"),ab=document.getElementById("announcementBody"),ad=document.getElementById("announcementDate");if(at)at.value=currentAnnouncement.title;if(ab)ab.value=currentAnnouncement.body;if(ad)ad.value=currentAnnouncement.date;if(announcementMessage)announcementMessage.textContent="";adminMessage.textContent="Administrator authentication verified.";adminOverlay.classList.remove("hidden");}
 function closeAdmin(){adminOverlay.classList.add("hidden");}
-async function writePlatformStatus(name,available){if(!canAdmin()||!db){adminMessage.textContent="Administrator access or Firebase is unavailable.";return;}try{await db.doc(`${PLATFORM_STATUS_PATH}/${name}`).set({status:available?"ON":"OFF",updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${name==="launcher"?"Kalahari Launcher":"Kalahari Messages"} is now ${available?"ONLINE":"OFFLINE"}.`;}catch(err){console.error(err);adminMessage.textContent="Could not save the status. Check your Firebase Firestore permissions.";updateAdminControls();}}
+async function writePlatformStatus(name,available){if(!canAdmin()||!db){adminMessage.textContent="Administrator access or Firebase is unavailable.";return;}const labels={launcher:"Kalahari Launcher",messages:"Kalahari Messages",markhor:"Kalahari Markhor"};try{await db.doc(`${PLATFORM_STATUS_PATH}/${name}`).set({status:available?"ON":"OFF",updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${labels[name]||name} is now ${available?"ONLINE":"OFFLINE"}.`;}catch(err){console.error(err);adminMessage.textContent="Could not save the status. Check your Firebase Firestore permissions.";updateAdminControls();}}
 
 async function saveAnnouncement(active){
   if(!canAdmin()||!db){if(announcementMessage)announcementMessage.textContent="Administrator access or Firebase is unavailable.";return;}
@@ -5078,7 +5125,7 @@ async function saveAnnouncement(active){
 }
 function renderAdminGameList(){const list=document.getElementById("adminGameList");if(!list)return;list.innerHTML="";games.forEach(game=>{const row=document.createElement("div");row.className="admin-game-row";const def=game.status==="IN PRODUCTION"?"IN PROGRESS":game.status;const current=gameStatuses[game.id]||def;row.innerHTML=`<div><div class="admin-game-name">${game.name}</div><span class="admin-game-default">Current: <span class="admin-status-pill">${current}</span></span></div><select class="admin-select" data-game-status="${game.id}"><option>AVAILABLE</option><option>MAINTENANCE</option><option>IN PROGRESS</option><option>COMING SOON</option></select>`;const select=row.querySelector("select");select.value=current;select.addEventListener("change",()=>setGameStatus(game,select.value));list.appendChild(row);});}
 async function setGameStatus(game,status){if(!canAdmin()||!db)return;const previous=gameStatuses[game.id]||(game.status==="IN PRODUCTION"?"IN PROGRESS":game.status);gameStatuses[game.id]=status;renderGames(search.value,gameFilter.value);renderAdminGameList();try{await db.collection("gameStatus").doc(game.id).set({gameName:game.name,status,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${game.name} is now ${status}.`;}catch(err){console.error(err);gameStatuses[game.id]=previous;renderGames(search.value,gameFilter.value);renderAdminGameList();adminMessage.textContent="Could not update that game's status. Check your Firebase permissions.";}}
-adminBtn.addEventListener("click",openAdmin);document.getElementById("closeAdmin").addEventListener("click",closeAdmin);adminOverlay.addEventListener("click",e=>{if(e.target===adminOverlay)closeAdmin();});document.getElementById("launcherStatusToggle").addEventListener("change",e=>writePlatformStatus("launcher",e.target.checked));document.getElementById("messagesStatusToggle").addEventListener("change",e=>writePlatformStatus("messages",e.target.checked));document.getElementById("publishAnnouncement").addEventListener("click",()=>saveAnnouncement(true));document.getElementById("clearAnnouncement").addEventListener("click",()=>saveAnnouncement(false));document.getElementById("announcementActiveToggle").addEventListener("change",e=>saveAnnouncement(e.target.checked));document.getElementById("createPollBtn").addEventListener("click",createPoll);function grantAdminAccess(){adminOverride=true;updateAdminVisibility(auth?.currentUser);if(auth?.currentUser){showLauncher(auth.currentUser);}else{setLauncherScreen(launcherAvailable);}}
+adminBtn.addEventListener("click",openAdmin);document.getElementById("closeAdmin").addEventListener("click",closeAdmin);adminOverlay.addEventListener("click",e=>{if(e.target===adminOverlay)closeAdmin();});document.getElementById("launcherStatusToggle").addEventListener("change",e=>writePlatformStatus("launcher",e.target.checked));document.getElementById("messagesStatusToggle").addEventListener("change",e=>writePlatformStatus("messages",e.target.checked));document.getElementById("markhorStatusToggle").addEventListener("change",e=>writePlatformStatus("markhor",e.target.checked));document.getElementById("publishAnnouncement").addEventListener("click",()=>saveAnnouncement(true));document.getElementById("clearAnnouncement").addEventListener("click",()=>saveAnnouncement(false));document.getElementById("announcementActiveToggle").addEventListener("change",e=>saveAnnouncement(e.target.checked));document.getElementById("createPollBtn").addEventListener("click",createPoll);function grantAdminAccess(){adminOverride=true;updateAdminVisibility(auth?.currentUser);if(auth?.currentUser){showLauncher(auth.currentUser);}else{setLauncherScreen(launcherAvailable);}}
 function submitAdminAccess(){if(!adminAccessPassword)return;if(checkAdminAccessPassword(adminAccessPassword.value)){adminAccessError.textContent="";adminAccessPassword.value="";document.getElementById("adminAccessPassword").closest(".admin-inline-access").classList.add("hidden");document.getElementById("adminSecurityQuestion").classList.remove("hidden");}else adminAccessError.textContent="Incorrect administrator password.";}
 if(adminAccessSubmit)adminAccessSubmit.addEventListener("click",submitAdminAccess);if(adminAccessPassword)adminAccessPassword.addEventListener("keydown",e=>{if(e.key==="Enter")submitAdminAccess();});
 document.querySelectorAll(".admin-security-btn").forEach(btn=>{btn.addEventListener("click",()=>{const securityError=document.getElementById("adminSecurityError");if(btn.getAttribute("data-answer")==="penguin"){securityError.textContent="";document.getElementById("adminSecurityQuestion").classList.add("hidden");grantAdminAccess();}else{securityError.textContent="Incorrect answer. Try again.";}});});

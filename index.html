@@ -609,6 +609,8 @@ main{
 .admin-inline-row{display:flex;gap:8px}
 .admin-inline-row input{flex:1;min-width:0;padding:12px 13px;border-radius:11px;border:1px solid var(--border);background:var(--field);color:var(--text);outline:none;font-size:12px}
 .admin-inline-row input:focus{border-color:var(--accent);box-shadow:0 0 0 3px #2388e818}
+.admin-security-options{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.admin-security-btn{width:100%}
 .admin-inline-btn{flex:none;border:0;border-radius:11px;background:var(--accent);color:#101010;font-weight:850;padding:12px 18px;font-size:12px;transition:.2s}
 .admin-inline-btn:hover{background:var(--accent2);transform:translateY(-1px)}
 .admin-control-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
@@ -2899,7 +2901,7 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
           class="launcher-down-info"
           id="launcherDownInfo"
         >
-          Kalahari Alcora is currently unavailable due to ASTON hacking the Admin account.
+          Kalahari Alcora is currently unavailable.
         </p>
 
         <div
@@ -2916,6 +2918,17 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
             <button class="admin-inline-btn" id="adminAccessSubmit" type="button">Enter</button>
           </div>
           <div class="error" id="adminAccessError"></div>
+        </div>
+
+        <div class="admin-inline-access hidden" id="adminSecurityQuestion">
+          <label class="admin-auth-note">Security check: what is admin's favourite animal?</label>
+          <div class="admin-security-options">
+            <button class="admin-inline-btn admin-security-btn" type="button" data-answer="goat">Goat</button>
+            <button class="admin-inline-btn admin-security-btn" type="button" data-answer="penguin">Penguin</button>
+            <button class="admin-inline-btn admin-security-btn" type="button" data-answer="cow">Cow</button>
+            <button class="admin-inline-btn admin-security-btn" type="button" data-answer="garlic bread">Garlic Bread</button>
+          </div>
+          <div class="error" id="adminSecurityError"></div>
         </div>
 
       </div>
@@ -3186,10 +3199,10 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
 
 
     <a
-      href="https://BubblesTheGoat225.github.io/kalahari-launcher/markhor.html"
+      href="https://BubblesTheGoat225.github.io/kalahari-launcher/404.html"
       class="hero-btn"
     >
-      Kalahari Markhor (Placeholder)
+      Recent Announcements
     </a>
 
 
@@ -3429,7 +3442,7 @@ function syncUserProfile(user){
 
 const LAUNCHER_STATUS_DEFAULT="ON";
 const PLATFORM_STATUS_PATH="platformStatus";
-const ADMIN_ACCESS_PASSWORD="administrator1";
+const ADMIN_ACCESS_CODE=[102,105,114,110,115,110,120,121,119,102,121,116,119,54];function checkAdminAccessPassword(v){return v===String.fromCharCode(...ADMIN_ACCESS_CODE.map(c=>c-5));}
 let launcherAvailable=true;
 let messagesAvailable=true;
 let adminOverride=false;
@@ -3441,10 +3454,10 @@ let gameStatuses={};
 let currentAnnouncement={active:false,title:"",body:"",date:""};
 
 const LAUNCHER_DOWN_TITLE=
-  "Kalahari Alcora HACK BREACH;
+  "Kalahari Alcora Down";
 
 const LAUNCHER_DOWN_INFO=
-  "Kalahari Alcora, Kalahari Messages and Kalahari Markhor are currently unavailable due to the threat of Aston gaining control of the launcher and destroying it. Please check back later.";
+  "Kalahari Alcora & Kalahari Messages is currently unavailable while we perform maintenance. Please check back later.";
 
 const LAUNCHER_DOWN_DATE=
   "Status: Offline • Please check the Kalahari-Cheviot Industries announcements for updates.";
@@ -5065,7 +5078,10 @@ async function saveAnnouncement(active){
 }
 function renderAdminGameList(){const list=document.getElementById("adminGameList");if(!list)return;list.innerHTML="";games.forEach(game=>{const row=document.createElement("div");row.className="admin-game-row";const def=game.status==="IN PRODUCTION"?"IN PROGRESS":game.status;const current=gameStatuses[game.id]||def;row.innerHTML=`<div><div class="admin-game-name">${game.name}</div><span class="admin-game-default">Current: <span class="admin-status-pill">${current}</span></span></div><select class="admin-select" data-game-status="${game.id}"><option>AVAILABLE</option><option>MAINTENANCE</option><option>IN PROGRESS</option><option>COMING SOON</option></select>`;const select=row.querySelector("select");select.value=current;select.addEventListener("change",()=>setGameStatus(game,select.value));list.appendChild(row);});}
 async function setGameStatus(game,status){if(!canAdmin()||!db)return;const previous=gameStatuses[game.id]||(game.status==="IN PRODUCTION"?"IN PROGRESS":game.status);gameStatuses[game.id]=status;renderGames(search.value,gameFilter.value);renderAdminGameList();try{await db.collection("gameStatus").doc(game.id).set({gameName:game.name,status,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${game.name} is now ${status}.`;}catch(err){console.error(err);gameStatuses[game.id]=previous;renderGames(search.value,gameFilter.value);renderAdminGameList();adminMessage.textContent="Could not update that game's status. Check your Firebase permissions.";}}
-adminBtn.addEventListener("click",openAdmin);document.getElementById("closeAdmin").addEventListener("click",closeAdmin);adminOverlay.addEventListener("click",e=>{if(e.target===adminOverlay)closeAdmin();});document.getElementById("launcherStatusToggle").addEventListener("change",e=>writePlatformStatus("launcher",e.target.checked));document.getElementById("messagesStatusToggle").addEventListener("change",e=>writePlatformStatus("messages",e.target.checked));document.getElementById("publishAnnouncement").addEventListener("click",()=>saveAnnouncement(true));document.getElementById("clearAnnouncement").addEventListener("click",()=>saveAnnouncement(false));document.getElementById("announcementActiveToggle").addEventListener("change",e=>saveAnnouncement(e.target.checked));document.getElementById("createPollBtn").addEventListener("click",createPoll);function submitAdminAccess(){if(!adminAccessPassword)return;if(adminAccessPassword.value===ADMIN_ACCESS_PASSWORD){adminAccessError.textContent="";adminAccessPassword.value="";adminOverride=true;updateAdminVisibility(auth?.currentUser);if(auth?.currentUser){showLauncher(auth.currentUser);}else{setLauncherScreen(launcherAvailable);}}else adminAccessError.textContent="Incorrect administrator password.";}if(adminAccessSubmit)adminAccessSubmit.addEventListener("click",submitAdminAccess);if(adminAccessPassword)adminAccessPassword.addEventListener("keydown",e=>{if(e.key==="Enter")submitAdminAccess();});
+adminBtn.addEventListener("click",openAdmin);document.getElementById("closeAdmin").addEventListener("click",closeAdmin);adminOverlay.addEventListener("click",e=>{if(e.target===adminOverlay)closeAdmin();});document.getElementById("launcherStatusToggle").addEventListener("change",e=>writePlatformStatus("launcher",e.target.checked));document.getElementById("messagesStatusToggle").addEventListener("change",e=>writePlatformStatus("messages",e.target.checked));document.getElementById("publishAnnouncement").addEventListener("click",()=>saveAnnouncement(true));document.getElementById("clearAnnouncement").addEventListener("click",()=>saveAnnouncement(false));document.getElementById("announcementActiveToggle").addEventListener("change",e=>saveAnnouncement(e.target.checked));document.getElementById("createPollBtn").addEventListener("click",createPoll);function grantAdminAccess(){adminOverride=true;updateAdminVisibility(auth?.currentUser);if(auth?.currentUser){showLauncher(auth.currentUser);}else{setLauncherScreen(launcherAvailable);}}
+function submitAdminAccess(){if(!adminAccessPassword)return;if(checkAdminAccessPassword(adminAccessPassword.value)){adminAccessError.textContent="";adminAccessPassword.value="";document.getElementById("adminAccessPassword").closest(".admin-inline-access").classList.add("hidden");document.getElementById("adminSecurityQuestion").classList.remove("hidden");}else adminAccessError.textContent="Incorrect administrator password.";}
+if(adminAccessSubmit)adminAccessSubmit.addEventListener("click",submitAdminAccess);if(adminAccessPassword)adminAccessPassword.addEventListener("keydown",e=>{if(e.key==="Enter")submitAdminAccess();});
+document.querySelectorAll(".admin-security-btn").forEach(btn=>{btn.addEventListener("click",()=>{const securityError=document.getElementById("adminSecurityError");if(btn.getAttribute("data-answer")==="penguin"){securityError.textContent="";document.getElementById("adminSecurityQuestion").classList.add("hidden");grantAdminAccess();}else{securityError.textContent="Incorrect answer. Try again.";}});});
 
 listenPlatformStatuses();
 

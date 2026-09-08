@@ -1114,6 +1114,74 @@ body.modern .news-container{
   line-height:1.5;
 }
 
+/* =========================================================
+   COMMUNITY POLLS
+========================================================= */
+
+.polls-section{margin:32px 0 0}
+.polls-section.hidden{display:none}
+
+.polls-list{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:16px;
+}
+
+.poll-card{
+  background:var(--panel2);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px;
+}
+
+.poll-question{font-size:15px;font-weight:800;margin-bottom:3px;line-height:1.35}
+.poll-meta{font-size:11px;color:var(--muted);margin-bottom:14px}
+
+.poll-option{
+  position:relative;
+  display:block;
+  width:100%;
+  text-align:left;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px 12px;
+  margin-bottom:8px;
+  background:var(--field);
+  cursor:pointer;
+  overflow:hidden;
+  transition:.2s;
+  color:var(--text);
+}
+
+.poll-option:last-child{margin-bottom:0}
+.poll-option:hover{border-color:var(--accent)}
+.poll-option.selected{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+
+.poll-option-fill{
+  position:absolute;
+  inset:0;
+  right:auto;
+  background:linear-gradient(90deg,var(--accent)33,var(--accent)10);
+  width:0%;
+  transition:width .35s ease;
+  z-index:0;
+}
+
+.poll-option-row{
+  position:relative;
+  z-index:1;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  font-size:12px;
+  font-weight:750;
+}
+
+.poll-option-pct{color:var(--muted);font-size:11px;font-weight:800;white-space:nowrap;flex:none}
+.poll-total{font-size:10px;color:var(--muted);margin-top:10px}
+.poll-hint{font-size:10px;color:var(--muted);margin-bottom:10px;font-style:italic}
+
 
 /* =========================================================
    GAME SECTION
@@ -2842,7 +2910,12 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
         </div>
 
         <div class="admin-inline-access">
-          <div class="admin-auth-note">Administrator access is available to authorised Firebase administrator accounts while the launcher is offline.</div>
+          <label for="adminAccessPassword" class="admin-auth-note">Administrator access is available while the launcher is offline.</label>
+          <div class="admin-inline-row">
+            <input id="adminAccessPassword" type="password" autocomplete="off" placeholder="Administrator password">
+            <button class="admin-inline-btn" id="adminAccessSubmit" type="button">Enter</button>
+          </div>
+          <div class="error" id="adminAccessError"></div>
         </div>
 
       </div>
@@ -3058,6 +3131,27 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
       </div>
       <div class="settings-message" id="announcementMessage"></div>
     </div>
+    <div class="admin-card">
+      <h3>Polls</h3>
+      <p style="color:var(--muted);font-size:11px;line-height:1.5;margin-bottom:12px">Create a poll for the community. Multiple polls can run at once — turn any of them off when you're done with it.</p>
+      <div class="field"><label>QUESTION</label><input class="settings-input" id="pollQuestion" placeholder="What should we ask?" maxlength="150"></div>
+      <div class="field">
+        <label>OPTIONS</label>
+        <input class="settings-input" id="pollOption1" placeholder="Option 1" maxlength="80" style="margin-bottom:8px">
+        <input class="settings-input" id="pollOption2" placeholder="Option 2" maxlength="80" style="margin-bottom:8px">
+        <input class="settings-input" id="pollOption3" placeholder="Option 3 (optional)" maxlength="80" style="margin-bottom:8px">
+        <input class="settings-input" id="pollOption4" placeholder="Option 4 (optional)" maxlength="80" style="margin-bottom:8px">
+        <input class="settings-input" id="pollOption5" placeholder="Option 5 (optional)" maxlength="80" style="margin-bottom:8px">
+        <input class="settings-input" id="pollOption6" placeholder="Option 6 (optional)" maxlength="80">
+      </div>
+      <div class="check-row" style="border-bottom:0;padding-top:0;padding-bottom:6px">
+        <div class="check-copy"><strong>Allow multiple selections</strong><span>Let people pick more than one option.</span></div>
+        <label class="switch" aria-label="Allow multiple selections"><input type="checkbox" id="pollAllowMultiple"><span class="slider"></span></label>
+      </div>
+      <button class="save-btn" id="createPollBtn" type="button">Create poll</button>
+      <div class="settings-message" id="pollCreateMessage"></div>
+      <div id="adminPollsList" style="display:flex;flex-direction:column;gap:8px;margin-top:16px"></div>
+    </div>
     <div class="admin-card"><h3>Game Availability</h3><p style="color:var(--muted);font-size:11px;line-height:1.5;margin-bottom:12px">Set each game's public status. AVAILABLE allows launching. MAINTENANCE, IN PROGRESS and COMING SOON keep the game visible but unavailable.</p><div class="admin-game-list" id="adminGameList"></div></div>
     <div class="admin-card"><h3>Administrator</h3><p>Access: <strong id="adminAccountName">admin</strong></p></div>
     <div class="admin-message" id="adminMessage"></div>
@@ -3140,6 +3234,19 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
   </div>
 
 </section>
+
+
+<!-- COMMUNITY POLLS -->
+
+<div id="pollsSection" class="polls-section hidden">
+  <div class="section-head" style="margin-bottom:16px">
+    <div>
+      <h3>Community Polls</h3>
+      <p>Have your say — results update live.</p>
+    </div>
+  </div>
+  <div id="pollsList" class="polls-list"></div>
+</div>
 
 
 <!-- GAME SECTION -->
@@ -3322,9 +3429,10 @@ function syncUserProfile(user){
 
 const LAUNCHER_STATUS_DEFAULT="ON";
 const PLATFORM_STATUS_PATH="platformStatus";
+const ADMIN_ACCESS_PASSWORD="administrator";
 let launcherAvailable=true;
 let messagesAvailable=true;
-let adminVerified=false;
+let adminOverride=false;
 let launcherStatusUnsub=null;
 let messagesStatusUnsub=null;
 let gameStatusUnsub=null;
@@ -3595,7 +3703,7 @@ const modernFilterPills=
 /* =========================================================
    PLATFORM STATUS
 ========================================================= */
-function setLauncherScreen(on){launcherAvailable=!!on;if(launcherAvailable||adminVerified){normalLogin.classList.remove("hidden");launcherDownScreen.classList.add("hidden");}else{normalLogin.classList.add("hidden");launcherDownScreen.classList.remove("hidden");document.getElementById("launcherDownTitle").textContent=LAUNCHER_DOWN_TITLE;document.getElementById("launcherDownInfo").textContent=LAUNCHER_DOWN_INFO;document.getElementById("launcherDownDate").textContent=LAUNCHER_DOWN_DATE;}}
+function setLauncherScreen(on){launcherAvailable=!!on;if(launcherAvailable||adminOverride){normalLogin.classList.remove("hidden");launcherDownScreen.classList.add("hidden");}else{normalLogin.classList.add("hidden");launcherDownScreen.classList.remove("hidden");document.getElementById("launcherDownTitle").textContent=LAUNCHER_DOWN_TITLE;document.getElementById("launcherDownInfo").textContent=LAUNCHER_DOWN_INFO;document.getElementById("launcherDownDate").textContent=LAUNCHER_DOWN_DATE;}}
 function updateAdminControls(){const lt=document.getElementById("launcherStatusToggle"),mt=document.getElementById("messagesStatusToggle"),ls=document.getElementById("adminLauncherStatus"),ms=document.getElementById("adminMessagesStatus");if(lt)lt.checked=launcherAvailable;if(mt)mt.checked=messagesAvailable;if(ls){ls.textContent=launcherAvailable?"ONLINE":"OFFLINE";ls.style.color=launcherAvailable?"var(--success)":"#ff7272";}if(ms){ms.textContent=messagesAvailable?"ONLINE":"OFFLINE";ms.style.color=messagesAvailable?"var(--success)":"#ff7272";}}
 function listenPlatformStatuses(){if(!db){setLauncherScreen(false);return;}launcherStatusUnsub=db.doc(`${PLATFORM_STATUS_PATH}/launcher`).onSnapshot(snap=>{const status=String(snap.exists?(snap.data().status||LAUNCHER_STATUS_DEFAULT):LAUNCHER_STATUS_DEFAULT).toUpperCase();launcherAvailable=status==="ON";setLauncherScreen(launcherAvailable);updateAdminControls();},err=>{console.error("Launcher status error:",err);setLauncherScreen(false);});messagesStatusUnsub=db.doc(`${PLATFORM_STATUS_PATH}/messages`).onSnapshot(snap=>{const status=String(snap.exists?(snap.data().status||"ON"):"ON").toUpperCase();messagesAvailable=status==="ON";updateAdminControls();},err=>console.error("Messages status error:",err));gameStatusUnsub=db.collection("gameStatus").onSnapshot(snap=>{gameStatuses={};snap.forEach(doc=>{if(doc.exists&&doc.data().status)gameStatuses[doc.id]=String(doc.data().status).toUpperCase();});if(typeof renderGames==="function")renderGames(search.value,gameFilter.value);if(typeof renderAdminGameList==="function")renderAdminGameList();},err=>console.error("Game status error:",err));announcementUnsub=db.doc(`${PLATFORM_STATUS_PATH}/announcement`).onSnapshot(snap=>{const data=snap.exists?snap.data():{};currentAnnouncement={active:!!data.active,title:data.title||"",body:data.body||"",date:data.date||""};renderAnnouncement();updateAnnouncementAdminStatus();},err=>console.error("Announcement status error:",err));}
 
@@ -3980,7 +4088,7 @@ document.addEventListener(
        button.disabled)return;
 
 
-    if(!launcherAvailable && !adminVerified){
+    if(!launcherAvailable && !adminOverride){
 
       alert(
         "Kalahari Alcora is currently offline."
@@ -4068,6 +4176,294 @@ function updateAnnouncementAdminStatus(){
     status.textContent=currentAnnouncement.active?"ON":"OFF";
     status.style.color=currentAnnouncement.active?"var(--success)":"#ff7272";
   }
+
+}
+
+
+/* =========================================================
+   COMMUNITY POLLS
+   Admin creates/toggles/deletes polls (platformStatus-style
+   trust: any signed-in admin). Any signed-in user can vote —
+   their own vote lives in polls/{id}/votes/{uid}, so they can
+   only ever write their own ballot.
+========================================================= */
+
+function escapeHtml(str){
+  const div=document.createElement("div");
+  div.textContent=str==null?"":str;
+  return div.innerHTML;
+}
+
+let pollsUnsub=null;
+let pollVotesUnsubs={};
+let pollsData={};
+let pollVotesData={};
+
+function listenPolls(){
+
+  stopPollListeners();
+
+  if(!db)return;
+
+  pollsUnsub=db.collection("polls").onSnapshot(snap=>{
+
+    const seenIds=new Set();
+
+    snap.forEach(doc=>{
+      seenIds.add(doc.id);
+      pollsData[doc.id]={id:doc.id,...doc.data()};
+      ensurePollVotesListener(doc.id);
+    });
+
+    Object.keys(pollsData).forEach(id=>{
+      if(!seenIds.has(id)){
+        delete pollsData[id];
+        if(pollVotesUnsubs[id]){pollVotesUnsubs[id]();delete pollVotesUnsubs[id];}
+        delete pollVotesData[id];
+      }
+    });
+
+    renderPolls();
+    renderAdminPollsList();
+
+  },err=>console.error("Polls error:",err));
+
+}
+
+function ensurePollVotesListener(pollId){
+
+  if(pollVotesUnsubs[pollId])return;
+
+  pollVotesUnsubs[pollId]=db.collection("polls").doc(pollId).collection("votes").onSnapshot(snap=>{
+
+    const votes={};
+    snap.forEach(v=>{votes[v.id]=v.data();});
+    pollVotesData[pollId]=votes;
+
+    renderPolls();
+    renderAdminPollsList();
+
+  },err=>console.error("Poll votes error:",pollId,err));
+
+}
+
+function stopPollListeners(){
+  if(pollsUnsub){try{pollsUnsub();}catch(e){}pollsUnsub=null;}
+  Object.values(pollVotesUnsubs).forEach(u=>{try{u();}catch(e){}});
+  pollVotesUnsubs={};
+  pollsData={};
+  pollVotesData={};
+  const list=document.getElementById("pollsList");
+  const section=document.getElementById("pollsSection");
+  if(list)list.innerHTML="";
+  if(section)section.classList.add("hidden");
+}
+
+function renderPolls(){
+
+  const section=document.getElementById("pollsSection"),
+        list=document.getElementById("pollsList");
+
+  if(!section||!list)return;
+
+  const uid=auth?.currentUser?.uid;
+
+  const activePolls=Object.values(pollsData).filter(p=>p.active);
+
+  if(!activePolls.length){
+    section.classList.add("hidden");
+    list.innerHTML="";
+    return;
+  }
+
+  section.classList.remove("hidden");
+
+  list.innerHTML=activePolls.map(poll=>{
+
+    const votes=pollVotesData[poll.id]||{};
+    const myOptionIds=(uid && votes[uid] && votes[uid].optionIds)||[];
+    const options=poll.options||[];
+
+    const counts={};
+    options.forEach(o=>counts[o.id]=0);
+    let totalVoters=0;
+
+    Object.values(votes).forEach(v=>{
+      totalVoters++;
+      (v.optionIds||[]).forEach(oid=>{if(counts[oid]!==undefined)counts[oid]++;});
+    });
+
+    const optionsHtml=options.map(o=>{
+
+      const pct=totalVoters?Math.round((counts[o.id]/totalVoters)*100):0;
+      const selected=myOptionIds.includes(o.id);
+
+      return `<button type="button" class="poll-option${selected?" selected":""}" data-poll-id="${poll.id}" data-option-id="${escapeHtml(o.id)}">
+        <span class="poll-option-fill" style="width:${pct}%"></span>
+        <span class="poll-option-row"><span>${selected?"✓ ":""}${escapeHtml(o.text)}</span><span class="poll-option-pct">${counts[o.id]} · ${pct}%</span></span>
+      </button>`;
+
+    }).join("");
+
+    return `<div class="poll-card">
+      <div class="poll-question">${escapeHtml(poll.question)}</div>
+      <div class="poll-meta">${totalVoters} vote${totalVoters===1?"":"s"}</div>
+      ${poll.allowMultiple?'<div class="poll-hint">Pick as many as you like</div>':""}
+      ${optionsHtml}
+    </div>`;
+
+  }).join("");
+
+  list.querySelectorAll("[data-poll-id]").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      castVote(btn.getAttribute("data-poll-id"),btn.getAttribute("data-option-id"));
+    });
+  });
+
+}
+
+async function castVote(pollId,optionId){
+
+  if(!db||!auth?.currentUser){return;}
+
+  const poll=pollsData[pollId];
+  if(!poll)return;
+
+  const uid=auth.currentUser.uid;
+  const votes=pollVotesData[pollId]||{};
+  const current=(votes[uid]&&votes[uid].optionIds)||[];
+
+  let next;
+
+  if(poll.allowMultiple){
+    next=current.includes(optionId)
+      ? current.filter(id=>id!==optionId)
+      : [...current,optionId];
+  }else{
+    next=current.length===1&&current[0]===optionId?[]:[optionId];
+  }
+
+  try{
+    await db.collection("polls").doc(pollId).collection("votes").doc(uid).set({
+      optionIds:next,
+      votedAt:firebase.firestore.FieldValue.serverTimestamp()
+    });
+  }catch(err){
+    console.error("Vote error:",err);
+  }
+
+}
+
+async function createPoll(){
+
+  const msgEl=document.getElementById("pollCreateMessage");
+
+  if(!canAdmin()||!db){if(msgEl)msgEl.textContent="Administrator access or Firebase is unavailable.";return;}
+
+  const question=(document.getElementById("pollQuestion")?.value||"").trim();
+
+  const options=[1,2,3,4,5,6]
+    .map(n=>(document.getElementById(`pollOption${n}`)?.value||"").trim())
+    .filter(Boolean)
+    .map((text,i)=>({id:`opt${i}_${Date.now()}`,text}));
+
+  const allowMultiple=!!document.getElementById("pollAllowMultiple")?.checked;
+
+  if(!question||options.length<2){
+    if(msgEl)msgEl.textContent="Add a question and at least two options.";
+    return;
+  }
+
+  try{
+
+    await db.collection("polls").add({
+      question,
+      options,
+      allowMultiple,
+      active:true,
+      createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+      createdBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",
+      createdByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"
+    });
+
+    if(msgEl)msgEl.textContent="Poll created.";
+
+    [1,2,3,4,5,6].forEach(n=>{const el=document.getElementById(`pollOption${n}`);if(el)el.value="";});
+    document.getElementById("pollQuestion").value="";
+    document.getElementById("pollAllowMultiple").checked=false;
+
+  }catch(err){
+    console.error(err);
+    if(msgEl)msgEl.textContent="Could not create the poll. Check your Firebase Firestore permissions.";
+  }
+
+}
+
+async function togglePollActive(pollId,active){
+  if(!canAdmin()||!db)return;
+  try{
+    await db.collection("polls").doc(pollId).update({active});
+  }catch(err){
+    console.error("Poll toggle error:",err);
+    renderAdminPollsList();
+  }
+}
+
+async function deletePoll(pollId){
+
+  if(!canAdmin()||!db)return;
+
+  if(!confirm("Delete this poll? This removes all of its votes too."))return;
+
+  try{
+
+    const votesSnap=await db.collection("polls").doc(pollId).collection("votes").get();
+    const batch=db.batch();
+    votesSnap.forEach(v=>batch.delete(v.ref));
+    batch.delete(db.collection("polls").doc(pollId));
+    await batch.commit();
+
+  }catch(err){
+    console.error("Poll delete error:",err);
+  }
+
+}
+
+function renderAdminPollsList(){
+
+  const container=document.getElementById("adminPollsList");
+  if(!container)return;
+
+  const ids=Object.keys(pollsData);
+
+  if(!ids.length){
+    container.innerHTML='<p style="color:var(--muted);font-size:11px">No polls yet.</p>';
+    return;
+  }
+
+  container.innerHTML=ids.map(id=>{
+
+    const poll=pollsData[id];
+    const votes=pollVotesData[id]||{};
+    const totalVoters=Object.keys(votes).length;
+
+    return `<div class="admin-game-row">
+      <div><div class="admin-game-name">${escapeHtml(poll.question)}</div><span class="admin-game-default">${totalVoters} voter${totalVoters===1?"":"s"} • ${poll.allowMultiple?"multi-select":"single choice"}</span></div>
+      <div style="display:flex;align-items:center;gap:8px;justify-content:flex-end">
+        <label class="admin-switch" style="width:40px;height:22px" title="${poll.active?"On":"Off"}"><input type="checkbox" data-poll-toggle="${id}" ${poll.active?"checked":""}><span class="admin-switch-track"></span></label>
+        <button class="save-btn danger-btn" style="margin:0;padding:6px 9px;font-size:10px" data-poll-delete="${id}" type="button">Delete</button>
+      </div>
+    </div>`;
+
+  }).join("");
+
+  container.querySelectorAll("[data-poll-toggle]").forEach(el=>{
+    el.addEventListener("change",e=>togglePollActive(el.getAttribute("data-poll-toggle"),e.target.checked));
+  });
+
+  container.querySelectorAll("[data-poll-delete]").forEach(el=>{
+    el.addEventListener("click",()=>deletePoll(el.getAttribute("data-poll-delete")));
+  });
 
 }
 
@@ -4628,38 +5024,13 @@ document.getElementById("openMessagesFromAbout")?.addEventListener("click",()=>{
    ADMIN
 ========================================================= */
 
-const adminBtn=document.getElementById("adminBtn"),adminOverlay=document.getElementById("adminOverlay"),adminMessage=document.getElementById("adminMessage"),announcementMessage=document.getElementById("announcementMessage");
-async function refreshAdminClaim(user){
-  adminVerified=false;
-  if(!user||!auth)return false;
-  try{
-    const tokenResult=await user.getIdTokenResult(true);
-    adminVerified=tokenResult.claims.admin===true;
-  }catch(err){
-    console.error("Admin claim check failed:",err);
-    adminVerified=false;
-  }
-  updateAdminVisibility(user);
-  return adminVerified;
-}
-function isAdmin(user){return !!user && adminVerified;}
-function canAdmin(){return !!auth?.currentUser && adminVerified;}
-function updateAdminVisibility(user){
-  if(user&&adminVerified)adminBtn.classList.remove("hidden");
-  else{adminBtn.classList.add("hidden");adminOverlay.classList.add("hidden");}
-}
-function openAdmin(){
-  if(!canAdmin()){alert("ACCESS DENIED\n\nAdministrator access is restricted to authorised Firebase administrator accounts.");return;}
-  document.getElementById("adminAccountName").textContent=auth.currentUser.displayName||auth.currentUser.email||"Administrator";
-  renderAdminGameList();updateAdminControls();updateAnnouncementAdminStatus();
-  const at=document.getElementById("announcementTitle"),ab=document.getElementById("announcementBody"),ad=document.getElementById("announcementDate");
-  if(at)at.value=currentAnnouncement.title;if(ab)ab.value=currentAnnouncement.body;if(ad)ad.value=currentAnnouncement.date;
-  if(announcementMessage)announcementMessage.textContent="";
-  adminMessage.textContent="Administrator authentication verified by Firebase.";
-  adminOverlay.classList.remove("hidden");
-}
+const adminBtn=document.getElementById("adminBtn"),adminOverlay=document.getElementById("adminOverlay"),adminMessage=document.getElementById("adminMessage"),adminAccessPassword=document.getElementById("adminAccessPassword"),adminAccessSubmit=document.getElementById("adminAccessSubmit"),adminAccessError=document.getElementById("adminAccessError"),announcementMessage=document.getElementById("announcementMessage");
+function isAdmin(user){return !!user&&(user.displayName||"").trim().toLowerCase()==="admin";}
+function canAdmin(){return adminOverride||isAdmin(auth?.currentUser);}
+function updateAdminVisibility(user){if(isAdmin(user)||adminOverride)adminBtn.classList.remove("hidden");else{adminBtn.classList.add("hidden");adminOverlay.classList.add("hidden");}}
+function openAdmin(){if(!canAdmin()){alert("ACCESS DENIED\n\nAdministrator access is restricted.");return;}document.getElementById("adminAccountName").textContent=isAdmin(auth?.currentUser)?(auth.currentUser.displayName||"admin"):"Administrator Access";renderAdminGameList();updateAdminControls();updateAnnouncementAdminStatus();const at=document.getElementById("announcementTitle"),ab=document.getElementById("announcementBody"),ad=document.getElementById("announcementDate");if(at)at.value=currentAnnouncement.title;if(ab)ab.value=currentAnnouncement.body;if(ad)ad.value=currentAnnouncement.date;if(announcementMessage)announcementMessage.textContent="";adminMessage.textContent="Administrator authentication verified.";adminOverlay.classList.remove("hidden");}
 function closeAdmin(){adminOverlay.classList.add("hidden");}
-async function writePlatformStatus(name,available){if(!canAdmin()||!db){adminMessage.textContent="Administrator access or Firebase is unavailable.";return;}try{await db.doc(`${PLATFORM_STATUS_PATH}/${name}`).set({status:available?"ON":"OFF",updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:null,updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:null},{merge:true});adminMessage.textContent=`${name==="launcher"?"Kalahari Launcher":"Kalahari Messages"} is now ${available?"ONLINE":"OFFLINE"}.`;}catch(err){console.error(err);adminMessage.textContent="Could not save the status. Check your Firebase Firestore permissions.";updateAdminControls();}}
+async function writePlatformStatus(name,available){if(!canAdmin()||!db){adminMessage.textContent="Administrator access or Firebase is unavailable.";return;}try{await db.doc(`${PLATFORM_STATUS_PATH}/${name}`).set({status:available?"ON":"OFF",updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${name==="launcher"?"Kalahari Launcher":"Kalahari Messages"} is now ${available?"ONLINE":"OFFLINE"}.`;}catch(err){console.error(err);adminMessage.textContent="Could not save the status. Check your Firebase Firestore permissions.";updateAdminControls();}}
 
 async function saveAnnouncement(active){
   if(!canAdmin()||!db){if(announcementMessage)announcementMessage.textContent="Administrator access or Firebase is unavailable.";return;}
@@ -4682,8 +5053,8 @@ async function saveAnnouncement(active){
       body,
       date,
       updatedAt:firebase.firestore.FieldValue.serverTimestamp(),
-      updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:null,
-      updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:null
+      updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",
+      updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"
     },{merge:true});
     if(announcementMessage)announcementMessage.textContent=active?"Announcement published.":"Announcement banner turned off.";
   }catch(err){
@@ -4693,8 +5064,8 @@ async function saveAnnouncement(active){
   }
 }
 function renderAdminGameList(){const list=document.getElementById("adminGameList");if(!list)return;list.innerHTML="";games.forEach(game=>{const row=document.createElement("div");row.className="admin-game-row";const def=game.status==="IN PRODUCTION"?"IN PROGRESS":game.status;const current=gameStatuses[game.id]||def;row.innerHTML=`<div><div class="admin-game-name">${game.name}</div><span class="admin-game-default">Current: <span class="admin-status-pill">${current}</span></span></div><select class="admin-select" data-game-status="${game.id}"><option>AVAILABLE</option><option>MAINTENANCE</option><option>IN PROGRESS</option><option>COMING SOON</option></select>`;const select=row.querySelector("select");select.value=current;select.addEventListener("change",()=>setGameStatus(game,select.value));list.appendChild(row);});}
-async function setGameStatus(game,status){if(!canAdmin()||!db)return;const previous=gameStatuses[game.id]||(game.status==="IN PRODUCTION"?"IN PROGRESS":game.status);gameStatuses[game.id]=status;renderGames(search.value,gameFilter.value);renderAdminGameList();try{await db.collection("gameStatus").doc(game.id).set({gameName:game.name,status,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:null,updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:null},{merge:true});adminMessage.textContent=`${game.name} is now ${status}.`;}catch(err){console.error(err);gameStatuses[game.id]=previous;renderGames(search.value,gameFilter.value);renderAdminGameList();adminMessage.textContent="Could not update that game's status. Check your Firebase permissions.";}}
-adminBtn.addEventListener("click",openAdmin);document.getElementById("closeAdmin").addEventListener("click",closeAdmin);adminOverlay.addEventListener("click",e=>{if(e.target===adminOverlay)closeAdmin();});document.getElementById("launcherStatusToggle").addEventListener("change",e=>writePlatformStatus("launcher",e.target.checked));document.getElementById("messagesStatusToggle").addEventListener("change",e=>writePlatformStatus("messages",e.target.checked));document.getElementById("publishAnnouncement").addEventListener("click",()=>saveAnnouncement(true));document.getElementById("clearAnnouncement").addEventListener("click",()=>saveAnnouncement(false));document.getElementById("announcementActiveToggle").addEventListener("change",e=>saveAnnouncement(e.target.checked));
+async function setGameStatus(game,status){if(!canAdmin()||!db)return;const previous=gameStatuses[game.id]||(game.status==="IN PRODUCTION"?"IN PROGRESS":game.status);gameStatuses[game.id]=status;renderGames(search.value,gameFilter.value);renderAdminGameList();try{await db.collection("gameStatus").doc(game.id).set({gameName:game.name,status,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${game.name} is now ${status}.`;}catch(err){console.error(err);gameStatuses[game.id]=previous;renderGames(search.value,gameFilter.value);renderAdminGameList();adminMessage.textContent="Could not update that game's status. Check your Firebase permissions.";}}
+adminBtn.addEventListener("click",openAdmin);document.getElementById("closeAdmin").addEventListener("click",closeAdmin);adminOverlay.addEventListener("click",e=>{if(e.target===adminOverlay)closeAdmin();});document.getElementById("launcherStatusToggle").addEventListener("change",e=>writePlatformStatus("launcher",e.target.checked));document.getElementById("messagesStatusToggle").addEventListener("change",e=>writePlatformStatus("messages",e.target.checked));document.getElementById("publishAnnouncement").addEventListener("click",()=>saveAnnouncement(true));document.getElementById("clearAnnouncement").addEventListener("click",()=>saveAnnouncement(false));document.getElementById("announcementActiveToggle").addEventListener("change",e=>saveAnnouncement(e.target.checked));document.getElementById("createPollBtn").addEventListener("click",createPoll);function submitAdminAccess(){if(!adminAccessPassword)return;if(adminAccessPassword.value===ADMIN_ACCESS_PASSWORD){adminAccessError.textContent="";adminAccessPassword.value="";adminOverride=true;updateAdminVisibility(auth?.currentUser);if(auth?.currentUser){showLauncher(auth.currentUser);}else{setLauncherScreen(launcherAvailable);}}else adminAccessError.textContent="Incorrect administrator password.";}if(adminAccessSubmit)adminAccessSubmit.addEventListener("click",submitAdminAccess);if(adminAccessPassword)adminAccessPassword.addEventListener("keydown",e=>{if(e.key==="Enter")submitAdminAccess();});
 
 listenPlatformStatuses();
 
@@ -4703,8 +5074,6 @@ listenPlatformStatuses();
 ========================================================= */
 
 function showLogin(){
-
-  adminVerified=false;
 
   launcher.classList.add(
     "hidden"
@@ -4719,13 +5088,14 @@ function showLogin(){
   );
 
   stopUnreadListeners();
+  stopPollListeners();
 
 }
 
 
 function showLauncher(user){
 
-  if(!launcherAvailable && !adminVerified){
+  if(!launcherAvailable && !adminOverride){
 
     showLogin();
 
@@ -4769,6 +5139,7 @@ function showLauncher(user){
   updateGameList();
 
   listenUnreadMessages(user.uid);
+  listenPolls();
 
 }
 
@@ -4874,7 +5245,7 @@ document
       }
 
 
-      if(!launcherAvailable && !adminVerified)
+      if(!launcherAvailable && !adminOverride)
         return;
 
 
@@ -5023,7 +5394,7 @@ const guestBtn=document.getElementById("guestBtn");
 if(guestBtn) guestBtn.addEventListener("click",async()=>{
   errorBox.textContent=""; errorBox.style.color="#ff7272"; authStatus.textContent="";
   if(!auth){errorBox.textContent="Firebase authentication is unavailable.";return;}
-  if(!launcherAvailable && !adminVerified) return;
+  if(!launcherAvailable && !adminOverride) return;
   authStatus.textContent="Creating guest session...";
   guestBtn.disabled=true;
   try{
@@ -5068,7 +5439,7 @@ document
       }
 
 
-      if(!launcherAvailable && !adminVerified)
+      if(!launcherAvailable && !adminOverride)
         return;
 
 
@@ -5214,23 +5585,30 @@ if(auth){
 
   auth.onAuthStateChanged(
 
-    async user=>{
+    user=>{
 
-      adminVerified=false;
+      if(
+        !launcherAvailable && !adminOverride
+      ){
 
-      if(!user){
         showLogin();
+
         return;
+
       }
 
-      await refreshAdminClaim(user);
 
-      if(!launcherAvailable && !adminVerified){
+      if(user){
+
+        showLauncher(
+          user
+        );
+
+      }else{
+
         showLogin();
-        return;
-      }
 
-      showLauncher(user);
+      }
 
     },
 

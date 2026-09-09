@@ -237,6 +237,7 @@ main{width:min(1100px,100%);margin:0 auto;padding:28px 24px 70px}
   <div class="status-card">
     <h2>Kalahari Markhor is unavailable</h2>
     <p id="offlineReason">Could not connect to Firebase right now. Try again shortly.</p>
+    <a class="btn" href="index.html">← Kalahari Alcora</a>
   </div>
 </div>
 
@@ -244,6 +245,7 @@ main{width:min(1100px,100%);margin:0 auto;padding:28px 24px 70px}
   <div class="status-card">
     <h2>Kalahari Markhor is offline</h2>
     <p>Crews and the Server Board are turned off right now. Check back later.</p>
+    <a class="btn" href="index.html">← Kalahari Alcora</a>
   </div>
 </div>
 
@@ -298,6 +300,7 @@ main{width:min(1100px,100%);margin:0 auto;padding:28px 24px 70px}
           <h2>Browse Crews</h2>
           <p>Join any crew — you can only be in one at a time.</p>
         </div>
+        <button class="header-btn hidden" id="adminBackToMyCrewBtn">← Back to My Crew</button>
       </div>
       <div id="crewListContainer">
         <div class="empty-state">Loading crews...</div>
@@ -311,7 +314,11 @@ main{width:min(1100px,100%);margin:0 auto;padding:28px 24px 70px}
           <h2 id="myCrewName">—</h2>
           <p id="myCrewDesc">—</p>
         </div>
-        <button class="header-btn" id="leaveCrewBtn">Leave Crew</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="header-btn hidden" id="adminBrowseAllBtn">Browse All Crews (Admin)</button>
+          <button class="header-btn hidden" id="exitAdminViewBtn">← Exit Admin View</button>
+          <button class="header-btn" id="leaveCrewBtn">Leave Crew</button>
+        </div>
       </div>
 
       <div class="crew-home">
@@ -550,10 +557,12 @@ let unsubMembers = null;
 let unsubMessages = null;
 let unsubCrewsBrowse = null;
 
-let currentCrewId = "__UNSET__"; // sentinel distinct from both null and any real crew id, so the very first snapshot (even a crewless user, whose real crewId is null) still triggers the initial render instead of being skipped by the "did it change" check
+let myOwnCrewId = "__UNSET__"; // from my own users/{uid}.crewId pointer
+let currentCrewId = "__UNSET__"; // whichever crew is actually shown in the Home panel — normally mirrors myOwnCrewId, but an admin can override it to inspect/manage any crew without actually joining it
 let currentCrewData = null;
 let currentMembers = {}; // uid -> member doc data
 let myRankTier = null;
+let isAdminViewing = false; // true while an admin is managing a crew that isn't their own
 
 const crewsBrowseEl = document.getElementById("crewsBrowse");
 const crewsHomeEl = document.getElementById("crewsHome");
@@ -563,9 +572,12 @@ function listenOwnCrewPointer(){
   unsubUserDoc = db.collection("users").doc(currentUser.uid).onSnapshot(snap => {
     const data = snap.exists ? snap.data() : {};
     const crewId = data.crewId || null;
-    if(crewId !== currentCrewId){
-      currentCrewId = crewId;
-      onCrewIdChanged();
+    if(crewId !== myOwnCrewId){
+      myOwnCrewId = crewId;
+      if(!isAdminViewing){
+        currentCrewId = myOwnCrewId;
+        onCrewIdChanged();
+      }
     }
   }, err => console.error("User doc listen error:", err));
 }
@@ -587,9 +599,53 @@ function onCrewIdChanged(){
     crewsBrowseEl.classList.remove("hidden");
     listenCrewsBrowse();
   }
+  updateCrewNavButtons();
 }
 
-/* ---------- Browse ---------- */
+/* ---------- Admin: view/manage any crew ---------- */
+function openAdminCrewView(crewId){
+  isAdminViewing = true;
+  currentCrewId = crewId;
+  onCrewIdChanged();
+}
+
+function showAdminBrowse(){
+  if(unsubCrewDoc){ unsubCrewDoc(); unsubCrewDoc = null; }
+  if(unsubMembers){ unsubMembers(); unsubMembers = null; }
+  if(unsubMessages){ unsubMessages(); unsubMessages = null; }
+  isAdminViewing = false;
+  currentCrewId = null;
+  currentCrewData = null; currentMembers = {}; myRankTier = null;
+  crewsHomeEl.classList.add("hidden");
+  crewsBrowseEl.classList.remove("hidden");
+  listenCrewsBrowse();
+  updateCrewNavButtons();
+}
+
+function exitAdminView(){
+  isAdminViewing = false;
+  currentCrewId = myOwnCrewId;
+  onCrewIdChanged();
+}
+
+function backToMyCrew(){
+  isAdminViewing = false;
+  currentCrewId = myOwnCrewId;
+  onCrewIdChanged();
+}
+
+function updateCrewNavButtons(){
+  const admin = isAdmin(currentUser);
+  const leaveBtn = document.getElementById("leaveCrewBtn");
+  const exitBtn = document.getElementById("exitAdminViewBtn");
+  const browseAllBtn = document.getElementById("adminBrowseAllBtn");
+  const backToMyCrewBtn = document.getElementById("adminBackToMyCrewBtn");
+
+  leaveBtn.classList.toggle("hidden", isAdminViewing);
+  exitBtn.classList.toggle("hidden", !isAdminViewing);
+  browseAllBtn.classList.toggle("hidden", !admin || isAdminViewing);
+  backToMyCrewBtn.classList.toggle("hidden", !admin || !myOwnCrewId || (!isAdminViewing && !!currentCrewId));
+}
 function listenCrewsBrowse(){
   if(unsubCrewsBrowse) return;
   unsubCrewsBrowse = db.collection("crews").onSnapshot(snap => {
@@ -610,6 +666,7 @@ function renderCrewBrowseList(crews){
     container.innerHTML = '<div class="empty-state">No crews yet — be the first to start one.</div>';
     return;
   }
+  const admin = isAdmin(currentUser);
   container.innerHTML = '<div class="crew-list">' + crews.map(c => `
     <div class="crew-card">
       <div class="crew-card-top">
@@ -619,11 +676,15 @@ function renderCrewBrowseList(crews){
       <div class="crew-desc">${escapeHtml(c.description || "")}</div>
       <div class="crew-coord">Led by ${escapeHtml(c.coordinatorName || "Unknown")}</div>
       <button class="crew-join-btn" data-join-crew="${c.id}">Join Crew</button>
+      ${admin ? `<button class="crew-join-btn" data-admin-manage="${c.id}" style="border-color:var(--accent);color:var(--accent2)">Manage (Admin)</button>` : ""}
     </div>
   `).join("") + '</div>';
 
   container.querySelectorAll("[data-join-crew]").forEach(btn => {
     btn.addEventListener("click", () => joinCrew(btn.getAttribute("data-join-crew")));
+  });
+  container.querySelectorAll("[data-admin-manage]").forEach(btn => {
+    btn.addEventListener("click", () => openAdminCrewView(btn.getAttribute("data-admin-manage")));
   });
 }
 
@@ -712,7 +773,7 @@ function listenCrewHome(crewId){
   unsubCrewDoc = db.collection("crews").doc(crewId).onSnapshot(snap => {
     if(!snap.exists){
       // Crew was disbanded out from under us.
-      selfClearCrewPointer();
+      if(isAdminViewing) exitAdminView(); else selfClearCrewPointer();
       return;
     }
     currentCrewData = { id: snap.id, ...snap.data() };
@@ -726,14 +787,14 @@ function listenCrewHome(crewId){
     snap.forEach(doc => { members[doc.id] = doc.data(); });
     currentMembers = members;
 
-    if(!members[currentUser.uid]){
+    if(!members[currentUser.uid] && !isAdminViewing){
       // We were kicked (or left through another tab) — heal our own pointer.
       selfClearCrewPointer();
       return;
     }
-    myRankTier = members[currentUser.uid].rankTier;
+    myRankTier = members[currentUser.uid] ? members[currentUser.uid].rankTier : null;
     renderRoster();
-    renderRanksPanel(); // manage panel visibility depends on myRankTier
+    renderRanksPanel(); // manage panel visibility depends on myRankTier / isAdminViewing
   }, err => console.error("Members listen error:", err));
 
   unsubMessages = db.collection("crews").doc(crewId).collection("messages")
@@ -775,13 +836,13 @@ function renderRoster(){
     (a.displayName||"").localeCompare(b.displayName||"")
   );
 
-  const canManage = isOfficerOrAbove(myRankTier);
+  const canManage = isAdminViewing || isOfficerOrAbove(myRankTier);
 
   container.innerHTML = rows.map(m => {
     const rankName = (ranks.find(r => r.id === m.rankId) || {}).name || m.rankTier;
     const isSelf = m.uid === currentUser.uid;
     const isCoordinator = m.rankTier === "coordinator";
-    const showControls = canManage && !isSelf && !isCoordinator;
+    const showControls = canManage && !isSelf && (!isCoordinator || isAdminViewing);
 
     const rankOptions = ranks
       .filter(r => r.tier !== "coordinator")
@@ -835,10 +896,10 @@ async function kickMember(uid){
 function renderRanksPanel(){
   const panel = document.getElementById("manageRanksPanel");
   const disbandPanel = document.getElementById("disbandPanel");
-  const isCoordinator = myRankTier === "coordinator";
-  panel.classList.toggle("hidden", !isCoordinator);
-  disbandPanel.classList.toggle("hidden", !isCoordinator);
-  if(!isCoordinator || !currentCrewData) return;
+  const canManageRanks = isAdminViewing || myRankTier === "coordinator";
+  panel.classList.toggle("hidden", !canManageRanks);
+  disbandPanel.classList.toggle("hidden", !canManageRanks);
+  if(!canManageRanks || !currentCrewData) return;
 
   const ranks = currentCrewData.ranks || DEFAULT_RANKS;
   document.getElementById("ranksList").innerHTML = ranks.map(r => {
@@ -885,6 +946,10 @@ async function removeRank(rankId){
 }
 
 /* ---------- Leave / disband ---------- */
+document.getElementById("exitAdminViewBtn").addEventListener("click", exitAdminView);
+document.getElementById("adminBrowseAllBtn").addEventListener("click", showAdminBrowse);
+document.getElementById("adminBackToMyCrewBtn").addEventListener("click", backToMyCrew);
+
 document.getElementById("leaveCrewBtn").addEventListener("click", async () => {
   if(myRankTier === "coordinator"){
     alert("As Coordinator you need to disband the crew instead of leaving it (or promote someone else first — coming soon).");
@@ -914,8 +979,11 @@ document.getElementById("disbandCrewBtn").addEventListener("click", async () => 
     membersSnap.forEach(doc => batch.delete(doc.ref));
     messagesSnap.forEach(doc => batch.delete(doc.ref));
     batch.delete(crewRef);
-    batch.set(db.collection("users").doc(currentUser.uid), { crewId: null }, { merge:true });
+    if(!isAdminViewing){
+      batch.set(db.collection("users").doc(currentUser.uid), { crewId: null }, { merge:true });
+    }
     await batch.commit();
+    if(isAdminViewing) exitAdminView();
   }catch(err){
     console.error("Disband failed:", err);
     alert("Could not disband the crew right now.");

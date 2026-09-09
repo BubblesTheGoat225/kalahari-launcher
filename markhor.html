@@ -668,24 +668,29 @@ document.getElementById("createCrewBtn").addEventListener("click", async () => {
   }
 
   try{
+    // Sequential, not batched: the coordinator's own member doc has to be
+    // created as rankTier "coordinator", and the security rule for that
+    // needs to read the crew doc's coordinatorUid to verify the claim —
+    // which only works if the crew doc already exists as its own
+    // committed write. A single atomic batch can't guarantee that (rules
+    // evaluate writes in a batch against the pre-batch database state), so
+    // this happens in three separate awaited steps instead.
     const crewRef = db.collection("crews").doc();
-    const batch = db.batch();
-    batch.set(crewRef, {
+    await crewRef.set({
       name, tag, description,
       coordinatorUid: currentUser.uid,
       coordinatorName: currentUser.displayName || currentUser.email?.split("@")[0] || "Player",
       ranks: DEFAULT_RANKS,
       createdAt: Date.now()
     });
-    batch.set(crewRef.collection("members").doc(currentUser.uid), {
+    await crewRef.collection("members").doc(currentUser.uid).set({
       uid: currentUser.uid,
       displayName: currentUser.displayName || currentUser.email?.split("@")[0] || "Player",
       rankId: "coordinator",
       rankTier: "coordinator",
       joinedAt: Date.now()
     });
-    batch.set(db.collection("users").doc(currentUser.uid), { crewId: crewRef.id }, { merge:true });
-    await batch.commit();
+    await db.collection("users").doc(currentUser.uid).set({ crewId: crewRef.id }, { merge:true });
 
     document.getElementById("newCrewName").value = "";
     document.getElementById("newCrewTag").value = "";

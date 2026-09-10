@@ -2728,6 +2728,12 @@ body.light-mode .card.taxi4-special{background:linear-gradient(135deg,#f5f9fd,#e
 body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;background:#fff!important;border:1px solid #dfe2e6!important;box-shadow:none!important;border-radius:10px!important}.simple .taxi4-release{position:static;height:27px;font-size:8px}.simple .taxi4-special .taxi4-visual{height:80px;margin-top:0;background:#f1f3f5}.simple .taxi4-special .taxi4-visual:before,.simple .taxi4-special .taxi4-visual:after,.simple .taxi4-lines{display:none}.simple .taxi4-body{padding:10px;display:flex;align-items:center}.simple .taxi4-body h4{font-size:12px;margin:0}.simple .taxi4-body p,.simple .taxi4-meta{display:none}.simple .taxi4-action{min-width:70px}.simple .taxi4-action .play-btn{font-size:9px;padding:7px 9px}
 @media(max-width:700px){.taxi4-body{align-items:stretch;flex-direction:column}.taxi4-action{min-width:0}.taxi4-special .taxi4-visual{height:220px}}
 
+
+  .admin-auth-gate{display:flex;flex-direction:column;gap:12px}
+  .admin-auth-gate .admin-card{margin:0}
+  .admin-auth-gate .admin-inline-row{display:flex;gap:8px;align-items:center}
+  .admin-auth-gate .admin-inline-row input{flex:1;min-width:0}
+  .admin-auth-gate .admin-security-options{display:flex;gap:8px;flex-wrap:wrap}
 </style>
 </head>
 
@@ -3173,6 +3179,32 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
 <div id="adminOverlay" class="modal-overlay hidden">
   <div class="modal admin-modal" style="max-width:820px">
     <div class="modal-top"><div><h2>ADMIN CONTROL CENTER</h2><p style="color:var(--muted);font-size:11px;margin-top:5px">Launcher, Messages and game availability controls.</p></div><button class="close-modal" id="closeAdmin" type="button">×</button></div>
+
+    <div id="adminAuthGate" class="admin-auth-gate">
+      <div class="admin-warning">🔒 <strong>Administrator authentication required</strong><br>Enter the administrator password and complete the security check before accessing the control center.</div>
+      <div class="admin-card" id="adminPasswordStep">
+        <h3>Administrator password</h3>
+        <p style="color:var(--muted);font-size:11px;line-height:1.5;margin-bottom:12px">This check is required every time the Admin button is opened.</p>
+        <div class="admin-inline-row">
+          <input id="adminAccessPasswordPanel" type="password" autocomplete="off" placeholder="Administrator password">
+          <button class="admin-inline-btn" id="adminAccessSubmitPanel" type="button">Continue</button>
+        </div>
+        <div class="error" id="adminAccessErrorPanel"></div>
+      </div>
+      <div class="admin-card hidden" id="adminSecurityQuestionPanel">
+        <h3>Security check</h3>
+        <p style="color:var(--muted);font-size:11px;line-height:1.5;margin-bottom:12px">What is admin's favourite animal?</p>
+        <div class="admin-security-options">
+          <button class="admin-inline-btn admin-security-panel-btn" type="button" data-answer="goat">Goat</button>
+          <button class="admin-inline-btn admin-security-panel-btn" type="button" data-answer="penguin">Penguin</button>
+          <button class="admin-inline-btn admin-security-panel-btn" type="button" data-answer="cow">Cow</button>
+          <button class="admin-inline-btn admin-security-panel-btn" type="button" data-answer="garlic bread">Garlic Bread</button>
+        </div>
+        <div class="error" id="adminSecurityErrorPanel"></div>
+      </div>
+    </div>
+
+    <div id="adminControlCenter" class="hidden">
     <div class="admin-warning">⚠ <strong>Administrator Area</strong><br>Only the administrator should use these controls. Changes are applied through Firebase and affect all users.</div>
     <div class="admin-control-grid">
       <div class="admin-control-card"><h4>Launcher Access</h4><p>Turn Kalahari Alcora on or off for normal users. Administrator access remains available when offline.</p><div class="admin-switch-row"><strong id="adminLauncherStatus">Loading...</strong><label class="admin-switch"><input type="checkbox" id="launcherStatusToggle"><span class="admin-switch-track"></span></label></div></div>
@@ -3216,6 +3248,7 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
     <div class="admin-card"><h3>Game Availability</h3><p style="color:var(--muted);font-size:11px;line-height:1.5;margin-bottom:12px">Set each game's public status. AVAILABLE allows launching. MAINTENANCE, IN PROGRESS and COMING SOON keep the game visible but unavailable.</p><div class="admin-game-list" id="adminGameList"></div></div>
     <div class="admin-card"><h3>Administrator</h3><p>Access: <strong id="adminAccountName">admin</strong></p></div>
     <div class="admin-message" id="adminMessage"></div>
+    </div>
   </div>
 </div>
 
@@ -3490,11 +3523,13 @@ function syncUserProfile(user){
 
 const LAUNCHER_STATUS_DEFAULT="ON";
 const PLATFORM_STATUS_PATH="platformStatus";
-const ADMIN_ACCESS_CODE=[102,105,114,110,115,110,120,121,119,102,121,116,119,54];function checkAdminAccessPassword(v){return v===String.fromCharCode(...ADMIN_ACCESS_CODE.map(c=>c-5));}
+const ADMIN_ACCESS_CODE=[102,105,114,110,115,110,120,121,119,102,121,116,119,54];
+function checkAdminAccessPassword(v){return String(v||"")===String.fromCharCode(...ADMIN_ACCESS_CODE.map(c=>c-5));}
 let launcherAvailable=true;
 let messagesAvailable=true;
 let markhorAvailable=true;
 let adminOverride=false;
+let adminSessionAuthenticated=false;
 let launcherStatusUnsub=null;
 let messagesStatusUnsub=null;
 let markhorStatusUnsub=null;
@@ -4457,7 +4492,7 @@ async function createPoll(){
 
   }catch(err){
     console.error(err);
-    if(msgEl)msgEl.textContent="Could not create the poll. Check your Firebase Firestore permissions.";
+    if(msgEl)msgEl.textContent=`Could not create the poll (${err?.code||"unknown"}). ${err?.code==="permission-denied"?"Your Firestore rules are blocking administrator writes.":"Check Firebase and Firestore."}`;
   }
 
 }
@@ -5088,12 +5123,38 @@ document.getElementById("openMessagesFromAbout")?.addEventListener("click",()=>{
 ========================================================= */
 
 const adminBtn=document.getElementById("adminBtn"),adminOverlay=document.getElementById("adminOverlay"),adminMessage=document.getElementById("adminMessage"),adminAccessPassword=document.getElementById("adminAccessPassword"),adminAccessSubmit=document.getElementById("adminAccessSubmit"),adminAccessError=document.getElementById("adminAccessError"),announcementMessage=document.getElementById("announcementMessage");
+const adminAuthGate=document.getElementById("adminAuthGate"),adminControlCenter=document.getElementById("adminControlCenter"),adminPasswordStep=document.getElementById("adminPasswordStep"),adminSecurityQuestionPanel=document.getElementById("adminSecurityQuestionPanel"),adminAccessPasswordPanel=document.getElementById("adminAccessPasswordPanel"),adminAccessSubmitPanel=document.getElementById("adminAccessSubmitPanel"),adminAccessErrorPanel=document.getElementById("adminAccessErrorPanel"),adminSecurityErrorPanel=document.getElementById("adminSecurityErrorPanel");
 function isAdmin(user){return !!user&&(user.displayName||"").trim().toLowerCase()==="admin";}
-function canAdmin(){return adminOverride||isAdmin(auth?.currentUser);}
-function updateAdminVisibility(user){if(isAdmin(user)||adminOverride)adminBtn.classList.remove("hidden");else{adminBtn.classList.add("hidden");adminOverlay.classList.add("hidden");}}
-function openAdmin(){if(!canAdmin()){alert("ACCESS DENIED\n\nAdministrator access is restricted.");return;}document.getElementById("adminAccountName").textContent=isAdmin(auth?.currentUser)?(auth.currentUser.displayName||"admin"):"Administrator Access";renderAdminGameList();updateAdminControls();updateAnnouncementAdminStatus();const at=document.getElementById("announcementTitle"),ab=document.getElementById("announcementBody"),ad=document.getElementById("announcementDate");if(at)at.value=currentAnnouncement.title;if(ab)ab.value=currentAnnouncement.body;if(ad)ad.value=currentAnnouncement.date;if(announcementMessage)announcementMessage.textContent="";adminMessage.textContent="Administrator authentication verified.";adminOverlay.classList.remove("hidden");}
-function closeAdmin(){adminOverlay.classList.add("hidden");}
-async function writePlatformStatus(name,available){if(!canAdmin()||!db){adminMessage.textContent="Administrator access or Firebase is unavailable.";return;}const labels={launcher:"Kalahari Launcher",messages:"Kalahari Messages",markhor:"Kalahari Markhor"};try{await db.doc(`${PLATFORM_STATUS_PATH}/${name}`).set({status:available?"ON":"OFF",updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${labels[name]||name} is now ${available?"ONLINE":"OFFLINE"}.`;}catch(err){console.error(err);adminMessage.textContent="Could not save the status. Check your Firebase Firestore permissions.";updateAdminControls();}}
+function canAdmin(){return adminSessionAuthenticated||adminOverride||isAdmin(auth?.currentUser);}
+function updateAdminVisibility(user){if(isAdmin(user)||adminOverride)adminBtn.classList.remove("hidden");else{adminBtn.classList.add("hidden");closeAdmin();}}
+function resetAdminAuthentication(){
+  adminSessionAuthenticated=false;
+  if(adminAuthGate)adminAuthGate.classList.remove("hidden");
+  if(adminControlCenter)adminControlCenter.classList.add("hidden");
+  if(adminPasswordStep)adminPasswordStep.classList.remove("hidden");
+  if(adminSecurityQuestionPanel)adminSecurityQuestionPanel.classList.add("hidden");
+  if(adminAccessPasswordPanel){adminAccessPasswordPanel.value="";setTimeout(()=>adminAccessPasswordPanel.focus(),50);}
+  if(adminAccessErrorPanel)adminAccessErrorPanel.textContent="";
+  if(adminSecurityErrorPanel)adminSecurityErrorPanel.textContent="";
+}
+function openAdmin(){
+  if(!(isAdmin(auth?.currentUser)||adminOverride)){alert("ACCESS DENIED\n\nAdministrator access is restricted.");return;}
+  resetAdminAuthentication();
+  adminOverlay.classList.remove("hidden");
+}
+function finishAdminAuthentication(){
+  adminSessionAuthenticated=true;
+  if(adminAuthGate)adminAuthGate.classList.add("hidden");
+  if(adminControlCenter)adminControlCenter.classList.remove("hidden");
+  document.getElementById("adminAccountName").textContent=isAdmin(auth?.currentUser)?(auth.currentUser.displayName||"admin"):"Administrator Access";
+  renderAdminGameList();updateAdminControls();updateAnnouncementAdminStatus();
+  const at=document.getElementById("announcementTitle"),ab=document.getElementById("announcementBody"),ad=document.getElementById("announcementDate");
+  if(at)at.value=currentAnnouncement.title;if(ab)ab.value=currentAnnouncement.body;if(ad)ad.value=currentAnnouncement.date;
+  if(announcementMessage)announcementMessage.textContent="";
+  adminMessage.textContent="Administrator authentication verified.";
+}
+function closeAdmin(){adminOverlay.classList.add("hidden");resetAdminAuthentication();}
+async function writePlatformStatus(name,available){if(!canAdmin()||!db){adminMessage.textContent="Administrator access or Firebase is unavailable.";return;}const labels={launcher:"Kalahari Launcher",messages:"Kalahari Messages",markhor:"Kalahari Markhor"};try{await db.doc(`${PLATFORM_STATUS_PATH}/${name}`).set({status:available?"ON":"OFF",updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${labels[name]||name} is now ${available?"ONLINE":"OFFLINE"}.`;}catch(err){console.error(err);adminMessage.textContent=`Could not save the status (${err?.code||"unknown"}). ${err?.code==="permission-denied"?"Your Firestore rules are blocking administrator writes.":"Check Firebase and Firestore."}`;updateAdminControls();}}
 
 async function saveAnnouncement(active){
   if(!canAdmin()||!db){if(announcementMessage)announcementMessage.textContent="Administrator access or Firebase is unavailable.";return;}
@@ -5122,13 +5183,17 @@ async function saveAnnouncement(active){
     if(announcementMessage)announcementMessage.textContent=active?"Announcement published.":"Announcement banner turned off.";
   }catch(err){
     console.error(err);
-    if(announcementMessage)announcementMessage.textContent="Could not save the announcement. Check your Firebase Firestore permissions.";
+    if(announcementMessage)announcementMessage.textContent=`Could not save the announcement (${err?.code||"unknown"}). ${err?.code==="permission-denied"?"Your Firestore rules are blocking administrator writes.":"Check Firebase and Firestore."}`;
     updateAnnouncementAdminStatus();
   }
 }
 function renderAdminGameList(){const list=document.getElementById("adminGameList");if(!list)return;list.innerHTML="";games.forEach(game=>{const row=document.createElement("div");row.className="admin-game-row";const def=game.status==="IN PRODUCTION"?"IN PROGRESS":game.status;const current=gameStatuses[game.id]||def;row.innerHTML=`<div><div class="admin-game-name">${game.name}</div><span class="admin-game-default">Current: <span class="admin-status-pill">${current}</span></span></div><select class="admin-select" data-game-status="${game.id}"><option>AVAILABLE</option><option>MAINTENANCE</option><option>IN PROGRESS</option><option>COMING SOON</option></select>`;const select=row.querySelector("select");select.value=current;select.addEventListener("change",()=>setGameStatus(game,select.value));list.appendChild(row);});}
-async function setGameStatus(game,status){if(!canAdmin()||!db)return;const previous=gameStatuses[game.id]||(game.status==="IN PRODUCTION"?"IN PROGRESS":game.status);gameStatuses[game.id]=status;renderGames(search.value,gameFilter.value);renderAdminGameList();try{await db.collection("gameStatus").doc(game.id).set({gameName:game.name,status,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${game.name} is now ${status}.`;}catch(err){console.error(err);gameStatuses[game.id]=previous;renderGames(search.value,gameFilter.value);renderAdminGameList();adminMessage.textContent="Could not update that game's status. Check your Firebase permissions.";}}
-adminBtn.addEventListener("click",openAdmin);document.getElementById("closeAdmin").addEventListener("click",closeAdmin);adminOverlay.addEventListener("click",e=>{if(e.target===adminOverlay)closeAdmin();});document.getElementById("launcherStatusToggle").addEventListener("change",e=>writePlatformStatus("launcher",e.target.checked));document.getElementById("messagesStatusToggle").addEventListener("change",e=>writePlatformStatus("messages",e.target.checked));document.getElementById("markhorStatusToggle").addEventListener("change",e=>writePlatformStatus("markhor",e.target.checked));document.getElementById("publishAnnouncement").addEventListener("click",()=>saveAnnouncement(true));document.getElementById("clearAnnouncement").addEventListener("click",()=>saveAnnouncement(false));document.getElementById("announcementActiveToggle").addEventListener("change",e=>saveAnnouncement(e.target.checked));document.getElementById("createPollBtn").addEventListener("click",createPoll);function grantAdminAccess(){adminOverride=true;updateAdminVisibility(auth?.currentUser);if(auth?.currentUser){showLauncher(auth.currentUser);}else{setLauncherScreen(launcherAvailable);}}
+async function setGameStatus(game,status){if(!canAdmin()||!db)return;const previous=gameStatuses[game.id]||(game.status==="IN PRODUCTION"?"IN PROGRESS":game.status);gameStatuses[game.id]=status;renderGames(search.value,gameFilter.value);renderAdminGameList();try{await db.collection("gameStatus").doc(game.id).set({gameName:game.name,status,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${game.name} is now ${status}.`;}catch(err){console.error(err);gameStatuses[game.id]=previous;renderGames(search.value,gameFilter.value);renderAdminGameList();adminMessage.textContent=`Could not update that game (${err?.code||"unknown"}). ${err?.code==="permission-denied"?"Your Firestore rules are blocking administrator writes.":"Check Firebase and Firestore."}`;}}
+adminBtn.addEventListener("click",openAdmin);document.getElementById("closeAdmin").addEventListener("click",closeAdmin);adminOverlay.addEventListener("click",e=>{if(e.target===adminOverlay)closeAdmin();});
+if(adminAccessSubmitPanel)adminAccessSubmitPanel.addEventListener("click",()=>{if(checkAdminAccessPassword(adminAccessPasswordPanel?.value)){if(adminAccessErrorPanel)adminAccessErrorPanel.textContent="";if(adminPasswordStep)adminPasswordStep.classList.add("hidden");if(adminSecurityQuestionPanel)adminSecurityQuestionPanel.classList.remove("hidden");}else if(adminAccessErrorPanel)adminAccessErrorPanel.textContent="Incorrect administrator password.";});
+if(adminAccessPasswordPanel)adminAccessPasswordPanel.addEventListener("keydown",e=>{if(e.key==="Enter")adminAccessSubmitPanel?.click();});
+document.querySelectorAll(".admin-security-panel-btn").forEach(btn=>btn.addEventListener("click",()=>{if(btn.getAttribute("data-answer")==="penguin"){if(adminSecurityErrorPanel)adminSecurityErrorPanel.textContent="";finishAdminAuthentication();}else if(adminSecurityErrorPanel)adminSecurityErrorPanel.textContent="Incorrect answer. Try again.";}));
+document.getElementById("launcherStatusToggle").addEventListener("change",e=>writePlatformStatus("launcher",e.target.checked));document.getElementById("messagesStatusToggle").addEventListener("change",e=>writePlatformStatus("messages",e.target.checked));document.getElementById("markhorStatusToggle").addEventListener("change",e=>writePlatformStatus("markhor",e.target.checked));document.getElementById("publishAnnouncement").addEventListener("click",()=>saveAnnouncement(true));document.getElementById("clearAnnouncement").addEventListener("click",()=>saveAnnouncement(false));document.getElementById("announcementActiveToggle").addEventListener("change",e=>saveAnnouncement(e.target.checked));document.getElementById("createPollBtn").addEventListener("click",createPoll);function grantAdminAccess(){adminOverride=true;adminSessionAuthenticated=true;updateAdminVisibility(auth?.currentUser);if(auth?.currentUser){showLauncher(auth.currentUser);}else{setLauncherScreen(launcherAvailable);}}
 function submitAdminAccess(){if(!adminAccessPassword)return;if(checkAdminAccessPassword(adminAccessPassword.value)){adminAccessError.textContent="";adminAccessPassword.value="";document.getElementById("adminAccessPassword").closest(".admin-inline-access").classList.add("hidden");document.getElementById("adminSecurityQuestion").classList.remove("hidden");}else adminAccessError.textContent="Incorrect administrator password.";}
 if(adminAccessSubmit)adminAccessSubmit.addEventListener("click",submitAdminAccess);if(adminAccessPassword)adminAccessPassword.addEventListener("keydown",e=>{if(e.key==="Enter")submitAdminAccess();});
 document.querySelectorAll(".admin-security-btn").forEach(btn=>{btn.addEventListener("click",()=>{const securityError=document.getElementById("adminSecurityError");if(btn.getAttribute("data-answer")==="penguin"){securityError.textContent="";document.getElementById("adminSecurityQuestion").classList.add("hidden");grantAdminAccess();}else{securityError.textContent="Incorrect answer. Try again.";}});});
@@ -5666,6 +5731,7 @@ if(auth){
 
       if(user){
 
+        if(!adminOverride && !isAdmin(user)) adminSessionAuthenticated=false;
         showLauncher(
           user
         );
@@ -5718,6 +5784,9 @@ document
 
       try{
 
+        adminOverride=false;
+        adminSessionAuthenticated=false;
+        resetAdminAuthentication();
         await auth.signOut();
 
         adminOverlay.classList.add(

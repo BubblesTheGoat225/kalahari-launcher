@@ -1175,6 +1175,7 @@ try{
 // existing "PLAY ONLINE" button) still means the same shared default
 // room everyone always joined — nothing changes for that path.
 let MP_ROOM = new URLSearchParams(location.search).get('server') || 'global';
+let mpAutoJoinPending = MP_ROOM !== 'global'; // true when we arrived via a Server Board "Join" link
 let onlineMode = false;
 let mpConnecting = false;
 let mpPlayersRef = null;
@@ -1209,6 +1210,17 @@ if(mpAuth){
   mpAuth.onAuthStateChanged(user => {
     mpUser = user;
     refreshOnlineUI();
+    // Server Board "Join" link: skip the main menu entirely and go
+    // straight into that room's live session, as advertised above.
+    // Only fires once, on the auth check that follows page load.
+    if(mpAutoJoinPending){
+      mpAutoJoinPending = false;
+      if(mpUser){
+        enterOnlineWorld();
+      }else{
+        showNotification('Sign in via the Kalahari Launcher first, then use the server link again.');
+      }
+    }
   });
 }
 
@@ -2771,13 +2783,47 @@ function buildSafehouseMarkers(){
     mesh.userData = { type:'safehouse', id:sh.id };
     target.add(mesh);
 
+    // Shared garage room — every safehouse gets one at the same
+    // (sh.x+10, sh.z+8) anchor that handleInteract()/updateInteractHint()
+    // already check on foot, sized to physically overlap the 12x12 house
+    // footprint below (rather than floating in the yard) so it reads as
+    // an attached garage. The "E Retrieve Vehicle" hint already shown at
+    // the bottom of the screen (same as "E Enter House") is the prompt —
+    // no separate floating sign needed.
+    {
+      const twoCar = sh.style === 'suburban'; // "two-car garage" in its listing
+      const gW = twoCar ? 11 : 8, gD = 8, gH = 3.4;
+      const bodyCol = owned ? 0x2f5233 : 0x78716c;
+      const garageBody = new THREE.Mesh(new THREE.BoxGeometry(gW, gH, gD), new THREE.MeshLambertMaterial({color:bodyCol}));
+      garageBody.position.set(sh.x+10, gH/2, sh.z+8);
+      garageBody.castShadow = true;
+      target.add(garageBody);
+      const garageRoof = new THREE.Mesh(new THREE.BoxGeometry(gW+0.6, 0.3, gD+0.6), new THREE.MeshLambertMaterial({color:0x455a64}));
+      garageRoof.position.set(sh.x+10, gH+0.15, sh.z+8);
+      target.add(garageRoof);
+      // Roll-up door on the +Z face — the side facing away from the house.
+      const doorW = twoCar ? 9.5 : 6.5;
+      const doorMat = new THREE.MeshLambertMaterial({ color:0x37474f });
+      const door = new THREE.Mesh(new THREE.BoxGeometry(doorW, gH-0.5, 0.25), doorMat);
+      door.position.set(sh.x+10, (gH-0.5)/2, sh.z+8+gD/2+0.13);
+      target.add(door);
+      for(let i=1;i<=3;i++){
+        const groove = new THREE.Mesh(new THREE.BoxGeometry(doorW-0.2, 0.08, 0.28), new THREE.MeshLambertMaterial({color:0x263238}));
+        groove.position.set(sh.x+10, i*((gH-0.5)/4), sh.z+8+gD/2+0.14);
+        target.add(groove);
+      }
+      const pad = new THREE.Mesh(new THREE.BoxGeometry(gW+2, 0.05, 4), new THREE.MeshLambertMaterial({color:0x4b5563}));
+      pad.position.set(sh.x+10, 0.03, sh.z+8+gD/2+2);
+      target.add(pad);
+    }
+
     if(sh.style === 'farmhouse'){
       // A real farmhouse exterior — main house, barn, silo, fenced field —
       // not just the generic box every other safehouse uses. Collision
       // is still registered on a 12x12 footprint matching the other
       // safehouses so the interaction/entry system needs no changes.
       const houseColor = owned ? 0x1a472a : 0xf5f0e6;
-      const house = new THREE.Mesh(new THREE.BoxGeometry(11,7,9), new THREE.MeshLambertMaterial({color:houseColor}));
+      const house = new THREE.Mesh(new THREE.BoxGeometry(12,7,10), new THREE.MeshLambertMaterial({color:houseColor}));
       house.position.set(sh.x, 3.5, sh.z);
       house.castShadow = true;
       target.add(house);
@@ -2813,29 +2859,126 @@ function buildSafehouseMarkers(){
       return;
     }
 
-    // House mesh
-    const houseG = new THREE.BoxGeometry(12, 8, 12);
-    const houseM = new THREE.MeshLambertMaterial({ color: owned ? 0x1a472a : 0x5d4037 });
-    const house = new THREE.Mesh(houseG, houseM);
-    house.position.set(sh.x, 4, sh.z);
+    // Per-style exterior — each listing gets a body colour, height and
+    // roof that fit its name/description, instead of every non-farmhouse
+    // safehouse reusing one identical box+cone. Footprint stays 12x12 for
+    // all of them so the garage overlap math above always lines up.
+    const STYLES = {
+      exchange:  { h:9,  ownedCol:0x1a472a, col:0x27455e, roof:'flat',  roofCol:0x3b3b3b },
+      pearl:     { h:8,  ownedCol:0x1a472a, col:0xa0522d, roof:'hip',   roofCol:0x4a2f1c },
+      oldquarter:{ h:11, ownedCol:0x1a472a, col:0x7b3f2b, roof:'flat',  roofCol:0x2c2c2c },
+      dockside:  { h:6,  ownedCol:0x1a472a, col:0x607d8b, roof:'shed',  roofCol:0x37474f },
+      southgate: { h:5,  ownedCol:0x1a472a, col:0x616161, roof:'flat',  roofCol:0x424242 },
+      fairview:  { h:9,  ownedCol:0x1a472a, col:0xd7dce1, roof:'flat',  roofCol:0xb0bec5 },
+      suburban:  { h:7,  ownedCol:0x1a472a, col:0xf5f0e6, roof:'hip',   roofCol:0x8b4513 },
+      penthouse: { h:20, ownedCol:0x1a472a, col:0x22344a, roof:'flat',  roofCol:0x1c2733 },
+    };
+    const cfg = STYLES[sh.style] || STYLES.suburban;
+
+    const houseM = new THREE.MeshLambertMaterial({ color: owned ? cfg.ownedCol : cfg.col });
+    const house = new THREE.Mesh(new THREE.BoxGeometry(12, cfg.h, 12), houseM);
+    house.position.set(sh.x, cfg.h/2, sh.z);
     house.castShadow = true;
     target.add(house);
-    buildingMeshes.push({ mesh:house, x:sh.x, z:sh.z, w:12, d:12, h:8, safehouse:true, data:sh });
+    buildingMeshes.push({ mesh:house, x:sh.x, z:sh.z, w:12, d:12, h:cfg.h, safehouse:true, data:sh });
+    const top = cfg.h; // world Y of the flat top of the house body
 
     // Roof
-    const roofG = new THREE.ConeGeometry(9, 5, 4);
-    const roofM = new THREE.MeshLambertMaterial({ color:0x8b4513 });
-    const roof = new THREE.Mesh(roofG, roofM);
-    roof.position.set(sh.x, 10.5, sh.z);
-    roof.rotation.y = Math.PI/4;
-    target.add(roof);
+    if(cfg.roof === 'flat'){
+      const roof = new THREE.Mesh(new THREE.BoxGeometry(12.6, 0.5, 12.6), new THREE.MeshLambertMaterial({color:cfg.roofCol}));
+      roof.position.set(sh.x, top+0.25, sh.z);
+      target.add(roof);
+    } else if(cfg.roof === 'shed'){
+      const roof = new THREE.Mesh(new THREE.BoxGeometry(12.6, 0.5, 13), new THREE.MeshLambertMaterial({color:cfg.roofCol}));
+      roof.position.set(sh.x, top+0.6, sh.z-0.5);
+      roof.rotation.x = -0.12;
+      target.add(roof);
+    } else { // 'hip' — same cone shape as the original generic roof
+      const roof = new THREE.Mesh(new THREE.ConeGeometry(9, 5, 4), new THREE.MeshLambertMaterial({color:cfg.roofCol}));
+      roof.position.set(sh.x, top+2.5, sh.z);
+      roof.rotation.y = Math.PI/4;
+      target.add(roof);
+    }
 
-    // For mansions/penthouses, make them taller
-    if(sh.price >= 45000){
-      house.scale.set(2, 2, 2);
-      house.position.y = 8;
-      roof.scale.set(2, 2, 2);
-      roof.position.y = 20;
+    // One or two accent features per style, so each name/area reads
+    // distinctly instead of just a recoloured box.
+    const winMat = new THREE.MeshLambertMaterial({color:0x8ecae6, emissive:0x2b6a8f, emissiveIntensity:0.5});
+    switch(sh.style){
+      case 'exchange': { // sleek glass band + rooftop AC unit
+        const band = new THREE.Mesh(new THREE.BoxGeometry(12.1, 1.4, 12.1), winMat);
+        band.position.set(sh.x, top*0.6, sh.z);
+        target.add(band);
+        const ac = new THREE.Mesh(new THREE.BoxGeometry(2,1,2), new THREE.MeshLambertMaterial({color:0x546e7a}));
+        ac.position.set(sh.x+3, top+1, sh.z-3);
+        target.add(ac);
+        break;
+      }
+      case 'pearl': { // brick stoop + shutters
+        const stoop = new THREE.Mesh(new THREE.BoxGeometry(4,0.6,2.5), new THREE.MeshLambertMaterial({color:0x9e9e9e}));
+        stoop.position.set(sh.x-6.5, 0.3, sh.z);
+        target.add(stoop);
+        [-1,1].forEach(s=>{
+          const shutter = new THREE.Mesh(new THREE.BoxGeometry(0.15,2,1), new THREE.MeshLambertMaterial({color:0x2e5339}));
+          shutter.position.set(sh.x-6.05, top*0.55, sh.z+s*2.5);
+          target.add(shutter);
+        });
+        break;
+      }
+      case 'oldquarter': { // rooftop water tank + big window strip
+        const tankLegs = new THREE.Mesh(new THREE.CylinderGeometry(1.6,1.6,2,10), new THREE.MeshLambertMaterial({color:0x5d4037}));
+        tankLegs.position.set(sh.x+3, top+1, sh.z-3);
+        target.add(tankLegs);
+        const strip = new THREE.Mesh(new THREE.BoxGeometry(0.15, 3, 9), winMat);
+        strip.position.set(sh.x-6.05, top*0.6, sh.z);
+        target.add(strip);
+        break;
+      }
+      case 'dockside': { // porthole + exterior pipe
+        const port = new THREE.Mesh(new THREE.CylinderGeometry(0.7,0.7,0.2,16), new THREE.MeshLambertMaterial({color:0x263238}));
+        port.rotation.z = Math.PI/2;
+        port.position.set(sh.x-6.1, top*0.6, sh.z+2);
+        target.add(port);
+        const pipe = new THREE.Mesh(new THREE.CylinderGeometry(0.25,0.25,cfg.h,8), new THREE.MeshLambertMaterial({color:0x37474f}));
+        pipe.position.set(sh.x-6, cfg.h/2, sh.z-4);
+        target.add(pipe);
+        break;
+      }
+      case 'southgate': { // high window slit + steel trim
+        const slit = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.6, 5), new THREE.MeshLambertMaterial({color:0x1b1b1b}));
+        slit.position.set(sh.x-6.05, top-0.8, sh.z);
+        target.add(slit);
+        const trim = new THREE.Mesh(new THREE.BoxGeometry(12.4,0.2,12.4), new THREE.MeshLambertMaterial({color:0x9e9e9e}));
+        trim.position.set(sh.x, 0.1, sh.z);
+        target.add(trim);
+        break;
+      }
+      case 'fairview': { // front balcony with railing
+        const balc = new THREE.Mesh(new THREE.BoxGeometry(5,0.3,2), new THREE.MeshLambertMaterial({color:0xb0bec5}));
+        balc.position.set(sh.x-6.8, top*0.6, sh.z);
+        target.add(balc);
+        for(let i=-1;i<=1;i++){
+          const rail = new THREE.Mesh(new THREE.BoxGeometry(0.15,1,0.15), new THREE.MeshLambertMaterial({color:0x455a64}));
+          rail.position.set(sh.x-7.9, top*0.6+0.6, sh.z+i);
+          target.add(rail);
+        }
+        break;
+      }
+      case 'penthouse': { // rooftop lounge + antenna, tall glass bands
+        const lounge = new THREE.Mesh(new THREE.BoxGeometry(7,2.5,7), new THREE.MeshLambertMaterial({color:0x37474f}));
+        lounge.position.set(sh.x, top+1.75, sh.z);
+        target.add(lounge);
+        const antenna = new THREE.Mesh(new THREE.CylinderGeometry(0.15,0.15,4,6), new THREE.MeshLambertMaterial({color:0x90a4ae}));
+        antenna.position.set(sh.x, top+5, sh.z);
+        target.add(antenna);
+        [top*0.3, top*0.55, top*0.8].forEach(y=>{
+          const band = new THREE.Mesh(new THREE.BoxGeometry(12.1,1.2,12.1), winMat);
+          band.position.set(sh.x, y, sh.z);
+          target.add(band);
+        });
+        break;
+      }
+      // 'suburban' keeps the plain hip-roof cottage look — the two-car
+      // garage next to it is already the standout feature.
     }
   });
 }
@@ -4145,8 +4288,14 @@ function distanceTo(ax, az, bx, bz){
 // unconditionally from anywhere without an idx===3 check.
 const TERRAIN_HW_X = COUNTRYSIDE_BRIDGE.x + COUNTRYSIDE_BRIDGE.w/2; // 240
 const TERRAIN_FLAT_ZONES = [
-  // Highway corridor, north from the bridge to the far edge.
-  { type:'rect', x1:TERRAIN_HW_X-38, x2:TERRAIN_HW_X+38, z1:-1500, z2:-690 },
+  // Highway corridor, north from the bridge to the far edge. z2 must reach
+  // the countryside bbox edge (-520) in getTerrainHeight below, not stop
+  // short at -690 — the actual COUNTRYSIDE_BRIDGE deck (z -701 to -481) is
+  // a flat, fixed-height mesh, but -690..-520 was still getting full
+  // rolling-hill height applied under it, so the ground fell away from
+  // under the deck partway across and stayed gone until the bbox edge
+  // (walking/driving "under the map" on the bridge into the countryside).
+  { type:'rect', x1:TERRAIN_HW_X-38, x2:TERRAIN_HW_X+38, z1:-1500, z2:-520 },
   // Millbrook and Ashwood Falls.
   { type:'circle', x:200, z:-790, r:210 },
   { type:'circle', x:520, z:-1190, r:200 },

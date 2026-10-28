@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kalahari Alcora</title>
+<title>Kalahari Melaan</title>
 
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
@@ -2734,6 +2734,54 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
   .admin-auth-gate .admin-inline-row{display:flex;gap:8px;align-items:center}
   .admin-auth-gate .admin-inline-row input{flex:1;min-width:0}
   .admin-auth-gate .admin-security-options{display:flex;gap:8px;flex-wrap:wrap}
+
+/* KALAHARI MELAAN — polished library, eight colour systems and admin dashboard */
+body[data-color-theme="gold"]{--bg:#080b10;--panel:#10151d;--panel2:#171e29;--text:#f5f7fa;--muted:#9aa6b6;--accent:#f5c542;--accent2:#ffe07a;--border:#2b3442;--header:rgba(8,11,16,.94);--input:#0d1219;--field:#0b0f15;--soft:#ffffff08}
+body[data-color-theme="ocean"]{--bg:#06111f;--panel:#0c1b2c;--panel2:#11263b;--text:#edf8ff;--muted:#91afc4;--accent:#37c8f4;--accent2:#80e3ff;--border:#203d55;--header:rgba(6,17,31,.94);--input:#071725;--field:#071725;--soft:#ffffff09}
+body[data-color-theme="arctic"]{--bg:#edf4fa;--panel:#ffffff;--panel2:#e3edf5;--text:#14283a;--muted:#637b8f;--accent:#287fc3;--accent2:#52a6e7;--border:#cfdeea;--header:rgba(247,251,255,.94);--input:#f4f8fb;--field:#f4f8fb;--soft:#14283a08}
+body[data-color-theme="evergreen"]{--bg:#07130f;--panel:#0d2119;--panel2:#143126;--text:#eefbf3;--muted:#9bb9a8;--accent:#70d6a1;--accent2:#a1edc3;--border:#254837;--header:rgba(7,19,15,.94);--input:#091a13;--field:#091a13;--soft:#ffffff08}
+body[data-color-theme="sunset"]{--bg:#180e1b;--panel:#241429;--panel2:#321c32;--text:#fff2f0;--muted:#c7a6b5;--accent:#ff886f;--accent2:#ffb09c;--border:#4c2a43;--header:rgba(24,14,27,.94);--input:#1c1020;--field:#1c1020;--soft:#ffffff08}
+body[data-color-theme="ultraviolet"]{--bg:#0e0c20;--panel:#17132e;--panel2:#211b40;--text:#f5f0ff;--muted:#b2a8d1;--accent:#a88bff;--accent2:#c6b4ff;--border:#39305f;--header:rgba(14,12,32,.94);--input:#100e25;--field:#100e25;--soft:#ffffff08}
+body[data-color-theme="ruby"]{--bg:#160d12;--panel:#241219;--panel2:#321821;--text:#fff1f3;--muted:#c6a0a8;--accent:#f05268;--accent2:#ff8999;--border:#4c2630;--header:rgba(22,13,18,.94);--input:#1b0f15;--field:#1b0f15;--soft:#ffffff08}
+body[data-color-theme="mono"]{--bg:#090909;--panel:#151515;--panel2:#222222;--text:#f4f4f4;--muted:#aaa;--accent:#e4e4e4;--accent2:#fff;--border:#393939;--header:rgba(9,9,9,.95);--input:#101010;--field:#101010;--soft:#ffffff08}
+body[data-color-theme="arctic"] .card,body[data-color-theme="arctic"] .settings-card,body[data-color-theme="arctic"] .admin-card,body[data-color-theme="arctic"] .admin-control-card{background:var(--panel);border-color:var(--border)}
+body[data-color-theme="arctic"] .header-logo,body[data-color-theme="arctic"] header{color:var(--text)}
+.theme-palette{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}
+.theme-choice{border:1px solid var(--border);border-radius:13px;padding:9px;background:var(--panel);color:var(--text);text-align:left;min-width:0;transition:.18s}
+.theme-choice:hover,.theme-choice.active{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 18%,transparent);transform:translateY(-1px)}
+.theme-swatch{height:35px;border-radius:7px;margin-bottom:8px;background:linear-gradient(110deg,var(--sw1) 0 55%,var(--sw2) 55% 100%);border:1px solid #ffffff20}
+.theme-choice strong{display:block;font-size:10px}.theme-choice span{display:block;font-size:9px;color:var(--muted);margin-top:3px}
+/* Compact professional game catalogue */
+body .grid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+body.modern .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+body .card,body.modern .card,body.modern .card:nth-child(2){grid-column:auto;min-height:0;border-radius:18px;background:var(--panel);border:1px solid var(--border);box-shadow:0 10px 28px #0002;overflow:hidden}
+body .card:hover,body.modern .card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 18px 38px #0003}
+body .cover,body.modern .cover,body.modern .card:nth-child(2) .cover{height:auto;aspect-ratio:16/9;background:var(--panel2)}
+body .cover img{width:100%;height:100%;object-fit:cover;display:block}
+body .cover:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,#0005,transparent 55%)}
+body .card-body,body.modern .card-body,body.modern .card:nth-child(2) .card-body{padding:15px 16px 16px}
+body .card-body h4,body.modern .card-body h4,body.modern .card:nth-child(2) h4{font-size:15px;line-height:1.35;margin:0 0 12px;letter-spacing:-.25px}
+body .card-body .desc,body .card-body .meta,body .card-body .release,body .card-body .game-update,body .taxi4-special{display:none!important}
+body .card-bottom{display:block}
+body .card-bottom .play-btn{width:100%;padding:11px 14px;border-radius:10px;font-size:10px;font-weight:850;letter-spacing:.4px}
+body .enter-page-btn{width:100%;border:1px solid var(--border);background:var(--soft);color:var(--text);border-radius:10px;padding:11px 14px;font-size:10px;font-weight:850;letter-spacing:.45px;transition:.2s}
+body .enter-page-btn:hover{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent)}
+.game-detail-shell{width:min(820px,94vw);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--border);border-radius:22px;box-shadow:0 35px 100px #0009;color:var(--text)}
+.game-detail-art{position:relative;width:100%;aspect-ratio:16/7;max-height:310px;background:var(--panel2);overflow:hidden}
+.game-detail-art img{width:100%;height:100%;object-fit:cover;display:block}.game-detail-art:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,var(--panel),transparent 65%)}
+.game-detail-content{padding:24px 28px 28px}.game-detail-kicker{font-size:10px;font-weight:900;letter-spacing:1.7px;color:var(--accent);margin-bottom:8px}.game-detail-content h2{font-size:clamp(24px,4vw,34px);letter-spacing:-1px;margin-bottom:12px}.game-detail-description{font-size:13px;line-height:1.8;color:var(--muted);white-space:pre-line}.game-detail-meta{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}.game-detail-chip{border:1px solid var(--border);background:var(--soft);border-radius:999px;padding:7px 10px;font-size:10px;color:var(--muted)}.game-detail-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.game-detail-actions .play-btn{min-width:170px}.game-detail-close{float:right;border:1px solid var(--border);border-radius:10px;background:var(--soft);color:var(--text);padding:8px 12px}
+/* Admin control centre dashboard treatment */
+.admin-modal{max-width:1000px!important;border-radius:22px!important;background:var(--panel)!important;border:1px solid var(--border)!important}
+.admin-modal>.modal-top{padding-bottom:17px;border-bottom:1px solid var(--border);margin-bottom:18px}
+.admin-modal .modal-top h2{font-size:22px;letter-spacing:-.6px}
+#adminControlCenter>.admin-warning{border-radius:13px;padding:14px 16px;margin-bottom:18px}
+#adminControlCenter .admin-control-grid{grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:14px;margin-bottom:18px}
+#adminControlCenter .admin-control-card,#adminControlCenter .admin-card{border:1px solid var(--border);background:var(--panel2);border-radius:16px;padding:18px;margin-bottom:14px}
+#adminControlCenter .admin-control-card h4,#adminControlCenter .admin-card h3{font-size:13px;letter-spacing:-.2px}
+#adminControlCenter .admin-control-card p,#adminControlCenter .admin-card>p{font-size:11px;line-height:1.7;color:var(--muted)}
+#adminControlCenter .admin-switch-row{padding-top:14px;margin-top:12px;border-top:1px solid var(--border)}
+@media(max-width:650px){.theme-palette{grid-template-columns:repeat(2,minmax(0,1fr))}.game-detail-content{padding:18px}.game-detail-art{aspect-ratio:16/9}.admin-modal{max-height:94vh!important}}
+
 </style>
 </head>
 
@@ -2804,7 +2852,7 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
         </div>
 
         <h1>
-          Kalahari <span>Alcora</span>
+          Kalahari <span>Melaan</span>
         </h1>
 
       </div>
@@ -2929,14 +2977,14 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
         </h2>
 
         <div class="down-subtitle">
-          Kalahari Alcora
+          Kalahari Melaan
         </div>
 
         <p
           class="launcher-down-info"
           id="launcherDownInfo"
         >
-          Kalahari Alcora is currently unavailable.
+          Kalahari Melaan is currently unavailable.
         </p>
 
         <div
@@ -3015,7 +3063,7 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
       KA
     </div>
 
-    Kalahari <b>Alcora</b>
+    Kalahari <b>Melaan</b>
 
   </div>
 
@@ -3104,6 +3152,21 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
      SETTINGS
 ======================================================= -->
 
+<div id="gameDetailOverlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="gameDetailTitle">
+  <div class="game-detail-shell">
+    <div class="game-detail-art"><img id="gameDetailCover" src="" alt="Game title artwork"></div>
+    <div class="game-detail-content">
+      <button type="button" class="game-detail-close" id="closeGameDetail" aria-label="Close game details">Close ✕</button>
+      <div class="game-detail-kicker" id="gameDetailKicker">GAME LIBRARY</div>
+      <h2 id="gameDetailTitle">Game title</h2>
+      <p class="game-detail-description" id="gameDetailDescription"></p>
+      <div class="game-detail-meta" id="gameDetailMeta"></div>
+      <div id="gameDetailUpdate" class="game-detail-description"></div>
+      <div class="game-detail-actions"><button class="play-btn" id="gameDetailLaunch" type="button">ENTER GAME</button></div>
+    </div>
+  </div>
+</div>
+
 <div id="settingsOverlay" class="modal-overlay hidden">
   <div class="settings-shell">
     <aside class="settings-sidebar">
@@ -3123,6 +3186,16 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
       <p class="settings-intro">Control the launcher, your account, game library, notifications and visual experience.</p>
 
       <section class="settings-section active" id="appearanceTab">
+        <div class="settings-card"><h3>Colour theme</h3><p>Choose one of eight Kalahari Melaan colour systems. Your selection is saved on this device.</p><div class="theme-palette" id="themePalette">
+          <button class="theme-choice" data-color-theme="gold" style="--sw1:#090b10;--sw2:#f5c542"><div class="theme-swatch"></div><strong>Kalahari Gold</strong><span>Signature gold</span></button>
+          <button class="theme-choice" data-color-theme="ocean" style="--sw1:#06111f;--sw2:#37c8f4"><div class="theme-swatch"></div><strong>Oceanic</strong><span>Blue and cyan</span></button>
+          <button class="theme-choice" data-color-theme="arctic" style="--sw1:#edf5fb;--sw2:#287fc3"><div class="theme-swatch"></div><strong>Arctic</strong><span>Bright and clean</span></button>
+          <button class="theme-choice" data-color-theme="evergreen" style="--sw1:#07130f;--sw2:#70d6a1"><div class="theme-swatch"></div><strong>Evergreen</strong><span>Forest green</span></button>
+          <button class="theme-choice" data-color-theme="sunset" style="--sw1:#180e1b;--sw2:#ff886f"><div class="theme-swatch"></div><strong>Sunset</strong><span>Warm coral</span></button>
+          <button class="theme-choice" data-color-theme="ultraviolet" style="--sw1:#0e0c20;--sw2:#a88bff"><div class="theme-swatch"></div><strong>Ultraviolet</strong><span>Violet glow</span></button>
+          <button class="theme-choice" data-color-theme="ruby" style="--sw1:#111113;--sw2:#f05268"><div class="theme-swatch"></div><strong>Ruby</strong><span>Crimson accent</span></button>
+          <button class="theme-choice" data-color-theme="mono" style="--sw1:#090909;--sw2:#e4e4e4"><div class="theme-swatch"></div><strong>Monochrome</strong><span>Black and white</span></button>
+        </div></div>
         <div class="settings-card"><h3>Launcher design</h3><p>Choose the layout used after you sign in.</p><div class="design-choice">
           <button class="design-option" id="oldDesignBtn"><div class="design-preview old-preview"></div><strong>Original</strong><span>Classic Kalahari launcher.</span></button>
           <button class="design-option" id="modernDesignBtn"><div class="design-preview modern-preview"></div><strong>Modern</strong><span>Redesigned gaming dashboard.</span></button>
@@ -3164,7 +3237,7 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
       <section class="settings-section" id="accessibilityTab"><div class="settings-card"><h3>Accessibility</h3><p>Make the interface easier to use.</p><div class="check-row"><div class="check-copy"><strong>Reduce animations</strong><span>Syncs with Appearance.</span></div><input type="checkbox" id="accessibilityMotion"></div><div class="check-row"><div class="check-copy"><strong>High contrast</strong><span>Increase borders and text contrast.</span></div><input type="checkbox" id="highContrastToggle"></div></div></section>
       <section class="settings-section" id="advancedTab"><div class="settings-card"><h3>Advanced</h3><p>Tools for troubleshooting the launcher.</p><div class="settings-actions"><button class="save-btn" id="clearLocalData">Clear local settings</button><button class="save-btn" id="reloadLauncher2">Reload</button></div><div class="settings-status" id="advancedStatus">Firebase connection is managed automatically.</div></div></section>
       <section class="settings-section" id="aboutTab">
-  <div class="settings-card"><h3>Kalahari Alcora</h3><p>Launcher v2.38</p><p style="margin-top:8px">Games, accounts, announcements and Kalahari-Cheviot Industries experiences in one place.</p></div>
+  <div class="settings-card"><h3>Kalahari Melaan</h3><p>Launcher v2.41</p><p style="margin-top:8px">Games, accounts, announcements and Kalahari-Cheviot Industries experiences in one place.</p></div>
   <div class="settings-card"><h3>Need help?</h3><p>You can chat to a moderator through the <strong>Messages</strong> page if you need help, want to report an issue, or have a question about the launcher.</p><div class="settings-actions"><button class="save-btn" id="openMessagesFromAbout">Open Messages</button></div></div>
 </section>
     </div>
@@ -3207,7 +3280,7 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
     <div id="adminControlCenter" class="hidden">
     <div class="admin-warning">⚠ <strong>Administrator Area</strong><br>Only the administrator should use these controls. Changes are applied through Firebase and affect all users.</div>
     <div class="admin-control-grid">
-      <div class="admin-control-card"><h4>Launcher Access</h4><p>Turn Kalahari Alcora on or off for normal users. Administrator access remains available when offline.</p><div class="admin-switch-row"><strong id="adminLauncherStatus">Loading...</strong><label class="admin-switch"><input type="checkbox" id="launcherStatusToggle"><span class="admin-switch-track"></span></label></div></div>
+      <div class="admin-control-card"><h4>Launcher Access</h4><p>Turn Kalahari Melaan on or off for normal users. Administrator access remains available when offline.</p><div class="admin-switch-row"><strong id="adminLauncherStatus">Loading...</strong><label class="admin-switch"><input type="checkbox" id="launcherStatusToggle"><span class="admin-switch-track"></span></label></div></div>
       <div class="admin-control-card"><h4>Kalahari Messages</h4><p>Control whether Kalahari Messages is available. When OFF, Messages shows its loading screen before the unavailable notice.</p><div class="admin-switch-row"><strong id="adminMessagesStatus">Loading...</strong><label class="admin-switch"><input type="checkbox" id="messagesStatusToggle"><span class="admin-switch-track"></span></label></div></div>
       <div class="admin-control-card"><h4>Kalahari Markhor</h4><p>Control whether Kalahari Markhor (Crews &amp; the Server Board) is available. When OFF, only you can still get in.</p><div class="admin-switch-row"><strong id="adminMarkhorStatus">Loading...</strong><label class="admin-switch"><input type="checkbox" id="markhorStatusToggle"><span class="admin-switch-track"></span></label></div></div>
     </div>
@@ -3435,7 +3508,7 @@ body.simple .taxi4-special{grid-column:auto!important;min-height:0!important;bac
 
 
 <footer>
-  © 2026 Kalahari-Cheviot Industries • Kalahari Alcora v2.40
+  © 2026 Kalahari-Cheviot Industries • Kalahari Melaan v2.41
 </footer>
 
 </main>
@@ -3539,10 +3612,10 @@ let gameStatuses={};
 let currentAnnouncement={active:false,title:"",body:"",date:""};
 
 const LAUNCHER_DOWN_TITLE=
-  "Kalahari Alcora Down";
+  "Kalahari Melaan Down";
 
 const LAUNCHER_DOWN_INFO=
-  "Kalahari Alcora & Kalahari Messages is currently unavailable while we perform maintenance. Please check back later.";
+  "Kalahari Melaan & Kalahari Messages is currently unavailable while we perform maintenance. Please check back later.";
 
 const LAUNCHER_DOWN_DATE=
   "Status: Offline • Please check the Kalahari-Cheviot Industries announcements for updates.";
@@ -3798,6 +3871,10 @@ const modernFilterPills=
   );
 
 
+
+// Stable Firestore document IDs also distinguish multiple upcoming placeholders.
+games.forEach((game,index)=>{if(!game.id){const base=String(game.name||"game").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"game";game.id=base+(games.slice(0,index).some(previous=>previous.id===base)?"-"+(index+1):"");}});
+
 /* =========================================================
    PLATFORM STATUS
 ========================================================= */
@@ -3809,257 +3886,49 @@ function listenPlatformStatuses(){if(!db){setLauncherScreen(false);return;}launc
    GAME RENDERING
 ========================================================= */
 
-function renderGames(
-  searchTerm="",
-  category="all"
-){
-
+function renderGames(searchTerm="",category="all"){
   grid.innerHTML="";
-
-  const term=
-    searchTerm.toLowerCase().trim();
-
-  games
-    .filter(game=>{
-
-      const matchesSearch=
-        game.name
-          .toLowerCase()
-          .includes(term)
-        ||
-        game.genre
-          .toLowerCase()
-          .includes(term);
-
-      const matchesCategory=
-        category==="all" ||
-        game.category===category;
-
-      return matchesSearch &&
-             matchesCategory;
-
-    })
-    .forEach(game=>{
-
-      const effectiveStatus=gameStatuses[game.id] || game.status;
-      const available=effectiveStatus==="AVAILABLE";
-      const production=effectiveStatus==="IN PROGRESS" || effectiveStatus==="IN PRODUCTION";
-      const coming=effectiveStatus==="COMING SOON";
-      const maintenance=effectiveStatus==="MAINTENANCE";
-
-      const isAdmin=
-        auth?.currentUser &&
-        (
-          auth.currentUser.displayName ||
-          ""
-        )
-        .toLowerCase()==="admin";
-
-      const hasValidLink=
-        !!game.url &&
-        game.url!=="#";
-
-      const canLaunch=
-        available ||
-        (
-          production &&
-          isAdmin &&
-          hasValidLink
-        );
-
-
-      const card=
-        document.createElement("article");
-
-
-      card.className=
-        "card"
-        +
-        (coming?" coming":"")
-        +
-        (maintenance?" maintenance":"")
-        +
-        (
-          game.name==="Taxi IV"
-            ?" wide-card"
-            :""
-        );
-
-
-      const updateHTML=
-        game.updateStatus==="ON"
-        ?
-        `
-        <div class="game-update">
-
-          <div class="game-update-title">
-            ${
-              maintenance
-                ?"Maintenance Notice"
-                :"Update Notice"
-            }
-          </div>
-
-          <div class="game-update-text">
-            ${game.updateNotes}
-          </div>
-
-        </div>
-        `
-        :"";
-
-
-      if(document.body.classList.contains("simple")){
-
-        card.innerHTML=`
-
-          <div class="simple-slot">
-
-            <div class="simple-game-title">
-              ${game.name}
-            </div>
-
-            <button
-              class="
-                play-btn
-                simple-play
-                ${production?"production-btn":""}
-                ${maintenance?"maintenance-btn":""}
-              "
-              ${!canLaunch?"disabled":""}
-              data-url="${game.url}"
-            >
-              ${
-                canLaunch
-                  ?"PLAY"
-                  :
-                  maintenance
-                    ?"MAINTENANCE"
-                    :
-                    production
-                      ?"IN PRODUCTION"
-                      :"COMING SOON"
-              }
-            </button>
-
-          </div>
-
-        `;
-
-      }else if(game.name==="Taxi IV"){
-
-        card.classList.add("taxi4-special");
-        card.innerHTML=`
-          <div class="taxi4-release">RELEASE DATE • ${game.date}</div>
-          <div class="taxi4-visual"><div class="taxi4-lines"></div></div>
-          <div class="taxi4-body">
-            <div>
-              <h4>TAXI 4 <span style="color:var(--accent);font-size:.55em">• 2026</span></h4>
-              <p>${game.description}</p>
-              <div class="taxi4-meta"><span class="taxi4-pill">DRIVING</span><span class="taxi4-pill">OPEN WORLD</span><span class="taxi4-pill">IN DEVELOPMENT</span><span class="taxi4-pill">KINGSTON CITY</span></div>
-            </div>
-            <div class="taxi4-action">
-              <button class="play-btn ${production?"production-btn":""} ${maintenance?"maintenance-btn":""}" ${!canLaunch?"disabled":""} data-url="${game.url}">${canLaunch?"PLAY":production?"IN PRODUCTION":maintenance?"MAINTENANCE":"COMING SOON"}</button>
-            </div>
-          </div>
-        `;
-
-      }else{
-
-        card.innerHTML=`
-
-        <div class="cover">
-
-          <span class="badge">
-            ${effectiveStatus}
-          </span>
-
-          ${
-            game.cover
-            ?
-            `
-            <img
-              src="${game.cover}"
-              alt="${game.name} cover art"
-            >
-            `
-            :
-            `
-            <div class="game-icon">
-              ${game.icon}
-            </div>
-            `
-          }
-
-        </div>
-
-
-        <div class="card-body">
-
-          <h4>
-            ${game.name}
-          </h4>
-
-          <div class="desc">
-            ${game.description}
-          </div>
-
-
-          <div class="meta">
-
-            <span class="tag">
-              ${game.genre}
-            </span>
-
-          </div>
-
-
-          <div class="card-bottom">
-
-            <span class="release">
-              ${game.date}
-            </span>
-
-
-            <button
-              class="
-                play-btn
-                ${production?"production-btn":""}
-                ${maintenance?"maintenance-btn":""}
-              "
-              ${!canLaunch?"disabled":""}
-              data-url="${game.url}"
-            >
-
-              ${
-                canLaunch
-                  ?"PLAY"
-                  :
-                  maintenance
-                    ?"MAINTENANCE"
-                    :
-                    production
-                      ?"IN PRODUCTION"
-                      :"COMING SOON"
-              }
-
-            </button>
-
-          </div>
-
-          ${updateHTML}
-
-        </div>
-
-        `;
-
-      }
-
-      grid.appendChild(card);
-
-    });
-
+  const term=String(searchTerm||"").toLowerCase().trim();
+  games.filter(game=>{
+    const haystack=[game.name,game.genre,game.description,game.date].join(" ").toLowerCase();
+    return haystack.includes(term)&&(category==="all"||game.category===category);
+  }).forEach(game=>{
+    const effectiveStatus=gameStatuses[game.id]||game.status;
+    const available=effectiveStatus==="AVAILABLE";
+    const production=effectiveStatus==="IN PROGRESS"||effectiveStatus==="IN PRODUCTION";
+    const maintenance=effectiveStatus==="MAINTENANCE";
+    const hasValidLink=!!game.url&&game.url!=="#";
+    const canLaunch=hasValidLink&&(available||(production&&isAdmin(auth?.currentUser)));
+    const card=document.createElement("article");
+    card.className="card game-library-card"+(effectiveStatus==="COMING SOON"?" coming":"")+(maintenance?" maintenance":"");
+    const cover=game.cover?`<img src="${escapeGameText(game.cover)}" alt="${escapeGameText(game.name)} title artwork" loading="lazy" onerror="this.style.display='none';this.parentElement.classList.add('no-cover');this.parentElement.insertAdjacentHTML('beforeend','<div class=\"game-icon\">${escapeGameText(game.icon||'GAME')}</div>')">`:`<div class="game-icon">${escapeGameText(game.icon||"GAME")}</div>`;
+    card.innerHTML=`<div class="cover">${cover}<span class="badge">${escapeGameText(effectiveStatus)}</span></div><div class="card-body"><h4>${escapeGameText(game.name)}</h4><div class="card-bottom"><button class="enter-page-btn" type="button" data-game-details="${escapeGameText(game.id)}">ENTER PAGE <span aria-hidden="true">↗</span></button></div></div>`;
+    grid.appendChild(card);
+  });
+  if(!grid.children.length)grid.innerHTML='<div class="empty-state">No games match your search.</div>';
 }
+function escapeGameText(value){return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;", "'":"&#39;"}[ch]));}
+function openGameDetails(gameId){
+  const game=games.find(item=>item.id===gameId);if(!game)return;
+  const status=gameStatuses[game.id]||game.status;
+  const art=document.getElementById("gameDetailCover");
+  art.src=game.cover||"";art.alt=game.name+" title artwork";art.style.display=game.cover?"block":"none";
+  document.getElementById("gameDetailKicker").textContent=(game.category||"game").toUpperCase()+" • "+status;
+  document.getElementById("gameDetailTitle").textContent=game.name;
+  document.getElementById("gameDetailDescription").textContent=game.description||"More information about this game will be available soon.";
+  const meta=document.getElementById("gameDetailMeta");meta.innerHTML="";
+  [game.genre||"Genre TBA",game.date&&game.date!=="TBA"?game.date:"Release date TBA",status].forEach(value=>{const chip=document.createElement("span");chip.className="game-detail-chip";chip.textContent=value;meta.appendChild(chip);});
+  const update=document.getElementById("gameDetailUpdate");update.textContent=game.updateStatus==="ON"?(game.updateNotes||""):"";
+  const launch=document.getElementById("gameDetailLaunch");const production=status==="IN PROGRESS"||status==="IN PRODUCTION";const canLaunch=game.url&&game.url!=="#"&&(status==="AVAILABLE"||(production&&isAdmin(auth?.currentUser)));
+  launch.dataset.url=game.url||"#";launch.disabled=!canLaunch;launch.textContent=canLaunch?(production?"ENTER GAME • DEVELOPMENT":"ENTER GAME"):status==="MAINTENANCE"?"UNDER MAINTENANCE":production?"IN DEVELOPMENT":status==="COMING SOON"?"COMING SOON":"UNAVAILABLE";
+  launch.classList.toggle("production-btn",production);launch.classList.toggle("maintenance-btn",status==="MAINTENANCE");
+  document.getElementById("gameDetailOverlay").classList.remove("hidden");
+}
+function closeGameDetails(){document.getElementById("gameDetailOverlay")?.classList.add("hidden");}
+document.getElementById("closeGameDetail")?.addEventListener("click",closeGameDetails);
+document.getElementById("gameDetailOverlay")?.addEventListener("click",event=>{if(event.target.id==="gameDetailOverlay")closeGameDetails();});
+document.addEventListener("keydown",event=>{if(event.key==="Escape")closeGameDetails();});
+document.addEventListener("click",event=>{const entry=event.target.closest("[data-game-details]");if(!entry)return;openGameDetails(entry.dataset.gameDetails);});
 
 
 /* =========================================================
@@ -4189,7 +4058,7 @@ document.addEventListener(
     if(!launcherAvailable && !adminOverride){
 
       alert(
-        "Kalahari Alcora is currently offline."
+        "Kalahari Melaan is currently offline."
       );
 
       return;
@@ -5862,6 +5731,18 @@ document.addEventListener(
 
   }
 );
+
+
+/* Kalahari Melaan colour themes */
+function applyColorTheme(theme,save=true){
+  const allowed=["gold","ocean","arctic","evergreen","sunset","ultraviolet","ruby","mono"];
+  if(!allowed.includes(theme))theme="gold";
+  document.body.dataset.colorTheme=theme;
+  document.querySelectorAll(".theme-choice").forEach(button=>{const active=button.dataset.colorTheme===theme;button.classList.toggle("active",active);button.setAttribute("aria-pressed",String(active));});
+  if(save)localStorage.setItem("kalahariColorTheme",theme);
+}
+document.querySelectorAll(".theme-choice").forEach(button=>button.addEventListener("click",()=>applyColorTheme(button.dataset.colorTheme)));
+applyColorTheme(localStorage.getItem("kalahariColorTheme")||"gold",false);
 
 </script>
 

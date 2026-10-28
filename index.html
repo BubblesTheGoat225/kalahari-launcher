@@ -5124,7 +5124,10 @@ document.getElementById("openMessagesFromAbout")?.addEventListener("click",()=>{
 
 const adminBtn=document.getElementById("adminBtn"),adminOverlay=document.getElementById("adminOverlay"),adminMessage=document.getElementById("adminMessage"),adminAccessPassword=document.getElementById("adminAccessPassword"),adminAccessSubmit=document.getElementById("adminAccessSubmit"),adminAccessError=document.getElementById("adminAccessError"),announcementMessage=document.getElementById("announcementMessage");
 const adminAuthGate=document.getElementById("adminAuthGate"),adminControlCenter=document.getElementById("adminControlCenter"),adminPasswordStep=document.getElementById("adminPasswordStep"),adminSecurityQuestionPanel=document.getElementById("adminSecurityQuestionPanel"),adminAccessPasswordPanel=document.getElementById("adminAccessPasswordPanel"),adminAccessSubmitPanel=document.getElementById("adminAccessSubmitPanel"),adminAccessErrorPanel=document.getElementById("adminAccessErrorPanel"),adminSecurityErrorPanel=document.getElementById("adminSecurityErrorPanel");
-function isAdmin(user){return !!user&&(user.displayName||"").trim().toLowerCase()==="admin";}
+// Identify the administrator by the Firebase Authentication UID, not displayName.
+// A username/profile rename will therefore no longer remove administrator access.
+const ADMIN_UID = "CpSNzxULgGZZf17ayaUlQJfRCZg2";
+function isAdmin(user){return !!user && user.uid === ADMIN_UID;}
 function canAdmin(){return adminSessionAuthenticated||adminOverride||isAdmin(auth?.currentUser);}
 function updateAdminVisibility(user){if(isAdmin(user)||adminOverride)adminBtn.classList.remove("hidden");else{adminBtn.classList.add("hidden");closeAdmin();}}
 function resetAdminAuthentication(){

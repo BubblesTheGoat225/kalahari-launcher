@@ -3397,6 +3397,18 @@ body .enter-page-btn:hover{border-color:var(--accent);background:color-mix(in sr
         <div class="wide"><label>UPDATE NOTES</label><textarea id="adminEditGameNotes" maxlength="1000"></textarea></div>
       </div><div class="admin-editor-actions"><button class="admin-action-btn primary" id="saveAdminGame" type="button">Save Game Details</button><button class="admin-action-btn" id="resetAdminGame" type="button">Reset Form</button></div><div class="profile-status" id="adminGameEditorStatus" role="status"></div></div>
     </div>
+    <div class="admin-card" id="adminGrantManager">
+      <h3>Temporary &amp; Game Admin Access</h3>
+      <p style="color:var(--muted);font-size:11px;line-height:1.5;margin-bottom:12px">Grant access to a signed-in user by Firebase UID. Temporary admin expires automatically; Game Editor access is restricted to one game.</p>
+      <div class="admin-game-editor-grid">
+        <div class="wide"><label>USER FIREBASE UID</label><input id="grantUserUid" maxlength="128" placeholder="Paste the user's Firebase Authentication UID"></div>
+        <div><label>ACCESS TYPE</label><select id="grantAccessType"><option value="temporary">Temporary admin</option><option value="game">Own-game editor</option></select></div>
+        <div id="grantDurationWrap"><label>DURATION (HOURS)</label><input id="grantDurationHours" type="number" min="1" max="720" value="24"></div>
+        <div class="wide hidden" id="grantGameWrap"><label>GAME THEY CAN EDIT</label><select id="grantGameId"></select></div>
+      </div>
+      <div class="admin-editor-actions"><button class="admin-action-btn primary" id="createAdminGrant" type="button">Grant Access</button><button class="admin-action-btn" id="revokeAdminGrant" type="button">Revoke Access</button></div>
+      <div class="profile-status" id="adminGrantStatus" role="status"></div>
+    </div>
     <div class="admin-card"><h3>Administrator</h3><p>Access: <strong id="adminAccountName">admin</strong></p></div>
     <div class="admin-message" id="adminMessage"></div>
     </div>
@@ -3690,6 +3702,9 @@ let messagesAvailable=true;
 let markhorAvailable=true;
 let adminOverride=false;
 let adminSessionAuthenticated=false;
+let currentAdminGrant=null;
+let currentAdminGrantUnsub=null;
+let grantExpiryTimer=null;
 let launcherStatusUnsub=null;
 let messagesStatusUnsub=null;
 let markhorStatusUnsub=null;
@@ -5133,8 +5148,30 @@ const adminAuthGate=document.getElementById("adminAuthGate"),adminControlCenter=
 // A username/profile rename will therefore no longer remove administrator access.
 const ADMIN_UID = "CpSNzxULgGZZf17ayaUlQJfRCZg2";
 function isAdmin(user){return !!user && user.uid === ADMIN_UID;}
-function canAdmin(){return adminSessionAuthenticated||adminOverride||isAdmin(auth?.currentUser);}
-function updateAdminVisibility(user){if(isAdmin(user)||adminOverride)adminBtn.classList.remove("hidden");else{adminBtn.classList.add("hidden");closeAdmin();}}
+function grantIsActive(grant){if(!grant)return false;if(grant.type==="temporary")return !!grant.expiresAt&&grant.expiresAt.toDate&&grant.expiresAt.toDate().getTime()>Date.now();if(grant.type==="game")return !!grant.gameId;return false;}
+function isTemporaryAdmin(user=auth?.currentUser){return !!user&&user.uid!==""
+  && !!currentAdminGrant&&currentAdminGrant.type==="temporary"&&grantIsActive(currentAdminGrant);}
+function isGameContributor(user=auth?.currentUser){return !!user&&!!currentAdminGrant&&currentAdminGrant.type==="game"&&grantIsActive(currentAdminGrant);}
+function hasAdminPanelAccess(user=auth?.currentUser){return isAdmin(user)||isTemporaryAdmin(user)||isGameContributor(user)||adminOverride;}
+function canAdmin(){return isAdmin(auth?.currentUser)||isTemporaryAdmin()||adminOverride;}
+function canEditGame(gameId){return canAdmin()||(isGameContributor()&&currentAdminGrant.gameId===gameId);}
+function updateAdminVisibility(user){if(hasAdminPanelAccess(user))adminBtn.classList.remove("hidden");else{adminBtn.classList.add("hidden");closeAdmin();}}
+function watchAdminGrant(user){
+  if(currentAdminGrantUnsub){currentAdminGrantUnsub();currentAdminGrantUnsub=null;}
+  if(grantExpiryTimer){clearTimeout(grantExpiryTimer);grantExpiryTimer=null;}
+  currentAdminGrant=null;
+  if(!user||!db){updateAdminVisibility(user);return;}
+  currentAdminGrantUnsub=db.collection("adminGrants").doc(user.uid).onSnapshot(snap=>{
+    currentAdminGrant=snap.exists?snap.data():null;
+    if(grantExpiryTimer)clearTimeout(grantExpiryTimer);
+    if(currentAdminGrant?.type==="temporary"&&currentAdminGrant.expiresAt?.toDate){
+      const delay=Math.max(0,currentAdminGrant.expiresAt.toDate().getTime()-Date.now()+250);
+      grantExpiryTimer=setTimeout(()=>{currentAdminGrant=null;updateAdminVisibility(auth?.currentUser);if(adminOverlay&&!adminOverlay.classList.contains("hidden"))closeAdmin();},delay);
+    }
+    updateAdminVisibility(user);
+    if(!hasAdminPanelAccess(user)&&adminOverlay&&!adminOverlay.classList.contains("hidden"))closeAdmin();
+  },err=>{console.warn("Admin grant lookup failed:",err?.code||err);currentAdminGrant=null;updateAdminVisibility(user);});
+}
 function resetAdminAuthentication(){
   adminSessionAuthenticated=false;
   if(adminAuthGate)adminAuthGate.classList.remove("hidden");
@@ -5154,8 +5191,12 @@ function finishAdminAuthentication(){
   adminSessionAuthenticated=true;
   if(adminAuthGate)adminAuthGate.classList.add("hidden");
   if(adminControlCenter)adminControlCenter.classList.remove("hidden");
-  document.getElementById("adminAccountName").textContent=isAdmin(auth?.currentUser)?(auth.currentUser.displayName||"admin"):"Administrator Access";
-  renderAdminGameList();populateAdminGameEditor();updateAdminControls();updateAnnouncementAdminStatus();
+  document.getElementById("adminAccountName").textContent=isAdmin(auth?.currentUser)?(auth.currentUser.displayName||"admin"):isGameContributor()?"Game Editor · "+(currentAdminGrant.gameId||""):"Temporary Administrator";
+  const contributor=isGameContributor();
+  document.querySelectorAll("#adminControlCenter > .admin-warning, #adminControlCenter > .admin-control-grid, #adminControlCenter > .admin-card:not(#adminGameEditorCard):not(#adminGrantManager), #adminControlCenter > .admin-message").forEach(el=>el.classList.toggle("hidden",contributor));
+  const grantManager=document.getElementById("adminGrantManager");if(grantManager)grantManager.classList.toggle("hidden",!isAdmin(auth?.currentUser));
+  const availabilityCard=document.getElementById("adminGameList")?.closest(".admin-card");if(availabilityCard)availabilityCard.classList.toggle("hidden",contributor);
+  renderAdminGameList();populateAdminGameEditor();updateAdminControls();updateAnnouncementAdminStatus();populateGrantGameSelect();
   const at=document.getElementById("announcementTitle"),ab=document.getElementById("announcementBody"),ad=document.getElementById("announcementDate");
   if(at)at.value=currentAnnouncement.title;if(ab)ab.value=currentAnnouncement.body;if(ad)ad.value=currentAnnouncement.date;
   if(announcementMessage)announcementMessage.textContent="";
@@ -5195,11 +5236,37 @@ async function saveAnnouncement(active){
     updateAnnouncementAdminStatus();
   }
 }
-function populateAdminGameEditor(){const select=document.getElementById("adminEditGameSelect");if(!select)return;const old=select.value;select.innerHTML=games.map(g=>`<option value="${escapeGameText(g.id)}">${escapeGameText(g.name)} (${escapeGameText(g.id)})</option>`).join("");if(old&&games.some(g=>g.id===old))select.value=old;loadAdminGameEditor();}
+function populateAdminGameEditor(){const select=document.getElementById("adminEditGameSelect");if(!select)return;const old=select.value;const allowed=games.filter(g=>canEditGame(g.id));select.innerHTML=allowed.map(g=>`<option value="${escapeGameText(g.id)}">${escapeGameText(g.name)} (${escapeGameText(g.id)})</option>`).join("");if(old&&allowed.some(g=>g.id===old))select.value=old;else if(isGameContributor()&&allowed.length)select.value=allowed[0].id;select.disabled=isGameContributor();const statusField=document.getElementById("adminEditGameStatus");if(statusField)statusField.disabled=isGameContributor();loadAdminGameEditor();}
 function loadAdminGameEditor(){const id=document.getElementById("adminEditGameSelect")?.value;const game=games.find(g=>g.id===id);if(!game)return;const fields={adminEditGameName:game.name,adminEditGameGenre:game.genre,adminEditGameDate:game.date,adminEditGamePrice:gamePrice(game)??"",adminEditGameStatus:gameStatuses[game.id]||game.status,adminEditGameCover:game.cover||"",adminEditGameUrl:game.url||"",adminEditGameDescription:game.description||"",adminEditGameNotes:game.updateNotes||""};Object.entries(fields).forEach(([key,value])=>{const el=document.getElementById(key);if(el)el.value=value;});const status=document.getElementById("adminGameEditorStatus");if(status)status.textContent="Editing: "+game.name;}
 function resetAdminGameEditor(){loadAdminGameEditor();}
-async function saveAdminGameEditor(){if(!canAdmin()||!db){document.getElementById("adminGameEditorStatus").textContent="Administrator access or Firebase is unavailable.";return;}const id=document.getElementById("adminEditGameSelect").value;const game=games.find(g=>g.id===id);if(!game)return;const data={name:document.getElementById("adminEditGameName").value.trim()||game.name,genre:document.getElementById("adminEditGameGenre").value.trim(),date:document.getElementById("adminEditGameDate").value.trim(),price:document.getElementById("adminEditGamePrice").value===""?null:Math.max(0,Number(document.getElementById("adminEditGamePrice").value)||0),status:document.getElementById("adminEditGameStatus").value,cover:document.getElementById("adminEditGameCover").value.trim(),url:document.getElementById("adminEditGameUrl").value.trim()||"#",description:document.getElementById("adminEditGameDescription").value.trim(),updateNotes:document.getElementById("adminEditGameNotes").value.trim(),updateStatus:document.getElementById("adminEditGameNotes").value.trim()?"ON":"OFF",updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:auth?.currentUser?.uid||"admin"};const statusEl=document.getElementById("adminGameEditorStatus");statusEl.textContent="Saving game details…";try{await db.collection("gameCatalog").doc(id).set(data,{merge:true});Object.assign(game,data);gameStatuses[id]=data.status;remoteGameCatalog[id]=data;renderGames(search.value,gameFilter.value);renderAdminGameList();statusEl.textContent="Saved. The game page and Store will use these details.";}catch(err){console.error("Game catalogue save failed",err);statusEl.textContent=err?.code==="permission-denied"?"Firestore denied this save. Your rules need admin-only read access to gameCatalog and admin-only create/update access for your administrator UID.":`Could not save (${err?.code||"unknown"}). Check Firebase connection and Firestore rules.`;}}
+async function saveAdminGameEditor(){if(!db){document.getElementById("adminGameEditorStatus").textContent="Firebase is unavailable.";return;}const id=document.getElementById("adminEditGameSelect").value;const game=games.find(g=>g.id===id);if(!game||!canEditGame(id)){document.getElementById("adminGameEditorStatus").textContent="You do not have permission to edit this game.";return;}const data={name:document.getElementById("adminEditGameName").value.trim()||game.name,genre:document.getElementById("adminEditGameGenre").value.trim(),date:document.getElementById("adminEditGameDate").value.trim(),price:document.getElementById("adminEditGamePrice").value===""?null:Math.max(0,Number(document.getElementById("adminEditGamePrice").value)||0),status:document.getElementById("adminEditGameStatus").value,cover:document.getElementById("adminEditGameCover").value.trim(),url:document.getElementById("adminEditGameUrl").value.trim()||"#",description:document.getElementById("adminEditGameDescription").value.trim(),updateNotes:document.getElementById("adminEditGameNotes").value.trim(),updateStatus:document.getElementById("adminEditGameNotes").value.trim()?"ON":"OFF",updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:auth?.currentUser?.uid||"admin"};const statusEl=document.getElementById("adminGameEditorStatus");statusEl.textContent="Saving game details…";try{await db.collection("gameCatalog").doc(id).set(data,{merge:true});Object.assign(game,data);gameStatuses[id]=data.status;remoteGameCatalog[id]=data;renderGames(search.value,gameFilter.value);renderAdminGameList();statusEl.textContent="Saved. The game page and Store will use these details.";}catch(err){console.error("Game catalogue save failed",err);statusEl.textContent=err?.code==="permission-denied"?"Firestore denied this save. Your rules need admin-only read access to gameCatalog and admin-only create/update access for your administrator UID.":`Could not save (${err?.code||"unknown"}). Check Firebase connection and Firestore rules.`;}}
 document.getElementById("adminEditGameSelect")?.addEventListener("change",loadAdminGameEditor);document.getElementById("saveAdminGame")?.addEventListener("click",saveAdminGameEditor);document.getElementById("resetAdminGame")?.addEventListener("click",resetAdminGameEditor);
+function populateGrantGameSelect(){const el=document.getElementById("grantGameId");if(!el)return;el.innerHTML=games.map(g=>`<option value="${escapeGameText(g.id)}">${escapeGameText(g.name)} (${escapeGameText(g.id)})</option>`).join("");}
+document.getElementById("grantAccessType")?.addEventListener("change",e=>{const game=e.target.value==="game";document.getElementById("grantDurationWrap")?.classList.toggle("hidden",game);document.getElementById("grantGameWrap")?.classList.toggle("hidden",!game);});
+async function saveAdminGrant(revoke=false){
+  const status=document.getElementById("adminGrantStatus"),uid=(document.getElementById("grantUserUid")?.value||"").trim();
+  if(!isAdmin(auth?.currentUser)||!db){if(status)status.textContent="Only the permanent administrator can manage grants.";return;}
+  if(!uid||uid===ADMIN_UID){if(status)status.textContent="Enter another user's Firebase UID.";return;}
+  try{
+    const ref=db.collection("adminGrants").doc(uid);
+    if(revoke){await ref.delete();if(status)status.textContent="Access revoked.";return;}
+    const type=document.getElementById("grantAccessType").value;
+    let grant={type,grantedBy:auth.currentUser.uid,grantedAt:firebase.firestore.FieldValue.serverTimestamp()};
+    if(type==="temporary"){
+      const hours=Math.max(1,Math.min(720,Number(document.getElementById("grantDurationHours").value)||24));
+      grant.expiresAt=firebase.firestore.Timestamp.fromDate(new Date(Date.now()+hours*3600000));
+      await ref.set(grant);
+      if(status)status.textContent=`Temporary admin access granted for ${hours} hour(s).`;
+    }else{
+      grant.gameId=document.getElementById("grantGameId").value;
+      await ref.set(grant);
+      if(status)status.textContent=`Game editor access granted for ${grant.gameId}.`;
+    }
+  }catch(err){console.error("Admin grant save failed",err);if(status)status.textContent=`Could not ${revoke?"revoke":"grant"} access (${err?.code||"unknown"}). Check the adminGrants Firestore rules.`;}
+}
+document.getElementById("createAdminGrant")?.addEventListener("click",()=>saveAdminGrant(false));
+document.getElementById("revokeAdminGrant")?.addEventListener("click",()=>saveAdminGrant(true));
+document.getElementById("grantAccessType")?.addEventListener("change",e=>{const game=e.target.value==="game";document.getElementById("grantDurationWrap")?.classList.toggle("hidden",game);document.getElementById("grantGameWrap")?.classList.toggle("hidden",!game);});
 
 function renderAdminGameList(){const list=document.getElementById("adminGameList");if(!list)return;list.innerHTML="";games.forEach(game=>{const row=document.createElement("div");row.className="admin-game-row";const def=game.status==="IN PRODUCTION"?"IN PROGRESS":game.status;const current=gameStatuses[game.id]||def;row.innerHTML=`<div><div class="admin-game-name">${game.name}</div><span class="admin-game-default">Current: <span class="admin-status-pill">${current}</span></span></div><select class="admin-select" data-game-status="${game.id}"><option>AVAILABLE</option><option>MAINTENANCE</option><option>IN PROGRESS</option><option>COMING SOON</option></select>`;const select=row.querySelector("select");select.value=current;select.addEventListener("change",()=>setGameStatus(game,select.value));list.appendChild(row);});}
 async function setGameStatus(game,status){if(!canAdmin()||!db)return;const previous=gameStatuses[game.id]||(game.status==="IN PRODUCTION"?"IN PROGRESS":game.status);gameStatuses[game.id]=status;renderGames(search.value,gameFilter.value);renderAdminGameList();try{await db.collection("gameStatus").doc(game.id).set({gameName:game.name,status,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${game.name} is now ${status}.`;}catch(err){console.error(err);gameStatuses[game.id]=previous;renderGames(search.value,gameFilter.value);renderAdminGameList();adminMessage.textContent=`Could not update that game (${err?.code||"unknown"}). ${err?.code==="permission-denied"?"Your Firestore rules are blocking administrator writes.":"Check Firebase and Firestore."}`;}}
@@ -5748,12 +5815,14 @@ if(auth){
       if(user){
 
         if(!adminOverride && !isAdmin(user)) adminSessionAuthenticated=false;
+        watchAdminGrant(user);
         showLauncher(
           user
         );
 
       }else{
 
+        watchAdminGrant(null);
         showLogin();
 
       }

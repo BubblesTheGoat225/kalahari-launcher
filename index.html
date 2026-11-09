@@ -654,7 +654,7 @@ main{
 .admin-game-row{display:grid;grid-template-columns:minmax(0,1fr) 160px;gap:10px;align-items:center;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:10px}
 .admin-game-name{font-size:11px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .admin-game-default{display:block;color:var(--muted);font-size:9px;margin-top:3px}
-.admin-status-pill{display:inline-flex;align-items:center;justify-content:center;padding:5px 8px;border-radius:999px;background:rgba(217,119,87,.08);border:1px solid var(--border);font-size:9px;font-weight:900;letter-spacing:.5px}
+.announcement-image-preview{display:none;max-width:100%;max-height:220px;object-fit:contain;border:1px solid var(--border);border-radius:12px;margin-top:10px;background:var(--panel)}.announcement-upload-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.announcement-upload-btn{display:inline-flex;align-items:center;gap:7px;padding:10px 13px;border-radius:10px;border:1px solid var(--border);background:var(--panel2);color:var(--text);font-size:11px;font-weight:800;cursor:pointer}.announcement-upload-help{font-size:10px;color:var(--muted);margin-top:7px;line-height:1.5}.news-announcement-image{display:none;width:100%;max-height:360px;object-fit:contain;border-radius:12px;margin:14px 0 4px;background:#080b10}.admin-status-pill{display:inline-flex;align-items:center;justify-content:center;padding:5px 8px;border-radius:999px;background:rgba(217,119,87,.08);border:1px solid var(--border);font-size:9px;font-weight:900;letter-spacing:.5px}
 @media(max-width:700px){.admin-control-grid{grid-template-columns:1fr}.admin-game-row{grid-template-columns:1fr}}
 
 /* =========================================================
@@ -1616,6 +1616,29 @@ body.modern .play-btn:hover:not(:disabled){
   background:var(--accent2);
 }
 
+
+.pacific-empty-slot{
+  min-height:430px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  text-align:center;
+  border-style:dashed!important;
+  border-color:rgba(255,255,255,.16)!important;
+  background:linear-gradient(145deg,rgba(16,31,48,.72),rgba(8,16,28,.9))!important;
+  color:var(--muted);
+}
+.pacific-empty-slot .slot-plus{
+  width:64px;height:64px;border-radius:20px;
+  display:grid;place-items:center;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.035);
+  color:#8da4bb;font-size:30px;font-weight:400;
+}
+.pacific-empty-slot h4{font-size:17px!important;color:var(--text)}
+.pacific-empty-slot p{font-size:11px;max-width:220px;line-height:1.6}
 
 /* =========================================================
    GAME STATUS
@@ -3357,6 +3380,13 @@ body .enter-page-btn:hover{border-color:var(--accent);background:color-mix(in sr
       <div class="admin-switch-row" style="margin-bottom:14px"><strong id="adminAnnouncementStatus">Loading...</strong><label class="admin-switch"><input type="checkbox" id="announcementActiveToggle"><span class="admin-switch-track"></span></label></div>
       <div class="field"><label>TITLE</label><input class="settings-input" id="announcementTitle" placeholder="Announcement title" maxlength="120"></div>
       <div class="field"><label>MESSAGE</label><textarea class="settings-input" id="announcementBody" rows="3" placeholder="What's going on?" style="resize:vertical;font-family:inherit" maxlength="600"></textarea></div>
+      <div class="field">
+        <label>ANNOUNCEMENT IMAGE</label>
+        <input class="settings-input" id="announcementImagePath" type="text" placeholder="e.g. announcement-banner.png or images/announcement-banner.png" autocomplete="off">
+        <button class="announcement-upload-btn" id="removeAnnouncementImage" type="button" style="margin-top:8px">Remove image</button>
+        <img id="announcementImagePreview" class="announcement-image-preview" alt="Announcement image preview">
+        <div class="announcement-upload-help">Upload the image to your Kalahari Melaan GitHub repository, then enter its filename or relative path here. Example: announcement.png or images/announcement.png. The image must be committed to GitHub before it can appear for everyone.</div>
+      </div>
       <div class="field"><label>DATE LABEL</label><input class="settings-input" id="announcementDate" placeholder="e.g. September 7, 2026" maxlength="60"></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="save-btn" id="publishAnnouncement" type="button">Publish announcement</button>
@@ -3485,6 +3515,7 @@ body .enter-page-btn:hover{border-color:var(--accent);background:color-mix(in sr
         class="news-content"
         id="news-info"
       ></p>
+      <img id="news-image" class="news-announcement-image" alt="Announcement image">
 
     </div>
 
@@ -3558,6 +3589,10 @@ body .enter-page-btn:hover{border-color:var(--accent);background:color-mix(in sr
         TAXI Series
       </option>
 
+      <option value="pacific-crown">
+        Pacific Crown Series
+      </option>
+
       <option value="other">
         Other Games
       </option>
@@ -3588,6 +3623,13 @@ body .enter-page-btn:hover{border-color:var(--accent);background:color-mix(in sr
     data-filter="taxi"
   >
     TAXI SERIES
+  </button>
+
+  <button
+    class="modern-filter-pill"
+    data-filter="pacific-crown"
+  >
+    PACIFIC CROWN SERIES
   </button>
 
   <button
@@ -3711,7 +3753,7 @@ let markhorStatusUnsub=null;
 let gameStatusUnsub=null;
 let announcementUnsub=null;
 let gameStatuses={};
-let currentAnnouncement={active:false,title:"",body:"",date:""};
+let currentAnnouncement={active:false,title:"",body:"",date:"",imageUrl:""};
 
 const LAUNCHER_DOWN_TITLE=
   "Kalahari Melaan Down";
@@ -3838,7 +3880,7 @@ const games=[
       "This game is currently in active development. Features, release dates and gameplay systems are subject to change."
   },
   {
-    category:"other",
+    category:"pacific-crown",
     name:"Pacific Crown",
     icon:"PC",
     cover:"pacific-crown-logo.png",
@@ -3854,6 +3896,21 @@ const games=[
     updateNotes:
       "This game is currently in active development. Features, release dates and gameplay systems are subject to change."
   },
+
+  ...Array.from({length:7},(_,index)=>({
+    id:"pacific-crown-empty-slot-"+(index+1),
+    category:"pacific-crown",
+    name:"Empty Slot "+(index+1),
+    icon:"+",
+    genre:"Pacific Crown Series",
+    date:"TBA",
+    description:"This game slot is reserved for a future Pacific Crown Series release.",
+    status:"EMPTY SLOT",
+    url:"#",
+    emptySlot:true,
+    updateStatus:"OFF",
+    updateNotes:""
+  })),
 
   {
     category:"other",
@@ -4000,7 +4057,7 @@ document.querySelectorAll("[data-platform-view]").forEach(button=>button.addEven
 ========================================================= */
 function setLauncherScreen(on){launcherAvailable=!!on;if(launcherAvailable||adminOverride){normalLogin.classList.remove("hidden");launcherDownScreen.classList.add("hidden");}else{normalLogin.classList.add("hidden");launcherDownScreen.classList.remove("hidden");document.getElementById("launcherDownTitle").textContent=LAUNCHER_DOWN_TITLE;document.getElementById("launcherDownInfo").textContent=LAUNCHER_DOWN_INFO;document.getElementById("launcherDownDate").textContent=LAUNCHER_DOWN_DATE;}}
 function updateAdminControls(){const lt=document.getElementById("launcherStatusToggle"),mt=document.getElementById("messagesStatusToggle"),kt=document.getElementById("markhorStatusToggle"),ls=document.getElementById("adminLauncherStatus"),ms=document.getElementById("adminMessagesStatus"),ks=document.getElementById("adminMarkhorStatus");if(lt)lt.checked=launcherAvailable;if(mt)mt.checked=messagesAvailable;if(kt)kt.checked=markhorAvailable;if(ls){ls.textContent=launcherAvailable?"ONLINE":"OFFLINE";ls.style.color=launcherAvailable?"var(--success)":"#ff7272";}if(ms){ms.textContent=messagesAvailable?"ONLINE":"OFFLINE";ms.style.color=messagesAvailable?"var(--success)":"#ff7272";}if(ks){ks.textContent=markhorAvailable?"ONLINE":"OFFLINE";ks.style.color=markhorAvailable?"var(--success)":"#ff7272";}}
-function listenPlatformStatuses(){if(!db){setLauncherScreen(false);return;}launcherStatusUnsub=db.doc(`${PLATFORM_STATUS_PATH}/launcher`).onSnapshot(snap=>{const status=String(snap.exists?(snap.data().status||LAUNCHER_STATUS_DEFAULT):LAUNCHER_STATUS_DEFAULT).toUpperCase();launcherAvailable=status==="ON";setLauncherScreen(launcherAvailable);updateAdminControls();},err=>{console.error("Launcher status error:",err);setLauncherScreen(false);});messagesStatusUnsub=db.doc(`${PLATFORM_STATUS_PATH}/messages`).onSnapshot(snap=>{const status=String(snap.exists?(snap.data().status||"ON"):"ON").toUpperCase();messagesAvailable=status==="ON";updateAdminControls();},err=>console.error("Messages status error:",err));markhorStatusUnsub=db.doc(`${PLATFORM_STATUS_PATH}/markhor`).onSnapshot(snap=>{const status=String(snap.exists?(snap.data().status||"ON"):"ON").toUpperCase();markhorAvailable=status==="ON";updateAdminControls();},err=>console.error("Markhor status error:",err));gameStatusUnsub=db.collection("gameStatus").onSnapshot(snap=>{gameStatuses={};snap.forEach(doc=>{if(doc.exists&&doc.data().status)gameStatuses[doc.id]=String(doc.data().status).toUpperCase();});if(typeof renderGames==="function")renderGames(search.value,gameFilter.value);if(typeof renderAdminGameList==="function")renderAdminGameList();},err=>console.error("Game status error:",err));announcementUnsub=db.doc(`${PLATFORM_STATUS_PATH}/announcement`).onSnapshot(snap=>{const data=snap.exists?snap.data():{};currentAnnouncement={active:!!data.active,title:data.title||"",body:data.body||"",date:data.date||""};renderAnnouncement();updateAnnouncementAdminStatus();},err=>console.error("Announcement status error:",err));}
+function listenPlatformStatuses(){if(!db){setLauncherScreen(false);return;}launcherStatusUnsub=db.doc(`${PLATFORM_STATUS_PATH}/launcher`).onSnapshot(snap=>{const status=String(snap.exists?(snap.data().status||LAUNCHER_STATUS_DEFAULT):LAUNCHER_STATUS_DEFAULT).toUpperCase();launcherAvailable=status==="ON";setLauncherScreen(launcherAvailable);updateAdminControls();},err=>{console.error("Launcher status error:",err);setLauncherScreen(false);});messagesStatusUnsub=db.doc(`${PLATFORM_STATUS_PATH}/messages`).onSnapshot(snap=>{const status=String(snap.exists?(snap.data().status||"ON"):"ON").toUpperCase();messagesAvailable=status==="ON";updateAdminControls();},err=>console.error("Messages status error:",err));markhorStatusUnsub=db.doc(`${PLATFORM_STATUS_PATH}/markhor`).onSnapshot(snap=>{const status=String(snap.exists?(snap.data().status||"ON"):"ON").toUpperCase();markhorAvailable=status==="ON";updateAdminControls();},err=>console.error("Markhor status error:",err));gameStatusUnsub=db.collection("gameStatus").onSnapshot(snap=>{gameStatuses={};snap.forEach(doc=>{if(doc.exists&&doc.data().status)gameStatuses[doc.id]=String(doc.data().status).toUpperCase();});if(typeof renderGames==="function")renderGames(search.value,gameFilter.value);if(typeof renderAdminGameList==="function")renderAdminGameList();},err=>console.error("Game status error:",err));announcementUnsub=db.doc(`${PLATFORM_STATUS_PATH}/announcement`).onSnapshot(snap=>{const data=snap.exists?snap.data():{};currentAnnouncement={active:!!data.active,title:data.title||"",body:data.body||"",date:data.date||"",imageUrl:data.imageUrl||""};renderAnnouncement();updateAnnouncementAdminStatus();},err=>console.error("Announcement status error:",err));}
 
 /* =========================================================
    GAME RENDERING
@@ -4016,6 +4073,13 @@ function renderGames(searchTerm="",category="all"){
     const viewMatch=currentPlatformView!=="library"||isGameOwned(game);
     return viewMatch&&haystack.includes(term)&&(category==="all"||game.category===category);
   }).forEach(game=>{
+    if(game.emptySlot){
+      const slot=document.createElement("article");
+      slot.className="card pacific-empty-slot";
+      slot.innerHTML=`<div class="slot-plus" aria-hidden="true">+</div><h4>${escapeGameText(game.name)}</h4><p>Reserved for a future Pacific Crown Series game.</p>`;
+      grid.appendChild(slot);
+      return;
+    }
     const effectiveStatus=gameStatuses[game.id]||game.status;
     const available=effectiveStatus==="AVAILABLE";
     const production=effectiveStatus==="IN PROGRESS"||effectiveStatus==="IN PRODUCTION";
@@ -4268,6 +4332,11 @@ function renderAnnouncement(){
       "news-info"
     ).textContent=
       currentAnnouncement.body;
+    const announcementImage=document.getElementById("news-image");
+    if(announcementImage){
+      if(currentAnnouncement.imageUrl){announcementImage.src=currentAnnouncement.imageUrl;announcementImage.style.display="block";}
+      else{announcementImage.removeAttribute("src");announcementImage.style.display="none";}
+    }
 
     newsBox.classList.remove(
       "hidden"
@@ -5197,45 +5266,51 @@ function finishAdminAuthentication(){
   const grantManager=document.getElementById("adminGrantManager");if(grantManager)grantManager.classList.toggle("hidden",!isAdmin(auth?.currentUser));
   const availabilityCard=document.getElementById("adminGameList")?.closest(".admin-card");if(availabilityCard)availabilityCard.classList.toggle("hidden",contributor);
   renderAdminGameList();populateAdminGameEditor();updateAdminControls();updateAnnouncementAdminStatus();populateGrantGameSelect();
-  const at=document.getElementById("announcementTitle"),ab=document.getElementById("announcementBody"),ad=document.getElementById("announcementDate");
-  if(at)at.value=currentAnnouncement.title;if(ab)ab.value=currentAnnouncement.body;if(ad)ad.value=currentAnnouncement.date;
+  const at=document.getElementById("announcementTitle"),ab=document.getElementById("announcementBody"),ad=document.getElementById("announcementDate"),ai=document.getElementById("announcementImagePath");
+  if(at)at.value=currentAnnouncement.title;if(ab)ab.value=currentAnnouncement.body;if(ad)ad.value=currentAnnouncement.date;if(ai)ai.value=currentAnnouncement.imageUrl||"";
+  updateAnnouncementImagePreview(currentAnnouncement.imageUrl||"");
   if(announcementMessage)announcementMessage.textContent="";
   adminMessage.textContent="Administrator authentication verified.";
 }
 function closeAdmin(){adminOverlay.classList.add("hidden");resetAdminAuthentication();}
 async function writePlatformStatus(name,available){if(!canAdmin()||!db){adminMessage.textContent="Administrator access or Firebase is unavailable.";return;}const labels={launcher:"Kalahari Launcher",messages:"Kalahari Messages",markhor:"Kalahari Markhor"};try{await db.doc(`${PLATFORM_STATUS_PATH}/${name}`).set({status:available?"ON":"OFF",updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"},{merge:true});adminMessage.textContent=`${labels[name]||name} is now ${available?"ONLINE":"OFFLINE"}.`;}catch(err){console.error(err);adminMessage.textContent=`Could not save the status (${err?.code||"unknown"}). ${err?.code==="permission-denied"?"Your Firestore rules are blocking administrator writes.":"Check Firebase and Firestore."}`;updateAdminControls();}}
 
+function updateAnnouncementImagePreview(src){
+  const preview=document.getElementById("announcementImagePreview");
+  if(!preview)return;
+  if(src){preview.src=src;preview.style.display="block";}
+  else{preview.removeAttribute("src");preview.style.display="none";}
+}
+
 async function saveAnnouncement(active){
   if(!canAdmin()||!db){if(announcementMessage)announcementMessage.textContent="Administrator access or Firebase is unavailable.";return;}
-  const titleEl=document.getElementById("announcementTitle"),
-        bodyEl=document.getElementById("announcementBody"),
-        dateEl=document.getElementById("announcementDate");
-  const title=(titleEl?.value||"").trim();
-  const body=(bodyEl?.value||"").trim();
-  const date=(dateEl?.value||"").trim();
-  if(active && !title && !body){
-    if(announcementMessage)announcementMessage.textContent="Add a title or message before publishing.";
+  const title=(document.getElementById("announcementTitle")?.value||"").trim();
+  const body=(document.getElementById("announcementBody")?.value||"").trim();
+  const date=(document.getElementById("announcementDate")?.value||"").trim();
+  const imageUrl=(document.getElementById("announcementImagePath")?.value||"").trim();
+  if(active && !title && !body && !imageUrl){
+    if(announcementMessage)announcementMessage.textContent="Add a title, message or image before publishing.";
     const toggleEl=document.getElementById("announcementActiveToggle");
     if(toggleEl)toggleEl.checked=false;
     return;
   }
   try{
     await db.doc(`${PLATFORM_STATUS_PATH}/announcement`).set({
-      active,
-      title,
-      body,
-      date,
+      active,title,body,date,imageUrl,
       updatedAt:firebase.firestore.FieldValue.serverTimestamp(),
       updatedBy:isAdmin(auth?.currentUser)?auth.currentUser.uid:"offline-admin",
       updatedByName:isAdmin(auth?.currentUser)?auth.currentUser.displayName:"admin"
     },{merge:true});
+    currentAnnouncement={...currentAnnouncement,active,title,body,date,imageUrl};
+    updateAnnouncementImagePreview(imageUrl);
     if(announcementMessage)announcementMessage.textContent=active?"Announcement published.":"Announcement banner turned off.";
   }catch(err){
     console.error(err);
-    if(announcementMessage)announcementMessage.textContent=`Could not save the announcement (${err?.code||"unknown"}). ${err?.code==="permission-denied"?"Your Firestore rules are blocking administrator writes.":"Check Firebase and Firestore."}`;
+    if(announcementMessage)announcementMessage.textContent=`Could not save the announcement (${err?.code||"error"}). ${err?.message||"Check your Firestore rules."}`;
     updateAnnouncementAdminStatus();
   }
 }
+
 function populateAdminGameEditor(){const select=document.getElementById("adminEditGameSelect");if(!select)return;const old=select.value;const allowed=games.filter(g=>canEditGame(g.id));select.innerHTML=allowed.map(g=>`<option value="${escapeGameText(g.id)}">${escapeGameText(g.name)} (${escapeGameText(g.id)})</option>`).join("");if(old&&allowed.some(g=>g.id===old))select.value=old;else if(isGameContributor()&&allowed.length)select.value=allowed[0].id;select.disabled=isGameContributor();const statusField=document.getElementById("adminEditGameStatus");if(statusField)statusField.disabled=isGameContributor();loadAdminGameEditor();}
 function loadAdminGameEditor(){const id=document.getElementById("adminEditGameSelect")?.value;const game=games.find(g=>g.id===id);if(!game)return;const fields={adminEditGameName:game.name,adminEditGameGenre:game.genre,adminEditGameDate:game.date,adminEditGamePrice:gamePrice(game)??"",adminEditGameStatus:gameStatuses[game.id]||game.status,adminEditGameCover:game.cover||"",adminEditGameUrl:game.url||"",adminEditGameDescription:game.description||"",adminEditGameNotes:game.updateNotes||""};Object.entries(fields).forEach(([key,value])=>{const el=document.getElementById(key);if(el)el.value=value;});const status=document.getElementById("adminGameEditorStatus");if(status)status.textContent="Editing: "+game.name;}
 function resetAdminGameEditor(){loadAdminGameEditor();}
@@ -5274,7 +5349,10 @@ adminBtn.addEventListener("click",openAdmin);document.getElementById("closeAdmin
 if(adminAccessSubmitPanel)adminAccessSubmitPanel.addEventListener("click",()=>{if(checkAdminAccessPassword(adminAccessPasswordPanel?.value)){if(adminAccessErrorPanel)adminAccessErrorPanel.textContent="";if(adminPasswordStep)adminPasswordStep.classList.add("hidden");if(adminSecurityQuestionPanel)adminSecurityQuestionPanel.classList.remove("hidden");}else if(adminAccessErrorPanel)adminAccessErrorPanel.textContent="Incorrect administrator password.";});
 if(adminAccessPasswordPanel)adminAccessPasswordPanel.addEventListener("keydown",e=>{if(e.key==="Enter")adminAccessSubmitPanel?.click();});
 document.querySelectorAll(".admin-security-panel-btn").forEach(btn=>btn.addEventListener("click",()=>{if(btn.getAttribute("data-answer")==="penguin"){if(adminSecurityErrorPanel)adminSecurityErrorPanel.textContent="";finishAdminAuthentication();}else if(adminSecurityErrorPanel)adminSecurityErrorPanel.textContent="Incorrect answer. Try again.";}));
-document.getElementById("launcherStatusToggle").addEventListener("change",e=>writePlatformStatus("launcher",e.target.checked));document.getElementById("messagesStatusToggle").addEventListener("change",e=>writePlatformStatus("messages",e.target.checked));document.getElementById("markhorStatusToggle").addEventListener("change",e=>writePlatformStatus("markhor",e.target.checked));document.getElementById("publishAnnouncement").addEventListener("click",()=>saveAnnouncement(true));document.getElementById("clearAnnouncement").addEventListener("click",()=>saveAnnouncement(false));document.getElementById("announcementActiveToggle").addEventListener("change",e=>saveAnnouncement(e.target.checked));document.getElementById("createPollBtn").addEventListener("click",createPoll);function grantAdminAccess(){adminOverride=true;adminSessionAuthenticated=true;updateAdminVisibility(auth?.currentUser);if(auth?.currentUser){showLauncher(auth.currentUser);}else{setLauncherScreen(launcherAvailable);}}
+document.getElementById("launcherStatusToggle").addEventListener("change",e=>writePlatformStatus("launcher",e.target.checked));document.getElementById("messagesStatusToggle").addEventListener("change",e=>writePlatformStatus("messages",e.target.checked));document.getElementById("markhorStatusToggle").addEventListener("change",e=>writePlatformStatus("markhor",e.target.checked));
+document.getElementById("announcementImagePath").addEventListener("input",e=>{const value=e.target.value.trim();updateAnnouncementImagePreview(value);if(announcementMessage)announcementMessage.textContent=value?"Image path entered. Publish the announcement to save it.":"";});
+document.getElementById("removeAnnouncementImage").addEventListener("click",()=>{const input=document.getElementById("announcementImagePath");if(input)input.value="";updateAnnouncementImagePreview("");if(announcementMessage)announcementMessage.textContent="Image will be removed when you publish.";});
+document.getElementById("publishAnnouncement").addEventListener("click",()=>saveAnnouncement(true));document.getElementById("clearAnnouncement").addEventListener("click",()=>saveAnnouncement(false));document.getElementById("announcementActiveToggle").addEventListener("change",e=>saveAnnouncement(e.target.checked));document.getElementById("createPollBtn").addEventListener("click",createPoll);function grantAdminAccess(){adminOverride=true;adminSessionAuthenticated=true;updateAdminVisibility(auth?.currentUser);if(auth?.currentUser){showLauncher(auth.currentUser);}else{setLauncherScreen(launcherAvailable);}}
 function submitAdminAccess(){if(!adminAccessPassword)return;if(checkAdminAccessPassword(adminAccessPassword.value)){adminAccessError.textContent="";adminAccessPassword.value="";document.getElementById("adminAccessPassword").closest(".admin-inline-access").classList.add("hidden");document.getElementById("adminSecurityQuestion").classList.remove("hidden");}else adminAccessError.textContent="Incorrect administrator password.";}
 if(adminAccessSubmit)adminAccessSubmit.addEventListener("click",submitAdminAccess);if(adminAccessPassword)adminAccessPassword.addEventListener("keydown",e=>{if(e.key==="Enter")submitAdminAccess();});
 document.querySelectorAll(".admin-security-btn").forEach(btn=>{btn.addEventListener("click",()=>{const securityError=document.getElementById("adminSecurityError");if(btn.getAttribute("data-answer")==="penguin"){securityError.textContent="";document.getElementById("adminSecurityQuestion").classList.add("hidden");grantAdminAccess();}else{securityError.textContent="Incorrect answer. Try again.";}});});

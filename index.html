@@ -4073,14 +4073,16 @@ function renderGames(searchTerm="",category="all"){
     const viewMatch=currentPlatformView!=="library"||isGameOwned(game);
     return viewMatch&&haystack.includes(term)&&(category==="all"||game.category===category);
   }).forEach(game=>{
-    if(game.emptySlot){
+    // Pacific Crown reserved slots become ordinary game cards as soon as an
+    // administrator changes their status/details from the EMPTY SLOT default.
+    const effectiveStatus=gameStatuses[game.id]||game.status;
+    if(game.emptySlot && effectiveStatus==="EMPTY SLOT"){
       const slot=document.createElement("article");
       slot.className="card pacific-empty-slot";
       slot.innerHTML=`<div class="slot-plus" aria-hidden="true">+</div><h4>${escapeGameText(game.name)}</h4><p>Reserved for a future Pacific Crown Series game.</p>`;
       grid.appendChild(slot);
       return;
     }
-    const effectiveStatus=gameStatuses[game.id]||game.status;
     const available=effectiveStatus==="AVAILABLE";
     const production=effectiveStatus==="IN PROGRESS"||effectiveStatus==="IN PRODUCTION";
     const maintenance=effectiveStatus==="MAINTENANCE";
